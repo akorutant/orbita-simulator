@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Probes.qml</file>
+        <file>Devices.qml</file>
+        <file>StepsLanding.qml</file>
+        <file>StepsActivity.qml</file>
+    </qresource>
+</RCC>
