@@ -3,11 +3,13 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
-Window {
+
+ApplicationWindow  {
     width: 773
     height: 745
     visible: true
     title: qsTr("Orbita-app")
+    flags: Qt.Window | Qt.WindowFixedSize
 
     RowLayout {
         anchors.fill: parent
@@ -18,14 +20,16 @@ Window {
             Layout.preferredWidth: 280
             Layout.fillHeight: true
 
+
             ListView {
                 id: listViewProbes
                 anchors.fill: parent
                 model: Probes {}
                 width: parent.width
                 height: parent.height - newProbeButton.height
-                anchors.bottomMargin: 135
+                anchors.bottomMargin: 158
                 clip: true
+                enabled: false
 
                 ScrollBar.vertical: ScrollBar {
                     id: probesScrollBar
@@ -39,12 +43,14 @@ Window {
 
                 delegate: Item {
                     width: listViewProbes.width
-                    height: 40
+                    height: 50
+
                     Rectangle {
                         width: parent.width - probesScrollBar.width
-                        height: parent.height - 1
-                        color: listViewProbes.currentIndex === index ? "lightblue" : "white"
+                        height: parent.height - 5
+                        color: listViewProbes.currentIndex === index && listViewProbes.enabled? "lightblue" : "white"
                         border.color: "grey"
+
 
                         MouseArea {
                             anchors.fill: parent
@@ -56,11 +62,23 @@ Window {
 
                     Column {
                         anchors.fill: parent
+                        anchors.leftMargin: 5
+                        anchors.topMargin: 15
                         Text {
+
                             text: index >= 0 && index < listViewProbes.count ? '<b>Аппарат:</b> ' + model.name + " " + model.number : ""
                         }
                     }
                 }
+            }
+
+
+            Button {
+                id: selectMissonButton
+                width: parent.width; height: 23
+                text: "Выбрать миссию"
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 125
             }
 
             Button {
@@ -69,6 +87,7 @@ Window {
                 text: "Cоздать новый"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 96
+                enabled: false
             }
 
             Button {
@@ -77,6 +96,7 @@ Window {
                 text: "Загрузить"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 67
+                enabled: false
             }
 
             Button {
@@ -85,6 +105,7 @@ Window {
                 text: "Сохранить"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 38
+                enabled: false
             }
 
             Button {
@@ -92,6 +113,7 @@ Window {
                 width: parent.width; height: 23
                 text: "Запустить"
                 anchors.bottom: parent.bottom
+                enabled: false
             }
         }
 
@@ -112,6 +134,7 @@ Window {
                         id: probeName
                         width: 200
                         height: 10
+                        enabled: false
                         onTextChanged: {
                             if (probeName.text.length > 30) {
                                 probeName.text = probeName.text.substring(0, 30);
@@ -151,6 +174,7 @@ Window {
                             width: 200
                             height: 10
                             validator: IntValidator {}
+                            enabled: false
 
                             onTextChanged: {
                                 if (firstNumber.text.length > 10) {
@@ -180,6 +204,7 @@ Window {
                             width: 200
                             height: 10
                             validator: IntValidator {}
+                            enabled: false
 
                             onTextChanged: {
                                 if (secondNumber.text.length > 10) {
@@ -211,6 +236,7 @@ Window {
                             width: parent.width - devicesButtons.width
                             height: parent.height
                             clip: true
+                            enabled: false
 
 
                             ScrollBar.vertical: ScrollBar {
@@ -228,8 +254,8 @@ Window {
                                 height: 100
                                 Rectangle {
                                     width: parent.width - devicesScrollBar.width
-                                    height: listViewDevices.height
-                                    color: listViewDevices.currentIndex === index ? "lightblue" : "white"
+                                    height: parent.height - 5
+                                    color: listViewDevices.currentIndex === index ** listViewDevices.enabled? "lightblue" : "white"
                                     border.color: "grey"
 
                                     MouseArea {
@@ -242,15 +268,18 @@ Window {
 
                                 Column {
                                     anchors.fill: parent
-                                    Text { text: index >= 0 && index < listViewDevices.count ? '<b>Номер:</b> ' + model.number : "" }
+                                    anchors.leftMargin: 5
+                                    anchors.topMargin: 8
 
-                                    Text { text: index >= 0 && index < listViewDevices.count ? '<b>Название:</b> ' + model.name : "" }
+                                    Text { text: index >= 0 && index < listViewDevices.count && model.number ? '<b>Номер:</b> ' + model.number : "<b>Номер:</b> None" }
 
-                                    Text { text: index >= 0 && index < listViewDevices.count ? '<b>Тип:</b> ' + model.type : "" }
+                                    Text { text: index >= 0 && index < listViewDevices.count && model.name ? '<b>Название:</b> ' + model.name : "<b>Название:</b> None" }
 
-                                    Text { text: index >= 0 && index < listViewDevices.count ? '<b>Начальное состояние:</b> ' + model.startState : "" }
+                                    Text { text: index >= 0 && index < listViewDevices.count && model.type ? '<b>Тип:</b> ' + model.type : "<b>Тип:</b> None" }
 
-                                    Text { text: index >= 0 && index < listViewDevices.count ? '<b>Safe Mode:</b> ' + model.inSafeMode : "" }
+                                    Text { text: index >= 0 && index < listViewDevices.count && model.startState ? '<b>Начальное состояние:</b> ' + model.startState : "<b>Начальное состояние:</b> None" }
+
+                                    Text { text: index >= 0 && index < listViewDevices.count && model.inSafeMode ? '<b>Safe Mode:</b> ' + model.inSafeMode : "<b>Safe Mode:</b> None" }
 
                                 }
                             }
@@ -258,20 +287,22 @@ Window {
 
                         ColumnLayout {
                             id: devicesButtons
-                            height: 23
+                            Layout.preferredHeight: 23
+                            Layout.preferredWidth: 80
                             Layout.alignment: Qt.AlignRight | Qt.AlignTop
                             Button {
                                 id: buttonAddDevice
+                                Layout.preferredHeight: 23
                                 text: "Добавить"
-                                height: 23
-                                width: 80
+                                enabled: false
+
                             }
 
                             Button {
                                 id: buttonDeleteDevice
+                                Layout.preferredHeight: 23
                                 text: "Удалить"
-                                height: 23
-                                width: 80
+                                enabled: false
                             }
                         }
 
@@ -300,6 +331,7 @@ Window {
                                     width: parent.width - sLButton.width
                                     height: parent.height
                                     clip: true
+                                    enabled: false
 
 
                                     ScrollBar.vertical: ScrollBar {
@@ -314,11 +346,11 @@ Window {
 
                                     delegate: Item {
                                         width: listViewStepsLanding.width
-                                        height: 100
+                                        height: 80
                                         Rectangle {
                                             width: parent.width - devicesScrollBar.width
-                                            height: listViewStepsLanding.height
-                                            color: listViewStepsLanding.currentIndex === index ? "lightblue" : "white"
+                                            height: parent.height - 5
+                                            color: listViewStepsLanding.currentIndex === index && listViewStepsLanding.enabled? "lightblue" : "white"
                                             border.color: "grey"
 
                                             MouseArea {
@@ -331,13 +363,16 @@ Window {
 
                                         Column {
                                             anchors.fill: parent
-                                            Text { text: index >= 0 && index < listViewStepsLanding.count ? '<b>Время:</b> ' + model.time : "" }
+                                            anchors.leftMargin: 5
+                                            anchors.topMargin: 8
 
-                                            Text { text: index >= 0 && index < listViewStepsLanding.count ? '<b>Устройство:</b> ' + model.device : "" }
+                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.time? '<b>Время:</b> ' + model.time : "<b>Время:</b> None" }
 
-                                            Text { text: index >= 0 && index < listViewStepsLanding.count ? '<b>Команда:</b> ' + model.command : "" }
+                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.device ? '<b>Устройство:</b> ' + model.device : "<b>Устройство:</b> None" }
 
-                                            Text { text: index >= 0 && index < listViewStepsLanding.count ? '<b>Параметр:</b> ' + model.argument : "" }
+                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.command ? '<b>Команда:</b>' + model.command : "<b>Команда:</b> None" }
+
+                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.argument ? '<b>Параметр:</b> ' + model.argument : "<b>Параметр:</b> None" }
                                         }
                                     }
                                 }
@@ -349,16 +384,16 @@ Window {
                                     Layout.alignment: Qt.AlignRight | Qt.AlignTop
                                     Button {
                                         id: buttonAddSL
+                                        Layout.preferredHeight: 23
                                         text: "Добавить"
-                                        height: 23
-                                        width: 80
+                                        enabled: false
                                     }
 
                                     Button {
                                         id: buttonDeleteSL
+                                        Layout.preferredHeight: 23
                                         text: "Удалить"
-                                        height: 23
-                                        width: 80
+                                        enabled: false
                                     }
                                 }
                             }
@@ -377,6 +412,7 @@ Window {
                                         width: parent.width - sPAButtons.width
                                         height: parent.height
                                         clip: true
+                                        enabled: false
 
 
                                         ScrollBar.vertical: ScrollBar {
@@ -391,11 +427,11 @@ Window {
 
                                         delegate: Item {
                                             width: listViewStepsPlanetActivity.width
-                                            height: 100
+                                            height: 80
                                             Rectangle {
                                                 width: parent.width - devicesScrollBar.width
-                                                height: listViewStepsPlanetActivity.height
-                                                color: listViewStepsPlanetActivity.currentIndex === index ? "lightblue" : "white"
+                                                height: parent.height - 5
+                                                color: listViewStepsPlanetActivity.currentIndex === index && listViewStepsPlanetActivity.enabled? "lightblue" : "white"
                                                 border.color: "grey"
 
                                                 MouseArea {
@@ -408,13 +444,16 @@ Window {
 
                                             Column {
                                                 anchors.fill: parent
-                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count ? '<b>Время:</b> ' + model.time : "" }
+                                                anchors.leftMargin: 5
+                                                anchors.topMargin: 8
 
-                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count ? '<b>Устройство:</b> ' + model.device : "" }
+                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.time? '<b>Время:</b> ' + model.time : "<b>Время:</b> None" }
 
-                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count ? '<b>Команда:</b> ' + model.command : "" }
+                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.device ? '<b>Устройство:</b> ' + model.device : "<b>Устройство:</b> None" }
 
-                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count ? '<b>Параметр:</b> ' + model.argument : "" }
+                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.command ? '<b>Команда:</b>' + model.command : "<b>Команда:</b> None" }
+
+                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.argument ? '<b>Параметр:</b> ' + model.argument : "<b>Параметр:</b> None" }
                                             }
                                         }
                                     }
@@ -422,20 +461,20 @@ Window {
 
                                     ColumnLayout {
                                         id: sPAButtons
-                                        height: 23
+                                        Layout.preferredHeight: 23
                                         Layout.alignment: Qt.AlignRight | Qt.AlignTop
                                         Button {
                                             id: buttonAddSPA
+                                            Layout.preferredHeight: 23
                                             text: "Добавить"
-                                            height: 23
-                                            width: 80
+                                            enabled: false
                                         }
 
                                         Button {
                                             id: buttonDeleteSPA
+                                            Layout.preferredHeight: 23
                                             text: "Удалить"
-                                            height: 23
-                                            width: 80
+                                            enabled: false
                                         }
                                     }
                                 }

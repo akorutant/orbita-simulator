@@ -5,5 +5,7 @@
         <file>Devices.qml</file>
         <file>StepsLanding.qml</file>
         <file>StepsActivity.qml</file>
+        <file>runWindow.qml</file>
+        <file>commandDialog.qml</file>
     </qresource>
 </RCC>
