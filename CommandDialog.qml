@@ -1,0 +1,144 @@
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+
+Dialog  {
+    id: commandDialog
+    width: 287
+    height: 179
+    visible: false
+    modal: true
+    standardButtons: Dialog.Ok | Dialog.Cancel
+    x: 243
+    y: 283
+
+    GridLayout {
+        anchors.fill: parent
+        columns: 2
+        rows: 5
+
+        Text {
+            id: time
+            Layout.preferredWidth: 72
+            Layout.preferredHeight: 23
+            text: "Время"
+            Layout.row: 0
+            Layout.column: 0
+        }
+
+        TextInput {
+            id: timeInput
+            Layout.row: 0
+            Layout.column: 1
+            Layout.preferredWidth: 189
+            Layout.preferredHeight: 23
+            validator: IntValidator {}
+            onTextChanged: {
+                if (timeInput.text.length > 30) {
+                    timeInput.text = timeInput.text.substring(0, 30);
+                }
+            }
+
+            property string placeholderText: "Введите время"
+
+            Text {
+                text: timeInput.placeholderText
+                color: "#aaa"
+                visible: !timeInput.text
+            }
+        }
+
+
+        Text {
+            Layout.preferredWidth: 72
+            Layout.preferredHeight: 23
+            text: "Устройство"
+            Layout.row: 1
+            Layout.column: 0
+        }
+
+        ComboBox {
+            Layout.preferredWidth: 189
+            Layout.preferredHeight: 23
+            Layout.row: 1
+            Layout.column: 1
+            editable: false
+            model: ListModel {
+                id: modelDevices
+                ListElement { text: "Test 1" }
+                ListElement { text: "Test 2" }
+            }
+            onAccepted: {
+                if (find(editText) === -1)
+                    model.append({text: editText})
+            }
+        }
+
+        Text {
+            Layout.preferredWidth: 72
+            Layout.preferredHeight: 23
+            text: "Команда"
+            Layout.row: 2
+            Layout.column: 0
+        }
+
+        ComboBox {
+            Layout.preferredWidth: 189
+            Layout.preferredHeight: 23
+            Layout.row: 2
+            Layout.column: 1
+            editable: false
+            model: ListModel {
+                id: modelCommands
+                ListElement { text: "TURNOFF" }
+                ListElement { text: "TURNON" }
+                ListElement { text: "PERIOD" }
+            }
+            onAccepted: {
+                if (find(editText) === -1)
+                    model.append({text: editText})
+            }
+        }
+
+        Text {
+            Layout.preferredWidth: 72
+            Layout.preferredHeight: 23
+            text: "Параметр"
+            Layout.row: 3
+            Layout.column: 0
+        }
+
+        TextInput {
+            id: argumentInput
+            Layout.preferredWidth: 189
+            Layout.preferredHeight: 23
+            Layout.row: 3
+            Layout.column: 1
+            enabled: false
+            onTextChanged: {
+                if (argumentInput.text.length > 30) {
+                    argumentInput.text = argumentInput.text.substring(0, 30);
+                }
+            }
+
+            property string placeholderText: "Введите параметр"
+
+            Text {
+                text: argumentInput.placeholderText
+                color: "#aaa"
+                visible: !argumentInput.text
+            }
+        }
+
+//        DialogButtonBox {
+//            Layout.preferredWidth: 269
+//            Layout.preferredHeight: 24
+//            Layout.row: 4
+//            Layout.column: 1
+//            standardButtons: DialogButtonBox.Ok | DialogButtonBox.Cancel
+
+
+//        }
+    }
+}

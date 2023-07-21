@@ -6,6 +6,8 @@
         <file>StepsLanding.qml</file>
         <file>StepsActivity.qml</file>
         <file>runWindow.qml</file>
-        <file>commandDialog.qml</file>
+        <file>CommandDialog.qml</file>
+        <file>DeviceDialog.qml</file>
+        <file>MissionDialog.qml</file>
     </qresource>
 </RCC>

@@ -10,6 +10,9 @@ ApplicationWindow  {
     visible: true
     title: qsTr("Orbita-app")
     flags: Qt.Window | Qt.WindowFixedSize
+    MissionDialog {id: missionDialog}
+    DeviceDialog {id: deviceDialog}
+    CommandDialog {id: commandDialog}
 
     RowLayout {
         anchors.fill: parent
@@ -75,10 +78,12 @@ ApplicationWindow  {
 
             Button {
                 id: selectMissonButton
+
                 width: parent.width; height: 23
                 text: "Выбрать миссию"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 125
+                onClicked: missionDialog.open()
             }
 
             Button {
