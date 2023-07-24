@@ -14,6 +14,7 @@ ApplicationWindow  {
     MissionDialog {id: missionDialog}
     DeviceDialog {id: deviceDialog}
     CommandDialog {id: commandDialog}
+    RunWindow {id: runWindow}
     property bool itemsEnabled: false
 
     RowLayout {
@@ -123,6 +124,10 @@ ApplicationWindow  {
                 text: "Запустить"
                 anchors.bottom: parent.bottom
                 enabled: itemsEnabled
+                onClicked: {
+                    runWindow.visible = true
+                    mainWindow.visible = false
+                }
             }
         }
 

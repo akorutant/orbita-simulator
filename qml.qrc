@@ -5,7 +5,7 @@
         <file>Devices.qml</file>
         <file>StepsLanding.qml</file>
         <file>StepsActivity.qml</file>
-        <file>runWindow.qml</file>
+        <file>RunWindow.qml</file>
         <file>CommandDialog.qml</file>
         <file>DeviceDialog.qml</file>
         <file>MissionDialog.qml</file>
