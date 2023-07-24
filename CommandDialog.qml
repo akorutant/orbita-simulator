@@ -9,9 +9,9 @@ Dialog  {
     height: 179
     visible: false
     modal: true
-    standardButtons: Dialog.Ok | Dialog.Cancel
-    x: 243
-    y: 283
+
+    x: mainWindow.width / 2 - width / 2
+    y: mainWindow.height / 2 - height / 2
 
     GridLayout {
         anchors.fill: parent
@@ -20,7 +20,7 @@ Dialog  {
 
         Text {
             id: time
-            Layout.preferredWidth: 72
+            Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             text: "Время"
             Layout.row: 0
@@ -31,7 +31,7 @@ Dialog  {
             id: timeInput
             Layout.row: 0
             Layout.column: 1
-            Layout.preferredWidth: 189
+            Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             validator: IntValidator {}
             onTextChanged: {
@@ -51,7 +51,7 @@ Dialog  {
 
 
         Text {
-            Layout.preferredWidth: 72
+            Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             text: "Устройство"
             Layout.row: 1
@@ -59,7 +59,7 @@ Dialog  {
         }
 
         ComboBox {
-            Layout.preferredWidth: 189
+            Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             Layout.row: 1
             Layout.column: 1
@@ -76,7 +76,7 @@ Dialog  {
         }
 
         Text {
-            Layout.preferredWidth: 72
+            Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             text: "Команда"
             Layout.row: 2
@@ -84,7 +84,7 @@ Dialog  {
         }
 
         ComboBox {
-            Layout.preferredWidth: 189
+            Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             Layout.row: 2
             Layout.column: 1
@@ -102,7 +102,7 @@ Dialog  {
         }
 
         Text {
-            Layout.preferredWidth: 72
+            Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             text: "Параметр"
             Layout.row: 3
@@ -111,7 +111,7 @@ Dialog  {
 
         TextInput {
             id: argumentInput
-            Layout.preferredWidth: 189
+            Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             Layout.row: 3
             Layout.column: 1
@@ -131,14 +131,34 @@ Dialog  {
             }
         }
 
-//        DialogButtonBox {
-//            Layout.preferredWidth: 269
-//            Layout.preferredHeight: 24
-//            Layout.row: 4
-//            Layout.column: 1
-//            standardButtons: DialogButtonBox.Ok | DialogButtonBox.Cancel
+        Button {
+            height: 23
+            width: parent.width
+            Layout.preferredHeight: 23
+            Layout.preferredWidth: parent.width * 0.5
+            Layout.column: 0
+            Layout.row: 4
+            text: "ОК"
+            onClicked: {
+                commandDialog.accepted()
+                commandDialog.close()
+            }
 
+        }
 
-//        }
+        Button {
+            height: 23
+            width: parent.width
+            Layout.preferredHeight: 23
+            Layout.preferredWidth: parent.width * 0.5
+            Layout.column: 1
+            Layout.row: 4
+            text: "Отмена"
+            onClicked: {
+                commandDialog.rejected()
+                commandDialog.close()
+            }
+
+        }
     }
 }

@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.15
 
 
 ApplicationWindow  {
+    id: mainWindow
     width: 773
     height: 745
     visible: true
@@ -13,6 +14,7 @@ ApplicationWindow  {
     MissionDialog {id: missionDialog}
     DeviceDialog {id: deviceDialog}
     CommandDialog {id: commandDialog}
+    property bool itemsEnabled: false
 
     RowLayout {
         anchors.fill: parent
@@ -32,7 +34,7 @@ ApplicationWindow  {
                 height: parent.height - newProbeButton.height
                 anchors.bottomMargin: 158
                 clip: true
-                enabled: false
+                enabled: itemsEnabled
 
                 ScrollBar.vertical: ScrollBar {
                     id: probesScrollBar
@@ -83,7 +85,9 @@ ApplicationWindow  {
                 text: "Выбрать миссию"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 125
-                onClicked: missionDialog.open()
+                onClicked: {
+                    missionDialog.open()
+                }
             }
 
             Button {
@@ -92,7 +96,7 @@ ApplicationWindow  {
                 text: "Cоздать новый"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 96
-                enabled: false
+                enabled: itemsEnabled
             }
 
             Button {
@@ -101,7 +105,7 @@ ApplicationWindow  {
                 text: "Загрузить"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 67
-                enabled: false
+                enabled: itemsEnabled
             }
 
             Button {
@@ -110,7 +114,7 @@ ApplicationWindow  {
                 text: "Сохранить"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 38
-                enabled: false
+                enabled: itemsEnabled
             }
 
             Button {
@@ -118,7 +122,7 @@ ApplicationWindow  {
                 width: parent.width; height: 23
                 text: "Запустить"
                 anchors.bottom: parent.bottom
-                enabled: false
+                enabled: itemsEnabled
             }
         }
 
@@ -139,7 +143,7 @@ ApplicationWindow  {
                         id: probeName
                         width: 200
                         height: 10
-                        enabled: false
+                        enabled: itemsEnabled
                         onTextChanged: {
                             if (probeName.text.length > 30) {
                                 probeName.text = probeName.text.substring(0, 30);
@@ -179,7 +183,7 @@ ApplicationWindow  {
                             width: 200
                             height: 10
                             validator: IntValidator {}
-                            enabled: false
+                            enabled: itemsEnabled
 
                             onTextChanged: {
                                 if (firstNumber.text.length > 10) {
@@ -209,7 +213,7 @@ ApplicationWindow  {
                             width: 200
                             height: 10
                             validator: IntValidator {}
-                            enabled: false
+                            enabled: itemsEnabled
 
                             onTextChanged: {
                                 if (secondNumber.text.length > 10) {
@@ -241,7 +245,7 @@ ApplicationWindow  {
                             width: parent.width - devicesButtons.width
                             height: parent.height
                             clip: true
-                            enabled: false
+                            enabled: itemsEnabled
 
 
                             ScrollBar.vertical: ScrollBar {
@@ -299,15 +303,15 @@ ApplicationWindow  {
                                 id: buttonAddDevice
                                 Layout.preferredHeight: 23
                                 text: "Добавить"
-                                enabled: false
-
+                                enabled: itemsEnabled
+                                onClicked: deviceDialog.open()
                             }
 
                             Button {
                                 id: buttonDeleteDevice
                                 Layout.preferredHeight: 23
                                 text: "Удалить"
-                                enabled: false
+                                enabled: itemsEnabled
                             }
                         }
 
@@ -318,6 +322,8 @@ ApplicationWindow  {
 
                 GroupBox {
                     id: commandsGroupBox
+                    width: parent.width
+                    height: 400
                     Layout.preferredWidth: parent.width
                     Layout.preferredHeight: 400
                     title: qsTr("Команды")
@@ -336,7 +342,7 @@ ApplicationWindow  {
                                     width: parent.width - sLButton.width
                                     height: parent.height
                                     clip: true
-                                    enabled: false
+                                    enabled: itemsEnabled
 
 
                                     ScrollBar.vertical: ScrollBar {
@@ -391,14 +397,15 @@ ApplicationWindow  {
                                         id: buttonAddSL
                                         Layout.preferredHeight: 23
                                         text: "Добавить"
-                                        enabled: false
+                                        enabled: itemsEnabled
+                                        onClicked: commandDialog.open()
                                     }
 
                                     Button {
                                         id: buttonDeleteSL
                                         Layout.preferredHeight: 23
                                         text: "Удалить"
-                                        enabled: false
+                                        enabled: itemsEnabled
                                     }
                                 }
                             }
@@ -417,7 +424,7 @@ ApplicationWindow  {
                                         width: parent.width - sPAButtons.width
                                         height: parent.height
                                         clip: true
-                                        enabled: false
+                                        enabled: itemsEnabled
 
 
                                         ScrollBar.vertical: ScrollBar {
@@ -472,14 +479,15 @@ ApplicationWindow  {
                                             id: buttonAddSPA
                                             Layout.preferredHeight: 23
                                             text: "Добавить"
-                                            enabled: false
+                                            enabled: itemsEnabled
+                                            onClicked: commandDialog.open()
                                         }
 
                                         Button {
                                             id: buttonDeleteSPA
                                             Layout.preferredHeight: 23
                                             text: "Удалить"
-                                            enabled: false
+                                            enabled: itemsEnabled
                                         }
                                     }
                                 }
