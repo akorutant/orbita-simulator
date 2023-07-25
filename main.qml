@@ -15,7 +15,12 @@ ApplicationWindow  {
     DeviceDialog {id: deviceDialog}
     CommandDialog {id: commandDialog}
     RunWindow {id: runWindow}
+    ErrorMessage {id: errorDialog}
     property bool itemsEnabled: false
+    property bool showPlanetsDevices: false
+    property bool showPlanetsElems: false
+    property bool showPythonArea: false
+    property bool showDiagrammButton: false
 
     RowLayout {
         anchors.fill: parent
@@ -236,11 +241,12 @@ ApplicationWindow  {
                         }
                     }
                 }
-
                 GroupBox {
                     Layout.preferredWidth: parent.width
                     Layout.preferredHeight: 140
                     title: qsTr("Устройства")
+                    visible: showPlanetsDevices
+
                     RowLayout {
                         anchors.fill: parent
 
@@ -251,6 +257,8 @@ ApplicationWindow  {
                             height: parent.height
                             clip: true
                             enabled: itemsEnabled
+                            visible: showPlanetsDevices
+
 
 
                             ScrollBar.vertical: ScrollBar {
@@ -307,6 +315,7 @@ ApplicationWindow  {
                             Button {
                                 id: buttonAddDevice
                                 Layout.preferredHeight: 23
+                                Layout.preferredWidth: 80
                                 text: "Добавить"
                                 enabled: itemsEnabled
                                 onClicked: deviceDialog.open()
@@ -315,6 +324,7 @@ ApplicationWindow  {
                             Button {
                                 id: buttonDeleteDevice
                                 Layout.preferredHeight: 23
+                                Layout.preferredWidth: 80
                                 text: "Удалить"
                                 enabled: itemsEnabled
                             }
@@ -331,9 +341,12 @@ ApplicationWindow  {
                     height: 400
                     Layout.preferredWidth: parent.width
                     Layout.preferredHeight: 400
+                    visible: showPlanetsElems
                     title: qsTr("Команды")
+
                     ColumnLayout {
                         anchors.fill: parent
+
                         GroupBox {
                             id: stepsLandingGroupBox
                             Layout.preferredWidth: parent.width
@@ -348,6 +361,7 @@ ApplicationWindow  {
                                     height: parent.height
                                     clip: true
                                     enabled: itemsEnabled
+                                    visible: showPlanetsElems
 
 
                                     ScrollBar.vertical: ScrollBar {
@@ -430,6 +444,7 @@ ApplicationWindow  {
                                         height: parent.height
                                         clip: true
                                         enabled: itemsEnabled
+                                        visible: showPlanetsElems
 
 
                                         ScrollBar.vertical: ScrollBar {
@@ -500,6 +515,34 @@ ApplicationWindow  {
 
                     }
 
+
+                }
+
+                GroupBox {
+                    width: parent.width
+                    height: 400
+                    Layout.preferredWidth: parent.width
+                    Layout.preferredHeight: 400
+                    visible: showPythonArea
+                     title: qsTr("Вставьте Python код:")
+                    TextArea {
+                        id: pythonCode
+                        anchors.fill: parent
+                        enabled: itemsEnabled
+
+                    }
+                }
+
+                Button {
+
+                    text: "Загрузить диаграму"
+                    height: 23
+                    width: parent.width * 0.5
+                    Layout.alignment: Qt.AlignRight | Qt.AlignTop
+                    Layout.preferredHeight: height
+                    Layout.preferredWidth: width
+                    enabled: itemsEnabled
+                    visible: showDiagrammButton
 
                 }
             }

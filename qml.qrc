@@ -9,5 +9,6 @@
         <file>CommandDialog.qml</file>
         <file>DeviceDialog.qml</file>
         <file>MissionDialog.qml</file>
+        <file>ErrorMessage.qml</file>
     </qresource>
 </RCC>
