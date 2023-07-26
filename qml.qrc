@@ -1,10 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>Probes.qml</file>
-        <file>Devices.qml</file>
-        <file>StepsLanding.qml</file>
-        <file>StepsActivity.qml</file>
         <file>RunWindow.qml</file>
         <file>CommandDialog.qml</file>
         <file>DeviceDialog.qml</file>

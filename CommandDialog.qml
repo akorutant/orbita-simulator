@@ -59,6 +59,7 @@ Dialog  {
         }
 
         ComboBox {
+            id: devicesBox
             Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             Layout.row: 1
@@ -66,8 +67,8 @@ Dialog  {
             editable: false
             model: ListModel {
                 id: modelDevices
-                ListElement { text: "Test 1" }
-                ListElement { text: "Test 2" }
+                ListElement { name: "Test 1" }
+                ListElement { name: "Test 2" }
             }
             onAccepted: {
                 if (find(editText) === -1)
@@ -84,6 +85,7 @@ Dialog  {
         }
 
         ComboBox {
+            id: commandsBox
             Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             Layout.row: 2
@@ -140,6 +142,23 @@ Dialog  {
             Layout.row: 4
             text: "ОК"
             onClicked: {
+                if (whatIsWindow) {
+                    stepsLanding.append({
+                                            time: timeInput.text,
+                                            device: devicesBox.currentValue,
+                                            command: commandsBox.currentValue,
+                                            argument: argumentInput.text
+                                        })
+                } else {
+                    stepsActivity.append({
+                                             time: timeInput.text,
+                                             device: devicesBox.currentValue,
+                                             command: commandsBox.currentValue,
+                                             argument: argumentInput.text
+                                        })
+                }
+                timeInput.text = ""
+                argumentInput.text = ""
                 commandDialog.accepted()
                 commandDialog.close()
             }

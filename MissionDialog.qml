@@ -104,7 +104,7 @@ Dialog  {
                     };
 
 
-                    mainWindow.itemsEnabled = true
+                    newProbeButton.enabled = true
                     missionDialog.accepted()
                     missionDialog.close()
                 }

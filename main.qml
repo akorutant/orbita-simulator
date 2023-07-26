@@ -21,6 +21,11 @@ ApplicationWindow  {
     property bool showPlanetsElems: false
     property bool showPythonArea: false
     property bool showDiagrammButton: false
+    property ListModel devices: ListModel {}
+    property ListModel probes: ListModel {}
+    property ListModel stepsActivity: ListModel {}
+    property ListModel stepsLanding: ListModel {}
+    property bool whatIsWindow: false
 
     RowLayout {
         anchors.fill: parent
@@ -35,7 +40,7 @@ ApplicationWindow  {
             ListView {
                 id: listViewProbes
                 anchors.fill: parent
-                model: Probes {}
+                model: probes
                 width: parent.width
                 height: parent.height - newProbeButton.height
                 anchors.bottomMargin: 158
@@ -102,7 +107,13 @@ ApplicationWindow  {
                 text: "Cоздать новый"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 96
-                enabled: itemsEnabled
+                enabled: false
+
+                onClicked: {
+                    probes.append({name: "probe", number: 0})
+                    probeName.text = "probe 0"
+                    itemsEnabled = true
+                }
             }
 
             Button {
@@ -245,14 +256,13 @@ ApplicationWindow  {
                     Layout.preferredWidth: parent.width
                     Layout.preferredHeight: 140
                     title: qsTr("Устройства")
-                    visible: showPlanetsDevices
 
                     RowLayout {
                         anchors.fill: parent
 
                         ListView {
                             id: listViewDevices
-                            model: Devices {}
+                            model: devices
                             width: parent.width - devicesButtons.width
                             height: parent.height
                             clip: true
@@ -272,6 +282,7 @@ ApplicationWindow  {
                             }
 
                             delegate: Item {
+
                                 width: listViewDevices.width
                                 height: 100
                                 Rectangle {
@@ -301,7 +312,7 @@ ApplicationWindow  {
 
                                     Text { text: index >= 0 && index < listViewDevices.count && model.startState ? '<b>Начальное состояние:</b> ' + model.startState : "<b>Начальное состояние:</b> None" }
 
-                                    Text { text: index >= 0 && index < listViewDevices.count && model.inSafeMode ? '<b>Safe Mode:</b> ' + model.inSafeMode : "<b>Safe Mode:</b> None" }
+                                    Text { text: index >= 0 && index < listViewDevices.count ? '<b>Safe Mode:</b> ' + model.inSafeMode : "" }
 
                                 }
                             }
@@ -327,6 +338,13 @@ ApplicationWindow  {
                                 Layout.preferredWidth: 80
                                 text: "Удалить"
                                 enabled: itemsEnabled
+                                onClicked: {
+                                    devices.remove(listViewDevices.currentIndex)
+                                    if (devices.count > 0)
+                                        for(var i = 0; i < devices.rowCount(); i++) {
+                                            devices.set(i, {number: devices.get(i).number === '1' ? '1' : `${devices.get(i).number - 1}`})
+                                        }
+                                }
                             }
                         }
 
@@ -356,7 +374,7 @@ ApplicationWindow  {
                                 anchors.fill: parent
                                 ListView {
                                     id: listViewStepsLanding
-                                    model: StepsLanding {}
+                                    model: stepsLanding
                                     width: parent.width - sLButton.width
                                     height: parent.height
                                     clip: true
@@ -417,7 +435,10 @@ ApplicationWindow  {
                                         Layout.preferredHeight: 23
                                         text: "Добавить"
                                         enabled: itemsEnabled
-                                        onClicked: commandDialog.open()
+                                        onClicked: {
+                                            whatIsWindow = true
+                                            commandDialog.open()
+                                        }
                                     }
 
                                     Button {
@@ -425,6 +446,7 @@ ApplicationWindow  {
                                         Layout.preferredHeight: 23
                                         text: "Удалить"
                                         enabled: itemsEnabled
+                                        onClicked: listViewStepsLanding.stepsLanding.remove(listViewStepsLanding.index)
                                     }
                                 }
                             }
@@ -439,7 +461,7 @@ ApplicationWindow  {
                                     anchors.fill: parent
                                     ListView {
                                         id: listViewStepsPlanetActivity
-                                        model: StepsActivity {}
+                                        model: stepsActivity
                                         width: parent.width - sPAButtons.width
                                         height: parent.height
                                         clip: true
@@ -500,7 +522,10 @@ ApplicationWindow  {
                                             Layout.preferredHeight: 23
                                             text: "Добавить"
                                             enabled: itemsEnabled
-                                            onClicked: commandDialog.open()
+                                            onClicked: {
+                                                whatIsWindow = false
+                                                commandDialog.open()
+                                            }
                                         }
 
                                         Button {
@@ -508,6 +533,7 @@ ApplicationWindow  {
                                             Layout.preferredHeight: 23
                                             text: "Удалить"
                                             enabled: itemsEnabled
+                                            onClicked: listViewStepsPlanetActivity.stepsActivity.remove(listViewStepsPlanetActivity.index)
                                         }
                                     }
                                 }
@@ -533,18 +559,30 @@ ApplicationWindow  {
                     }
                 }
 
-                Button {
+                ColumnLayout {
+                    Layout.preferredHeight: 500
+                    width: parent.width
+                    Button {
 
-                    text: "Загрузить диаграму"
-                    height: 23
-                    width: parent.width * 0.5
-                    Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                    Layout.preferredHeight: height
-                    Layout.preferredWidth: width
-                    enabled: itemsEnabled
-                    visible: showDiagrammButton
+                        text: "Загрузить диаграмму"
+                        height: 23
+                        width: parent.width
+                        Layout.alignment: Qt.AlignRight | Qt.AlignTop
+                        Layout.preferredHeight: height
+                        Layout.preferredWidth: width
+                        enabled: itemsEnabled
+                        visible: showDiagrammButton
 
+                    }
+
+                    Text {
+                        Layout.alignment: Qt.AlignTop
+                        text: "Вы не выбрали диаграмму"
+                        visible: showDiagrammButton
+
+                    }
                 }
+
             }
 
         }

@@ -18,7 +18,7 @@ Dialog  {
         rows: 5
 
         Text {
-            id: time
+            id: deviceText
             Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             text: "Устройство"
@@ -27,6 +27,7 @@ Dialog  {
         }
 
         ComboBox {
+            id: deviceBox
             Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             Layout.row: 0
@@ -51,6 +52,7 @@ Dialog  {
         }
 
         ComboBox {
+            id: startStateBox
             Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             Layout.row: 1
@@ -59,7 +61,7 @@ Dialog  {
             model: ListModel {
                 id: modelStates
                 ListElement { text: "ON" }
-                ListElement { text: "OF" }
+                ListElement { text: "OFF" }
             }
             onAccepted: {
                 if (find(editText) === -1)
@@ -76,6 +78,7 @@ Dialog  {
         }
 
         ComboBox {
+            id: safeModeBox
             Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             Layout.row: 2
@@ -103,6 +106,13 @@ Dialog  {
             Layout.row: 4
             text: "ОК"
             onClicked: {
+                devices.append({
+                                   name: deviceBox.currentValue,
+                                   type: "none",
+                                   number: `${devices.count === 0 ? 1 : devices.count + 1}`,
+                                   startState: startStateBox.currentValue,
+                                   inSafeMode: safeModeBox.currentIndex === 1 ? false : true,
+                               })
                 deviceDialog.accepted()
                 deviceDialog.close()
             }
