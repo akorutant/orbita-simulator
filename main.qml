@@ -16,15 +16,17 @@ ApplicationWindow  {
     CommandDialog {id: commandDialog}
     RunWindow {id: runWindow}
     ErrorMessage {id: errorDialog}
+    SuccessMessage {id: successDialog}
     property bool itemsEnabled: false
     property bool showPlanetsDevices: false
     property bool showPlanetsElems: false
     property bool showPythonArea: false
     property bool showDiagrammButton: false
-    property ListModel devices: ListModel {}
     property ListModel probes: ListModel {}
+    property ListModel devices: ListModel {}
     property ListModel stepsActivity: ListModel {}
     property ListModel stepsLanding: ListModel {}
+    property var probe: undefined
     property bool whatIsWindow: false
 
     RowLayout {
@@ -72,6 +74,14 @@ ApplicationWindow  {
                             anchors.fill: parent
                             onClicked: {
                                 listViewProbes.currentIndex = index
+                                if (probes.count)
+                                    probe = probes.get(listViewProbes.currentIndex)
+                                    probeName.text = `${probe.name}`
+                                    firstNumber.text = `${probe.outerRadius}`
+                                    secondNumber.text = `${probe.innerRadius}`
+                                    listViewDevices.model = `${probe.devices}`
+                                    listViewStepsLanding.model = `${probe.stepsLanding}`
+                                    listViewStepsPlanetActivity.model = `${probe.stepsActivity}`
                             }
                         }
                     }
@@ -110,25 +120,40 @@ ApplicationWindow  {
                 enabled: false
 
                 onClicked: {
-                    probes.append({name: "probe", number: 0})
-                    probeName.text = "probe 0"
+                    probes.append({
+                                      name: `probe`,
+                                      number: probes.count,
+                                      outerRadius: '0',
+                                      innerRadius: '0',
+                                      devices: devices,
+                                      stepsActivity: stepsActivity,
+                                      stepsLanding: stepsLanding
+                                  })
+                    listViewProbes.currentIndex = probes.count - 1
+                    probe = probes.get(listViewProbes.currentIndex)
+                    probeName.text = `${probe.name}`
+                    firstNumber.text = `${probe.outerRadius}`
+                    secondNumber.text = `${probe.innerRadius}`
+                    listViewDevices.model = `${probe.devices.get(probe.number)}`
+                    listViewStepsLanding.model = `${probe.stepsLanding}`
+                    listViewStepsPlanetActivity.model = `${probe.stepsActivity}`
                     itemsEnabled = true
                 }
-            }
-
-            Button {
-                id: loadProbeButton
-                width: parent.width; height: 23
-                text: "Загрузить"
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 67
-                enabled: itemsEnabled
             }
 
             Button {
                 id: saveProbeButton
                 width: parent.width; height: 23
                 text: "Сохранить"
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 67
+                enabled: itemsEnabled
+            }
+
+            Button {
+                id: loadProbeButton
+                width: parent.width; height: 23
+                text: "Загрузить"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 38
                 enabled: itemsEnabled
@@ -262,7 +287,6 @@ ApplicationWindow  {
 
                         ListView {
                             id: listViewDevices
-                            model: devices
                             width: parent.width - devicesButtons.width
                             height: parent.height
                             clip: true
@@ -329,7 +353,8 @@ ApplicationWindow  {
                                 Layout.preferredWidth: 80
                                 text: "Добавить"
                                 enabled: itemsEnabled
-                                onClicked: deviceDialog.open()
+                                onClicked: {
+                                    deviceDialog.open() }
                             }
 
                             Button {
@@ -339,11 +364,16 @@ ApplicationWindow  {
                                 text: "Удалить"
                                 enabled: itemsEnabled
                                 onClicked: {
-                                    devices.remove(listViewDevices.currentIndex)
-                                    if (devices.count > 0)
-                                        for(var i = 0; i < devices.rowCount(); i++) {
-                                            devices.set(i, {number: devices.get(i).number === '1' ? '1' : `${devices.get(i).number - 1}`})
-                                        }
+                                    if (probe.devices.count) {
+                                        successDialog.message = `Успешно удалено устройство ${probe.devices.get(listViewDevices.currentIndex).name}`
+                                        probe.devices.remove(listViewDevices.currentIndex)
+                                        if (probe.devices.count >= 0)
+                                            for(var i = 0; i < probe.devices.rowCount(); i++) {
+                                                probe.devices.set(i, {number: probe.devices.get(i).number === '1' ? '1' : `${probe.devices.get(i).number - 1}`})
+                                            }
+                                        successDialog.open()
+                                    }
+
                                 }
                             }
                         }
@@ -374,7 +404,6 @@ ApplicationWindow  {
                                 anchors.fill: parent
                                 ListView {
                                     id: listViewStepsLanding
-                                    model: stepsLanding
                                     width: parent.width - sLButton.width
                                     height: parent.height
                                     clip: true
@@ -446,7 +475,13 @@ ApplicationWindow  {
                                         Layout.preferredHeight: 23
                                         text: "Удалить"
                                         enabled: itemsEnabled
-                                        onClicked: listViewStepsLanding.stepsLanding.remove(listViewStepsLanding.index)
+                                        onClicked: {
+                                            if (stepsLanding.count) {
+                                                successDialog.message = "Успшено удалено"
+                                                probe.stepsLanding.remove(listViewStepsLanding.index)}
+                                                successDialog.open()
+                                            }
+
                                     }
                                 }
                             }
@@ -461,7 +496,6 @@ ApplicationWindow  {
                                     anchors.fill: parent
                                     ListView {
                                         id: listViewStepsPlanetActivity
-                                        model: stepsActivity
                                         width: parent.width - sPAButtons.width
                                         height: parent.height
                                         clip: true
@@ -533,7 +567,14 @@ ApplicationWindow  {
                                             Layout.preferredHeight: 23
                                             text: "Удалить"
                                             enabled: itemsEnabled
-                                            onClicked: listViewStepsPlanetActivity.stepsActivity.remove(listViewStepsPlanetActivity.index)
+                                            onClicked: {
+                                                if (stepsActivity.count) {
+                                                    successDialog.message = "Успешно удалено"
+                                                    probe.stepsActivity.remove(listViewStepsPlanetActivity.index)
+                                                    successDialog.open()
+                                                }
+
+                                            }
                                         }
                                     }
                                 }

@@ -143,19 +143,19 @@ Dialog  {
             text: "ОК"
             onClicked: {
                 if (whatIsWindow) {
-                    stepsLanding.append({
-                                            time: timeInput.text,
-                                            device: devicesBox.currentValue,
-                                            command: commandsBox.currentValue,
-                                            argument: argumentInput.text
-                                        })
+                    probe.stepsLanding.append({
+                                                  time: timeInput.text,
+                                                  device: devicesBox.currentValue,
+                                                  command: commandsBox.currentValue,
+                                                  argument: argumentInput.text
+                                              })
                 } else {
-                    stepsActivity.append({
-                                             time: timeInput.text,
-                                             device: devicesBox.currentValue,
-                                             command: commandsBox.currentValue,
-                                             argument: argumentInput.text
-                                        })
+                    probe.stepsActivity.append({
+                                                   time: timeInput.text,
+                                                   device: devicesBox.currentValue,
+                                                   command: commandsBox.currentValue,
+                                                   argument: argumentInput.text
+                                               })
                 }
                 timeInput.text = ""
                 argumentInput.text = ""

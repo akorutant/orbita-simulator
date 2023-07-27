@@ -106,13 +106,13 @@ Dialog  {
             Layout.row: 4
             text: "ОК"
             onClicked: {
-                devices.append({
-                                   name: deviceBox.currentValue,
-                                   type: "none",
-                                   number: `${devices.count === 0 ? 1 : devices.count + 1}`,
-                                   startState: startStateBox.currentValue,
-                                   inSafeMode: safeModeBox.currentIndex === 1 ? false : true,
-                               })
+                probe.devices.append({
+                                         name: deviceBox.currentValue,
+                                         type: "none",
+                                         number: `${devices.count === 0 ? 1 : devices.count + 1}`,
+                                         startState: startStateBox.currentValue,
+                                         inSafeMode: safeModeBox.currentIndex === 1 ? false : true,
+                                     })
                 deviceDialog.accepted()
                 deviceDialog.close()
             }

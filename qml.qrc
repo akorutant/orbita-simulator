@@ -6,5 +6,6 @@
         <file>DeviceDialog.qml</file>
         <file>MissionDialog.qml</file>
         <file>ErrorMessage.qml</file>
+        <file>SuccessMessage.qml</file>
     </qresource>
 </RCC>
