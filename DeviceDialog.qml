@@ -113,6 +113,8 @@ Dialog  {
                                          startState: startStateBox.currentValue,
                                          inSafeMode: safeModeBox.currentIndex === 1 ? false : true,
                                      })
+                listViewDevices.currentIndex = probe.devices.count - 1
+
                 deviceDialog.accepted()
                 deviceDialog.close()
             }

@@ -76,7 +76,7 @@ ApplicationWindow  {
                                 listViewProbes.currentIndex = index
                                 if (probes.count)
                                     probe = probes.get(listViewProbes.currentIndex)
-                                    probeName.text = `${probe.name}${probe.number}`
+                                    probeName.text = `${probe.name}`
                                     firstNumber.text = `${probe.outerRadius}`
                                     secondNumber.text = `${probe.innerRadius}`
                                     showDevices = probe.devices
@@ -92,7 +92,7 @@ ApplicationWindow  {
                         anchors.topMargin: 15
                         Text {
 
-                            text: index >= 0 && index < listViewProbes.count ? '<b>Аппарат:</b> ' + model.name + " " + model.number : ""
+                            text: index >= 0 && index < listViewProbes.count ? '<b>Аппарат:</b> ' + model.name : ""
                         }
                     }
                 }
@@ -628,6 +628,27 @@ ApplicationWindow  {
                     }
                 }
 
+                Button {
+                    width: parent.width * 0.4
+                    height: 23
+                    Layout.preferredHeight: height
+                    Layout.preferredWidth: width
+                    Layout.alignment: Qt.AlignBottom | Qt.AlignRight
+                    enabled: itemsEnabled
+                    text: "Сохранить изменения"
+                    onClicked: {
+                        probes.set(listViewProbes.currentIndex,
+                                   {
+                                       name: probeName.text,
+                                       number: probe.number,
+                                       outerRadius: firstNumber.text,
+                                       innerRadius: secondNumber.text,
+                                       devices: probe.devices,
+                                       stepsActivity: probe.stepsActivity,
+                                       stepsLanding: probe.stepsLanding
+                                   })
+                    }
+                }
             }
 
         }

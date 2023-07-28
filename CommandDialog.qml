@@ -149,6 +149,7 @@ Dialog  {
                                                   command: commandsBox.currentValue,
                                                   argument: argumentInput.text
                                               })
+                    listViewStepsLanding.currentIndex = probe.stepsLanding.count - 1
                 } else {
                     probe.stepsActivity.append({
                                                    time: timeInput.text,
@@ -156,7 +157,10 @@ Dialog  {
                                                    command: commandsBox.currentValue,
                                                    argument: argumentInput.text
                                                })
+                    listViewStepsPlanetActivity.currentIndex = probe.stepsActivity.count - 1
                 }
+
+
                 timeInput.text = ""
                 argumentInput.text = ""
                 commandDialog.accepted()
