@@ -10,6 +10,7 @@ Dialog  {
     visible: false
     modal: true
     ErrorMessage {id: errorDialog}
+    property ListModel clear: ListModel {}
 
     title: qsTr("Выберите тип миссии")
     x: mainWindow.width / 2 - width / 2
@@ -69,11 +70,53 @@ Dialog  {
                 Layout.preferredWidth: parent.width * 0.5
                 text: "ОК"
                 onClicked: {
+                    probeName.text = ""
+                    firstNumber.text = ""
+                    secondNumber.text = ""
+                    showDevices = clear
+
+                    if (missonSelect.currentText === "Планеты") {
+                        listViewProbes.model = probesPlanets
+
+                        if (probesPlanets.get(probesPlanets.currentIndex)) {
+                            listViewProbes.currentIndex = probesPlanets.count - 1
+                            probe = probesPlanets.get(listViewProbes.currentIndex)
+                            showStepsLanding = probe.stepsLanding
+                            showStepsActivity = probe.stepsActivity
+                            probeName.text = `${probe.name}`
+                            firstNumber.text = `${probe.outerRadius}`
+                            secondNumber.text = `${probe.innerRadius}`
+                            showDevices = probe.devices
+                        } else {
+                            itemsEnabled = false
+                        }
+
+                        typeMission = true
+                    }
+
+                    if (missonSelect.currentText === "Земля") {
+                        listViewProbes.model = probesErath
+
+                        if (probesErath.get(probesErath.currentIndex)) {
+                            listViewProbes.currentIndex = probesErath.count - 1
+                            probe = probesErath.get(listViewProbes.currentIndex)
+                            probeName.text = `${probe.name}`
+                            firstNumber.text = `${probe.outerRadius}`
+                            secondNumber.text = `${probe.innerRadius}`
+                            showDevices = probe.devices
+                        } else {
+                            itemsEnabled = false
+                        }
+                        typeMission = false
+                    }
+
                     if (missonSelect.currentText === "Планеты" && typeSelect.currentText === "Таблица") {
-                        mainWindow.showPlanetsElems = true
-                        mainWindow.showPlanetsDevices = true
-                        mainWindow.showPythonArea = false
-                        mainWindow.showDiagrammButton = false
+                        showPlanetsElems = true
+                        showPlanetsDevices = true
+                        showPythonArea = false
+                        showDiagrammButton = false
+                        pythonCode.text = ""
+
                     }
 
                     if (missonSelect.currentText === "Планеты" && typeSelect.currentText === "Диаграмма") {
@@ -90,18 +133,20 @@ Dialog  {
                     }
 
                     if (typeSelect.currentText === "Python") {
-                        mainWindow.showPlanetsElems = false
-                        mainWindow.showPlanetsDevices = true
-                        mainWindow.showPythonArea = true
-                        mainWindow.showDiagrammButton = false
+                        showPlanetsElems = false
+                        showPlanetsDevices = true
+                        showPythonArea = true
+                        showDiagrammButton = false
                     };
 
                     if (missonSelect.currentText === "Земля" && typeSelect.currentText === "Диаграмма") {
-                        mainWindow.showPlanetsElems = false
-                        mainWindow.showPlanetsDevices = true
-                        mainWindow.showPythonArea = false
-                        mainWindow.showDiagrammButton = true
+                        showPlanetsElems = false
+                        showPlanetsDevices = true
+                        showPythonArea = false
+                        showDiagrammButton = true
+                        pythonCode.text = ""
                     };
+
 
 
                     newProbeButton.enabled = true

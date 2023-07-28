@@ -17,17 +17,20 @@ ApplicationWindow  {
     RunWindow {id: runWindow}
     ErrorMessage {id: errorDialog}
     SuccessMessage {id: successDialog}
+    DeviceForEarthDialog {id: deviceEarthDialog}
     property bool itemsEnabled: false
     property bool showPlanetsDevices: false
     property bool showPlanetsElems: false
     property bool showPythonArea: false
     property bool showDiagrammButton: false
-    property ListModel probes: ListModel {}
+    property ListModel probesPlanets: ListModel {}
+    property ListModel probesErath: ListModel {}
     property ListModel showDevices: ListModel {}
     property ListModel showStepsLanding: ListModel {}
     property ListModel showStepsActivity: ListModel {}
     property var probe: undefined
     property bool whatIsWindow: false
+    property bool typeMission: true
 
     RowLayout {
         anchors.fill: parent
@@ -42,7 +45,6 @@ ApplicationWindow  {
             ListView {
                 id: listViewProbes
                 anchors.fill: parent
-                model: probes
                 width: parent.width
                 height: parent.height - newProbeButton.height
                 anchors.bottomMargin: 158
@@ -74,14 +76,24 @@ ApplicationWindow  {
                             anchors.fill: parent
                             onClicked: {
                                 listViewProbes.currentIndex = index
-                                if (probes.count)
-                                    probe = probes.get(listViewProbes.currentIndex)
-                                    probeName.text = `${probe.name}`
-                                    firstNumber.text = `${probe.outerRadius}`
-                                    secondNumber.text = `${probe.innerRadius}`
-                                    showDevices = probe.devices
-                                    showStepsLanding = probe.stepsLanding
-                                    showStepsActivity = probe.stepsActivity
+                                if (typeMission) {
+                                    if (probesPlanets.count)
+                                        probe = probesPlanets.get(listViewProbes.currentIndex)
+                                        probeName.text = `${probe.name}`
+                                        firstNumber.text = `${probe.outerRadius}`
+                                        secondNumber.text = `${probe.innerRadius}`
+                                        showDevices = probe.devices
+                                        showStepsLanding = probe.stepsLanding
+                                        showStepsActivity = probe.stepsActivity
+                                } else {
+                                    if (probesErath.count)
+                                        probe = probesErath.get(listViewProbes.currentIndex)
+                                        probeName.text = `${probe.name}`
+                                        firstNumber.text = `${probe.outerRadius}`
+                                        secondNumber.text = `${probe.innerRadius}`
+                                        showDevices = probe.devices
+                                }
+
                             }
                         }
                     }
@@ -108,6 +120,7 @@ ApplicationWindow  {
                 anchors.bottomMargin: 125
                 onClicked: {
                     missionDialog.open()
+
                 }
             }
 
@@ -120,24 +133,41 @@ ApplicationWindow  {
                 enabled: false
 
                 onClicked: {
-                    probes.append({
-                                      name: `probe`,
-                                      number: probes.count,
-                                      outerRadius: '0',
-                                      innerRadius: '0',
-                                      devices: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
-                                      stepsActivity: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
-                                      stepsLanding: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow)
-                                  })
+                    if (typeMission) {
+                        probesPlanets.append({
+                                          name: `probe`,
+                                          number: probesPlanets.count,
+                                          outerRadius: '0',
+                                          innerRadius: '0',
+                                          devices: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
+                                          stepsActivity: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
+                                          stepsLanding: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
+                                          pythonCode: ""
+                                             })
 
-                    listViewProbes.currentIndex = probes.count - 1
-                    probe = probes.get(listViewProbes.currentIndex)
-                    probeName.text = `${probe.name}${probe.number}`
+                        listViewProbes.model = probesPlanets
+                        listViewProbes.currentIndex = probesPlanets.count - 1
+                        probe = probesPlanets.get(listViewProbes.currentIndex)
+                        showStepsLanding = probe.stepsLanding
+                        showStepsActivity = probe.stepsActivity
+                    } else {
+                        probesErath.append({
+                                          name: `probe`,
+                                          number: probesPlanets.count,
+                                          outerRadius: '0',
+                                          innerRadius: '0',
+                                          devices: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
+                                          pythonCode: ""
+                                           })
+                        listViewProbes.model = probesErath
+                        listViewProbes.currentIndex = probesErath.count - 1
+                        probe = probesErath.get(listViewProbes.currentIndex)
+                    }
+
+                    probeName.text = `${probe.name}`
                     firstNumber.text = `${probe.outerRadius}`
                     secondNumber.text = `${probe.innerRadius}`
                     showDevices = probe.devices
-                    showStepsLanding = probe.stepsLanding
-                    showStepsActivity = probe.stepsActivity
                     itemsEnabled = true
                 }
             }
@@ -338,7 +368,10 @@ ApplicationWindow  {
 
                                     Text { text: index >= 0 && index < listViewDevices.count && model.startState ? '<b>Начальное состояние:</b> ' + model.startState : "<b>Начальное состояние:</b> None" }
 
-                                    Text { text: index >= 0 && index < listViewDevices.count ? '<b>Safe Mode:</b> ' + model.inSafeMode : "" }
+                                    Text {
+                                        visible: typeMission
+                                        text: index >= 0 && index < listViewDevices.count ? '<b>Safe Mode:</b> ' + model.inSafeMode : ""
+                                    }
 
                                 }
                             }
@@ -356,7 +389,12 @@ ApplicationWindow  {
                                 text: "Добавить"
                                 enabled: itemsEnabled
                                 onClicked: {
-                                    deviceDialog.open() }
+                                    if (typeMission) {
+                                        deviceDialog.open()
+                                    } else {
+                                        deviceEarthDialog.open()
+                                    }
+                                }
                             }
 
                             Button {
@@ -597,9 +635,10 @@ ApplicationWindow  {
                     visible: showPythonArea
                      title: qsTr("Вставьте Python код:")
                     TextArea {
-                        id: pythonCode
+                        id: pythonCodeTextArea
                         anchors.fill: parent
                         enabled: itemsEnabled
+                        text: probe.pythonCode
 
                     }
                 }
@@ -637,16 +676,30 @@ ApplicationWindow  {
                     enabled: itemsEnabled
                     text: "Сохранить изменения"
                     onClicked: {
-                        probes.set(listViewProbes.currentIndex,
-                                   {
-                                       name: probeName.text,
-                                       number: probe.number,
-                                       outerRadius: firstNumber.text,
-                                       innerRadius: secondNumber.text,
-                                       devices: probe.devices,
-                                       stepsActivity: probe.stepsActivity,
-                                       stepsLanding: probe.stepsLanding
-                                   })
+                        if (typeMission) {
+                            probesPlanets.set(listViewProbes.currentIndex,
+                                       {
+                                           name: probeName.text,
+                                           number: probe.number,
+                                           outerRadius: firstNumber.text,
+                                           innerRadius: secondNumber.text,
+                                           devices: probe.devices,
+                                           stepsActivity: probe.stepsActivity,
+                                           stepsLanding: probe.stepsLanding,
+                                           pythonCode: pythonCodeTextArea.text
+                                       })
+                        } else {
+                            probesErath.set(listViewProbes.currentIndex,
+                                       {
+                                           name: probeName.text,
+                                           number: probe.number,
+                                           outerRadius: firstNumber.text,
+                                           innerRadius: secondNumber.text,
+                                           devices: probe.devices,
+                                           pythonCode: pythonCodeTextArea.text
+                                       })
+                        }
+
                     }
                 }
             }
