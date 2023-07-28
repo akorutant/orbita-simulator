@@ -23,9 +23,9 @@ ApplicationWindow  {
     property bool showPythonArea: false
     property bool showDiagrammButton: false
     property ListModel probes: ListModel {}
-    property ListModel devices: ListModel {}
-    property ListModel stepsActivity: ListModel {}
-    property ListModel stepsLanding: ListModel {}
+    property ListModel showDevices: ListModel {}
+    property ListModel showStepsLanding: ListModel {}
+    property ListModel showStepsActivity: ListModel {}
     property var probe: undefined
     property bool whatIsWindow: false
 
@@ -76,12 +76,12 @@ ApplicationWindow  {
                                 listViewProbes.currentIndex = index
                                 if (probes.count)
                                     probe = probes.get(listViewProbes.currentIndex)
-                                    probeName.text = `${probe.name}`
+                                    probeName.text = `${probe.name}${probe.number}`
                                     firstNumber.text = `${probe.outerRadius}`
                                     secondNumber.text = `${probe.innerRadius}`
-                                    listViewDevices.model = `${probe.devices}`
-                                    listViewStepsLanding.model = `${probe.stepsLanding}`
-                                    listViewStepsPlanetActivity.model = `${probe.stepsActivity}`
+                                    showDevices = probe.devices
+                                    showStepsLanding = probe.stepsLanding
+                                    showStepsActivity = probe.stepsActivity
                             }
                         }
                     }
@@ -125,18 +125,19 @@ ApplicationWindow  {
                                       number: probes.count,
                                       outerRadius: '0',
                                       innerRadius: '0',
-                                      devices: devices,
-                                      stepsActivity: stepsActivity,
-                                      stepsLanding: stepsLanding
+                                      devices: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
+                                      stepsActivity: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
+                                      stepsLanding: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow)
                                   })
+
                     listViewProbes.currentIndex = probes.count - 1
                     probe = probes.get(listViewProbes.currentIndex)
-                    probeName.text = `${probe.name}`
+                    probeName.text = `${probe.name}${probe.number}`
                     firstNumber.text = `${probe.outerRadius}`
                     secondNumber.text = `${probe.innerRadius}`
-                    listViewDevices.model = `${probe.devices.get(probe.number)}`
-                    listViewStepsLanding.model = `${probe.stepsLanding}`
-                    listViewStepsPlanetActivity.model = `${probe.stepsActivity}`
+                    showDevices = probe.devices
+                    showStepsLanding = probe.stepsLanding
+                    showStepsActivity = probe.stepsActivity
                     itemsEnabled = true
                 }
             }
@@ -292,6 +293,7 @@ ApplicationWindow  {
                             clip: true
                             enabled: itemsEnabled
                             visible: showPlanetsDevices
+                            model: showDevices
 
 
 
@@ -409,6 +411,7 @@ ApplicationWindow  {
                                     clip: true
                                     enabled: itemsEnabled
                                     visible: showPlanetsElems
+                                    model: showStepsLanding
 
 
                                     ScrollBar.vertical: ScrollBar {
@@ -501,6 +504,7 @@ ApplicationWindow  {
                                         clip: true
                                         enabled: itemsEnabled
                                         visible: showPlanetsElems
+                                        model: showStepsActivity
 
 
                                         ScrollBar.vertical: ScrollBar {
