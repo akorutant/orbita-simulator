@@ -8,5 +8,6 @@
         <file>ErrorMessage.qml</file>
         <file>SuccessMessage.qml</file>
         <file>DeviceForEarthDialog.qml</file>
+        <file>PlanetsDevices.qml</file>
     </qresource>
 </RCC>

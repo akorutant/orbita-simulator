@@ -24,7 +24,7 @@ ApplicationWindow  {
     property bool showPythonArea: false
     property bool showDiagrammButton: false
     property ListModel probesPlanets: ListModel {}
-    property ListModel probesErath: ListModel {}
+    property ListModel probesEarth: ListModel {}
     property ListModel showDevices: ListModel {}
     property ListModel showStepsLanding: ListModel {}
     property ListModel showStepsActivity: ListModel {}
@@ -86,8 +86,8 @@ ApplicationWindow  {
                                         showStepsLanding = probe.stepsLanding
                                         showStepsActivity = probe.stepsActivity
                                 } else {
-                                    if (probesErath.count)
-                                        probe = probesErath.get(listViewProbes.currentIndex)
+                                    if (probesEarth.count)
+                                        probe = probesEarth.get(listViewProbes.currentIndex)
                                         probeName.text = `${probe.name}`
                                         firstNumber.text = `${probe.outerRadius}`
                                         secondNumber.text = `${probe.innerRadius}`
@@ -151,7 +151,7 @@ ApplicationWindow  {
                         showStepsLanding = probe.stepsLanding
                         showStepsActivity = probe.stepsActivity
                     } else {
-                        probesErath.append({
+                        probesEarth.append({
                                           name: `probe`,
                                           number: probesPlanets.count,
                                           outerRadius: '0',
@@ -159,9 +159,9 @@ ApplicationWindow  {
                                           devices: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
                                           pythonCode: ""
                                            })
-                        listViewProbes.model = probesErath
-                        listViewProbes.currentIndex = probesErath.count - 1
-                        probe = probesErath.get(listViewProbes.currentIndex)
+                        listViewProbes.model = probesEarth
+                        listViewProbes.currentIndex = probesEarth.count - 1
+                        probe = probesEarth.get(listViewProbes.currentIndex)
                     }
 
                     probeName.text = `${probe.name}`
@@ -358,13 +358,11 @@ ApplicationWindow  {
                                 Column {
                                     anchors.fill: parent
                                     anchors.leftMargin: 5
-                                    anchors.topMargin: 8
+                                    anchors.topMargin: 15
 
                                     Text { text: index >= 0 && index < listViewDevices.count && model.number ? '<b>Номер:</b> ' + model.number : "<b>Номер:</b> None" }
 
-                                    Text { text: index >= 0 && index < listViewDevices.count && model.name ? '<b>Название:</b> ' + model.name : "<b>Название:</b> None" }
-
-                                    Text { text: index >= 0 && index < listViewDevices.count && model.type ? '<b>Тип:</b> ' + model.type : "<b>Тип:</b> None" }
+                                    Text { text: index >= 0 && index < listViewDevices.count && model.name ? '<b>Тип:</b> ' + model.name : "<b>Название:</b> None" }
 
                                     Text { text: index >= 0 && index < listViewDevices.count && model.startState ? '<b>Начальное состояние:</b> ' + model.startState : "<b>Начальное состояние:</b> None" }
 
@@ -638,7 +636,7 @@ ApplicationWindow  {
                         id: pythonCodeTextArea
                         anchors.fill: parent
                         enabled: itemsEnabled
-                        text: probe.pythonCode
+                        text: probe ? probe.pythonCode : ""
 
                     }
                 }
@@ -689,7 +687,7 @@ ApplicationWindow  {
                                            pythonCode: pythonCodeTextArea.text
                                        })
                         } else {
-                            probesErath.set(listViewProbes.currentIndex,
+                            probesEarth.set(listViewProbes.currentIndex,
                                        {
                                            name: probeName.text,
                                            number: probe.number,

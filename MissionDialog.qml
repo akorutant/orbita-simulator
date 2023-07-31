@@ -95,11 +95,11 @@ Dialog  {
                     }
 
                     if (missonSelect.currentText === "Земля") {
-                        listViewProbes.model = probesErath
+                        listViewProbes.model = probesEarth
 
-                        if (probesErath.get(probesErath.currentIndex)) {
-                            listViewProbes.currentIndex = probesErath.count - 1
-                            probe = probesErath.get(listViewProbes.currentIndex)
+                        if (probesEarth.get(probesEarth.currentIndex)) {
+                            listViewProbes.currentIndex = probesEarth.count - 1
+                            probe = probesEarth.get(listViewProbes.currentIndex)
                             probeName.text = `${probe.name}`
                             firstNumber.text = `${probe.outerRadius}`
                             secondNumber.text = `${probe.innerRadius}`
@@ -115,7 +115,7 @@ Dialog  {
                         showPlanetsDevices = true
                         showPythonArea = false
                         showDiagrammButton = false
-                        pythonCode.text = ""
+                        showPythonArea.text = ""
 
                     }
 
@@ -144,12 +144,13 @@ Dialog  {
                         showPlanetsDevices = true
                         showPythonArea = false
                         showDiagrammButton = true
-                        pythonCode.text = ""
+                        showPythonArea.text = ""
                     };
 
 
 
                     newProbeButton.enabled = true
+                    loadProbeButton.enabled = true
                     missionDialog.accepted()
                     missionDialog.close()
                 }

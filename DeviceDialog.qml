@@ -11,6 +11,7 @@ Dialog  {
     modal: true
     x: mainWindow.width / 2 - width / 2
     y: mainWindow.height / 2 - height / 2
+    PlanetsDevices {id: planetsDevices}
 
     GridLayout {
         anchors.fill: parent
@@ -32,14 +33,13 @@ Dialog  {
             Layout.preferredHeight: 23
             Layout.row: 0
             Layout.column: 1
+
             editable: false
-            model: ListModel {
-                id: modelDevice
-                ListElement { text: "test" }
-            }
+            model: planetsDevices
             onAccepted: {
                 if (find(editText) === -1)
-                    model.append({text: editText})
+                    model.append({type: editText})
+                    currentIndex = find(editText)
             }
         }
 
@@ -108,7 +108,6 @@ Dialog  {
             onClicked: {
                 probe.devices.append({
                                          name: deviceBox.currentValue,
-                                         type: "none",
                                          number: `${probe.devices.count === 0 ? 1 : probe.devices.count + 1}`,
                                          startState: startStateBox.currentValue,
                                          inSafeMode: safeModeBox.currentIndex === 1 ? false : true,

@@ -18,7 +18,7 @@ Dialog  {
         rows: 5
 
         Text {
-            id: deviceErathText
+            id: deviceEarthText
             Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             text: "Устройство"
@@ -27,7 +27,7 @@ Dialog  {
         }
 
         ComboBox {
-            id: deviceErathBox
+            id: deviceEarthBox
             Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             Layout.row: 0
@@ -52,7 +52,7 @@ Dialog  {
         }
 
         ComboBox {
-            id: startStateErathBox
+            id: startStateEarthBox
             Layout.preferredWidth: parent.width * 0.5
             Layout.preferredHeight: 23
             Layout.row: 1
@@ -79,10 +79,10 @@ Dialog  {
             text: "ОК"
             onClicked: {
                 probe.devices.append({
-                                         name: deviceErathBox.currentValue,
+                                         name: deviceEarthBox.currentValue,
                                          number: `${probe.devices.count === 0 ? 1 : probe.devices.count + 1}`,
                                          type: "none",
-                                         startState: startStateErathBox.currentValue
+                                         startState: startStateEarthBox.currentValue
                                      })
                 listViewDevices.currentIndex = probe.devices.count - 1
 
