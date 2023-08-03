@@ -3,7 +3,7 @@
 Probe::Probe(QObject *parent)
     : QObject{parent}
 {
-
+    mItems.append({1, "Apollo", 1200, 1500, "python", "file"});
 }
 
 QVector<ProbeItem> Probe::items() const

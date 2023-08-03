@@ -36,6 +36,7 @@ public:
     Devices *list() const;
     void setList(Devices *list);
 
+
 private:
     Devices *mList;
 };

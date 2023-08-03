@@ -1,7 +1,6 @@
 #ifndef PROBEMODEL_H
 #define PROBEMODEL_H
 
-#include <QAbstractListModel>
 #include "devicesmodel.h"
 
 class Probe;
@@ -10,6 +9,7 @@ class ProbeModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(Probe *list READ list WRITE setList)
+
 
 public:
     explicit ProbeModel(QObject *parent = nullptr);

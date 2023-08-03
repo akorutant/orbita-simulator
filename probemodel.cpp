@@ -128,3 +128,4 @@ void ProbeModel::setList(Probe *list)
     }
     endResetModel();
 }
+

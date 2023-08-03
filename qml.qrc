@@ -9,5 +9,6 @@
         <file>SuccessMessage.qml</file>
         <file>DeviceForEarthDialog.qml</file>
         <file>PlanetsDevices.qml</file>
+        <file>test.qml</file>
     </qresource>
 </RCC>

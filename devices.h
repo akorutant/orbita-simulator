@@ -10,7 +10,6 @@ struct DevicesItem
     QString deviceName;
     QString startState;
     bool inSafeMode;
-
 };
 
 class Devices : public QObject

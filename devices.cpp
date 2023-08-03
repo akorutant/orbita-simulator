@@ -3,7 +3,7 @@
 Devices::Devices(QObject *parent)
     : QObject{parent}
 {
-
+    mItems.append({1, "test", "TURNOFF", true});
 }
 
 QVector<DevicesItem> Devices::items() const
