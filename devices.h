@@ -30,7 +30,7 @@ signals:
     void postDevicesItemRemoved();
 
 public slots:
-    void appendDevicesItem();
+    void appendDevicesItem(QString deviceName, QString startState, bool inSafeMode);
     void removeDevicesItem(int index);
 
 private:

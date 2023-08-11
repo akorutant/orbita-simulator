@@ -7,7 +7,9 @@ QT += quick
 SOURCES += \
         devices.cpp \
         devicesmodel.cpp \
+        earthstarship.cpp \
         main.cpp \
+        planetsstarship.cpp \
         probe.cpp \
         probemodel.cpp \
         stepsactivity.cpp \
@@ -34,6 +36,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     devices.h \
     devicesmodel.h \
+    earthstarship.h \
+    planetsstarship.h \
     probe.h \
     probemodel.h \
     stepsactivity.h \

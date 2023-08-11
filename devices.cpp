@@ -3,7 +3,7 @@
 Devices::Devices(QObject *parent)
     : QObject{parent}
 {
-    mItems.append({1, "test", "TURNOFF", true});
+
 }
 
 QVector<DevicesItem> Devices::items() const
@@ -23,13 +23,12 @@ bool Devices::setDevicesItem(int index, const DevicesItem &item)
     return true;
 }
 
-void Devices::appendDevicesItem()
+void Devices::appendDevicesItem(QString deviceName, QString startState, bool inSafeMode)
 {
     emit preDevicesItemAppended();
 
     DevicesItem item;
-    item.deviceNumber = mItems.size();
-    mItems.append(item);
+    mItems.append({mItems.size(), deviceName, startState, inSafeMode});
 
     emit postDevicesItemAppended();
 }

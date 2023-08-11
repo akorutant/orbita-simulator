@@ -1,6 +1,6 @@
 #include "devicesmodel.h"
 
-#include "devices.h"
+#include "probe.h"
 
 DevicesModel::DevicesModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -15,7 +15,7 @@ int DevicesModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid() || !mList)
         return 0;
 
-    return mList->items().size();
+    return mList->devicesItems().size();
 }
 
 QVariant DevicesModel::data(const QModelIndex &index, int role) const
@@ -23,7 +23,7 @@ QVariant DevicesModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || !mList)
         return QVariant();
 
-    const DevicesItem item = mList->items().at(index.row());
+    const DevicesItem item = mList->devicesItems().at(index.row());
 
     switch (role) {
     case deviceNumberRole:
@@ -46,7 +46,7 @@ bool DevicesModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (!mList)
         return false;
 
-    DevicesItem item = mList->items().at(index.row());
+    DevicesItem item = mList->devicesItems().at(index.row());
     switch (role) {
     case deviceNumberRole:
         item.deviceNumber = value.toInt();
@@ -87,12 +87,12 @@ QHash<int, QByteArray> DevicesModel::roleNames() const
     return names;
 }
 
-Devices *DevicesModel::list() const
+Probe *DevicesModel::list() const
 {
     return mList;
 }
 
-void DevicesModel::setList(Devices *list)
+void DevicesModel::setList(Probe *list)
 {
     beginResetModel();
 
@@ -102,18 +102,18 @@ void DevicesModel::setList(Devices *list)
     mList = list;
 
     if (mList) {
-        connect(mList, &Devices::preDevicesItemAppended, this, [=] () {
-            const int index = mList->items().size();
+        connect(mList, &Probe::preDevicesItemAppended, this, [=] () {
+            const int index = mList->devicesItems().size();
             beginInsertRows(QModelIndex(), index, index);
         });
-        connect(mList, &Devices::postDevicesItemAppended, this, [=] () {
+        connect(mList, &Probe::postDevicesItemAppended, this, [=] () {
             endInsertRows();
         });
 
-        connect(mList, &Devices::preDevicesItemRemoved, this, [=] (int index) {
+        connect(mList, &Probe::preDevicesItemRemoved, this, [=] (int index) {
             beginRemoveRows(QModelIndex(), index, index);
         });
-        connect(mList, &Devices::postDevicesItemRemoved, this, [=] () {
+        connect(mList, &Probe::postDevicesItemRemoved, this, [=] () {
             endRemoveRows();
         });
     }

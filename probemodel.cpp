@@ -91,6 +91,7 @@ QHash<int, QByteArray> ProbeModel::roleNames() const
     names[probeNameRole] = "probeName";
     names[outerRadiusRole] = "outerRadius";
     names[innerRadiusRole] = "innerRadius";
+    names[devicesRole] = "devices";
     names[pythonCodeRole] = "pythonCode";
     names[graphFileRole] = "graphFile";
     return names;
