@@ -28,7 +28,7 @@ ApplicationWindow {
                     width: parent.width
 
                     Text {
-                        text: model.deviceName
+                        text:"Устройство у аппарата " + model.probeName + " это " + model.deviceName
                     }
 
                     MouseArea {
@@ -36,6 +36,34 @@ ApplicationWindow {
                         onClicked: {
                             listViewDevices.currentIndex = index
                         }
+                    }
+                }
+            }
+
+        }
+
+        ListView {
+            id: testView
+            implicitWidth: 250
+            implicitHeight: 250
+            anchors.fill: parent
+            clip: true
+
+            model: ProbeModel {
+                list: probe
+            }
+
+            delegate: RowLayout {
+                width: parent.width
+
+                Text {
+                    text:"Устройства " + model.probeName
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        testView.currentIndex = index
                     }
                 }
             }

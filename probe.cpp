@@ -3,8 +3,7 @@
 Probe::Probe(QObject *parent)
     : QObject{parent}
 {
-    mItems.append({1, "Apollo", 1200, 1500, "python", "file"});
-    mDevicesItems.append({1, "test", "off", true});
+    mItems.append({1, "Apollo", 1200, 1500, {}, "python"});
 }
 
 QVector<ProbeItem> Probe::items() const
@@ -25,12 +24,12 @@ bool Probe::setProbe(int index, const ProbeItem &item)
     return true;
 }
 
-void Probe::appendProbe(QString probeName, int outerRadius, int innerRadius, QString pythonCode, QString graphFile)
+void Probe::appendProbe(QString probeName, int outerRadius, int innerRadius, QString pythonCode)
 {
     emit preProbeAppended();
 
     ProbeItem item;
-    mItems.append({mItems.size(), probeName, outerRadius, innerRadius, pythonCode, graphFile});
+    mItems.append({mItems.size(), probeName, outerRadius, innerRadius, {}, pythonCode});
 
     emit postProbeAppended();
 }
@@ -44,39 +43,20 @@ void Probe::removeProbe(int index)
     emit postProbeRemoved();
 }
 
-QVector<DevicesItem> Probe::devicesItems() const
-{
-    return mDevicesItems;
-}
-
-bool Probe::setDevicesItem(int index, const DevicesItem &item)
-{
-    if (index < 0 || index >= mDevicesItems.size())
-        return false;
-
-    const DevicesItem &olditem = mDevicesItems.at(index);
-    if (item.deviceNumber == olditem.deviceNumber)
-        return false;
-    mDevicesItems[index] = item;
-    return true;
-}
-
-void Probe::appendDevicesItem(QString deviceName, QString startState, bool inSafeMode)
+void Probe::appendDevicesItem(int probeIndex, QString deviceName, QString startState, bool inSafeMode)
 {
     emit preDevicesItemAppended();
 
-    DevicesItem item;
-
-    mDevicesItems.append({mDevicesItems.size(), deviceName, startState, inSafeMode});
+    mItems[probeIndex].devices.append({mItems[probeIndex].devices.size(), deviceName, startState, inSafeMode});
 
     emit postDevicesItemAppended();
 }
 
-void Probe::removeDevicesItem(int index)
+void Probe::removeDevicesItem(int probeIndex, int index)
 {
     emit preDevicesItemRemoved(index);
 
-    mDevicesItems.removeAt(index);
+    mItems[probeIndex].devices.removeAt(index);
 
     emit postDevicesItemRemoved();
 }

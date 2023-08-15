@@ -11,8 +11,8 @@ struct ProbeItem
     QString probeName;
     int outerRadius;
     int innerRadius;
+    QVector<DevicesItem> devices;
     QString pythonCode;
-    QString graphFile;
 };
 
 class Probe : public QObject
@@ -26,13 +26,6 @@ public:
 
     bool setProbe(int index, const ProbeItem &item);
 
-
-    QVector<DevicesItem> devicesItems() const;
-
-    bool setDevicesItem(int index, const DevicesItem &item);
-
-    const Devices &probeDevices() const;
-
 signals:
    void preProbeAppended();
    void postProbeAppended();
@@ -45,16 +38,14 @@ signals:
    void postDevicesItemRemoved();
 
 public slots:
-    void appendProbe(QString probeName, int outerRadius, int innerRadius, QString pythonCode, QString graphFile);
+    void appendProbe(QString probeName, int outerRadius, int innerRadius, QString pythonCode );
     void removeProbe(int index);
 
-    void appendDevicesItem(QString deviceName, QString startState, bool inSafeMode);
-    void removeDevicesItem(int index);
+    void appendDevicesItem(int probeIndex, QString deviceName, QString startState, bool inSafeMode);
+    void removeDevicesItem(int probeIndex,int index);
 
 private:
     QVector<ProbeItem> mItems;
-    QVector<DevicesItem> mDevicesItems;
-
 };
 
 

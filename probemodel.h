@@ -19,8 +19,7 @@ public:
         probeNameRole,
         outerRadiusRole,
         innerRadiusRole,
-        pythonCodeRole,
-        graphFileRole
+        pythonCodeRole
     };
 
     // Basic functionality:
