@@ -10,8 +10,8 @@ SOURCES += \
         main.cpp \
         probe.cpp \
         probemodel.cpp \
-        stepsactivity.cpp \
-        stepslanding.cpp
+        stepsactivitymodel.cpp \
+        stepsitems.cpp
 
 RESOURCES += qml.qrc
 
@@ -36,5 +36,5 @@ HEADERS += \
     devicesmodel.h \
     probe.h \
     probemodel.h \
-    stepsactivity.h \
-    stepslanding.h
+    stepsactivitymodel.h \
+    stepsitems.h

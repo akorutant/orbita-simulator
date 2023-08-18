@@ -1,14 +1,14 @@
-#ifndef STEPSACTIVITY_H
-#define STEPSACTIVITY_H
+#ifndef STEPSACTIVITYMODEL_H
+#define STEPSACTIVITYMODEL_H
 
 #include <QAbstractListModel>
 
-class StepsActivity : public QAbstractListModel
+class StepsActivityModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    explicit StepsActivity(QObject *parent = nullptr);
+    explicit StepsActivityModel(QObject *parent = nullptr);
 
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -24,4 +24,4 @@ public:
 private:
 };
 
-#endif // STEPSACTIVITY_H
+#endif // STEPSACTIVITYMODEL_H

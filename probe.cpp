@@ -3,7 +3,7 @@
 Probe::Probe(QObject *parent)
     : QObject{parent}
 {
-    mItems.append({1, "Apollo", 1200, 1500, {}, "python"});
+    mItems.append({1, "Apollo", 1200, 1500, {}, {}, {}, "python"});
 }
 
 QVector<ProbeItem> Probe::items() const
@@ -28,8 +28,7 @@ void Probe::appendProbe(QString probeName, int outerRadius, int innerRadius, QSt
 {
     emit preProbeAppended();
 
-    ProbeItem item;
-    mItems.append({mItems.size(), probeName, outerRadius, innerRadius, {}, pythonCode});
+    mItems.append({mItems.size(), probeName, outerRadius, innerRadius, {}, {},{},  pythonCode});
 
     emit postProbeAppended();
 }
@@ -59,6 +58,31 @@ void Probe::removeDevicesItem(int probeIndex, int index)
     mItems[probeIndex].devices.removeAt(index);
 
     emit postDevicesItemRemoved();
+}
+
+void Probe::appendActivityAndLandingItem(int probeIndex, bool typeCommand, double time, QString device, QString command, QString argument)
+{
+    emit preActivityAndLandingItemAppended();
+
+    if (typeCommand)
+        mItems[probeIndex].stepsActivity.append({mItems[probeIndex].stepsActivity.size(), time, device, command, argument});
+    else
+        mItems[probeIndex].stepsLanding.append({mItems[probeIndex].stepsActivity.size(), time, device, command, argument});
+
+    emit postActivityAndLandingItemAppended();
+}
+
+void Probe::removeActivityAndLandingItem(int probeIndex, bool typeCommand, int index)
+{
+    emit preActivityAndLandingItemRemoved(index);
+
+    if (typeCommand)
+        mItems[probeIndex].stepsActivity.removeAt(index);
+    else
+        mItems[probeIndex].stepsLanding.removeAt(index);
+
+    emit postActivityAndLandingItemRemoved();
+
 }
 
 

@@ -21,14 +21,14 @@ ApplicationWindow {
                 clip: true
 
                 model: DevicesModel {
-                    list: probe
+                    list: devices
                 }
 
                 delegate: RowLayout {
                     width: parent.width
 
                     Text {
-                        text:"Устройство у аппарата " + model.probeName + " это " + model.deviceName
+                        text: " это " + model.deviceName
                     }
 
                     MouseArea {
@@ -53,11 +53,11 @@ ApplicationWindow {
                 list: probe
             }
 
-            delegate: RowLayout {
+            delegate: Item {
                 width: parent.width
 
                 Text {
-                    text:"Устройства " + model.probeName
+                    text:"Устройства " + probe
                 }
 
                 MouseArea {
@@ -72,12 +72,12 @@ ApplicationWindow {
         RowLayout {
             Button {
                 text: qsTr("Add new item")
-                onClicked: probe.appendDevicesItem("testdsadasd", "te231st", false)
+                onClicked: devices.appendDevicesItem(probe, 0, "testdsadasd", "te231st", false)
                 Layout.fillWidth: true
             }
             Button {
                 text: qsTr("Remove completed")
-                onClicked: probe.removeDevicesItem(0)
+                onClicked: devices.removeDevicesItem(probe, 0, 0)
                 Layout.fillWidth: true
             }
         }

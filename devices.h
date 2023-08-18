@@ -3,6 +3,9 @@
 
 #include <QObject>
 #include <QVector>
+#include "probe.h"
+
+class Probe;
 
 struct DevicesItem
 {
@@ -30,8 +33,8 @@ signals:
     void postDevicesItemRemoved();
 
 public slots:
-    void appendDevicesItem(QString deviceName, QString startState, bool inSafeMode);
-    void removeDevicesItem(int index);
+    void appendDevicesItem(Probe* probe, int probeIndex, QString deviceName, QString startState, bool inSafeMode);
+    void removeDevicesItem(Probe* probe, int probeIndex, int index);
 
 private:
     QVector<DevicesItem> mItems;

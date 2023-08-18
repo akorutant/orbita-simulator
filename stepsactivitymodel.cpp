@@ -1,11 +1,11 @@
-#include "stepsactivity.h"
+#include "stepsactivitymodel.h"
 
-StepsActivity::StepsActivity(QObject *parent)
+StepsActivityModel::StepsActivityModel(QObject *parent)
     : QAbstractListModel(parent)
 {
 }
 
-int StepsActivity::rowCount(const QModelIndex &parent) const
+int StepsActivityModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
@@ -15,7 +15,7 @@ int StepsActivity::rowCount(const QModelIndex &parent) const
     // FIXME: Implement me!
 }
 
-QVariant StepsActivity::data(const QModelIndex &index, int role) const
+QVariant StepsActivityModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -24,7 +24,7 @@ QVariant StepsActivity::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool StepsActivity::setData(const QModelIndex &index, const QVariant &value, int role)
+bool StepsActivityModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (data(index, role) != value) {
         // FIXME: Implement me!
@@ -34,7 +34,7 @@ bool StepsActivity::setData(const QModelIndex &index, const QVariant &value, int
     return false;
 }
 
-Qt::ItemFlags StepsActivity::flags(const QModelIndex &index) const
+Qt::ItemFlags StepsActivityModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;

@@ -23,21 +23,23 @@ bool Devices::setDevicesItem(int index, const DevicesItem &item)
     return true;
 }
 
-void Devices::appendDevicesItem(QString deviceName, QString startState, bool inSafeMode)
+void Devices::appendDevicesItem(Probe* probe, int probeIndex, QString deviceName, QString startState, bool inSafeMode)
 {
     emit preDevicesItemAppended();
 
-    DevicesItem item;
     mItems.append({mItems.size(), deviceName, startState, inSafeMode});
+    probe->appendDevicesItem(probeIndex, deviceName, startState, inSafeMode);
 
     emit postDevicesItemAppended();
+
 }
 
-void Devices::removeDevicesItem(int index)
+void Devices::removeDevicesItem(Probe* probe, int probeIndex, int index)
 {
     emit preDevicesItemRemoved(index);
 
     mItems.removeAt(index);
+    probe->removeDevicesItem(probeIndex, index);
 
     emit postDevicesItemRemoved();
 }

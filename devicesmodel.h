@@ -3,12 +3,12 @@
 
 #include <QAbstractListModel>
 
-class Probe;
+class Devices;
 
 class DevicesModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(Probe *list READ list WRITE setList)
+    Q_PROPERTY(Devices *list READ list WRITE setList)
 
 public:
     explicit DevicesModel(QObject *parent = nullptr);
@@ -33,12 +33,12 @@ public:
 
     virtual QHash<int, QByteArray> roleNames() const override;
 
-    Probe *list() const;
-    void setList(Probe *list);
+    Devices *list() const;
+    void setList(Devices *list);
 
 
 private:
-    Probe *mList;
+    Devices *mList;
 };
 
 #endif // DEVICESMODEL_H
