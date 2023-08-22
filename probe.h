@@ -49,7 +49,7 @@ signals:
    void postActivityAndLandingItemRemoved();
 
 public slots:
-    void appendProbe(QString probeName, int outerRadius, int innerRadius, QString pythonCode );
+    void appendProbe(QString probeName, int outerRadius, int innerRadius, QString pythonCode);
     void removeProbe(int index);
 
     void appendDevicesItem(int probeIndex, QString deviceName, QString startState, bool inSafeMode);

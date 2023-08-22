@@ -4,6 +4,8 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import ProbeModel 1.0
+import DevicesModel 1.0
+import StepsActivityModel 1.0
 
 
 ApplicationWindow  {
@@ -25,12 +27,6 @@ ApplicationWindow  {
     property bool showPlanetsElems: false
     property bool showPythonArea: false
     property bool showDiagrammButton: false
-    property ListModel probesPlanets: ListModel {}
-    property ListModel probesEarth: ListModel {}
-    property ListModel showDevices: ListModel {}
-    property ListModel showStepsLanding: ListModel {}
-    property ListModel showStepsActivity: ListModel {}
-    property var probe: undefined
     property bool whatIsWindow: false
     property bool typeMission: true
 
@@ -52,6 +48,9 @@ ApplicationWindow  {
                 anchors.bottomMargin: 158
                 clip: true
                 enabled: itemsEnabled
+                model: ProbeModel {
+                    list: probe
+                }
 
                 ScrollBar.vertical: ScrollBar {
                     id: probesScrollBar
@@ -78,23 +77,9 @@ ApplicationWindow  {
                             anchors.fill: parent
                             onClicked: {
                                 listViewProbes.currentIndex = index
-                                if (typeMission) {
-                                    if (probesPlanets.count)
-                                        probe = probesPlanets.get(listViewProbes.currentIndex)
-                                        probeName.text = `${probe.name}`
-                                        firstNumber.text = `${probe.outerRadius}`
-                                        secondNumber.text = `${probe.innerRadius}`
-                                        showDevices = probe.devices
-                                        showStepsLanding = probe.stepsLanding
-                                        showStepsActivity = probe.stepsActivity
-                                } else {
-                                    if (probesEarth.count)
-                                        probe = probesEarth.get(listViewProbes.currentIndex)
-                                        probeName.text = `${probe.name}`
-                                        firstNumber.text = `${probe.outerRadius}`
-                                        secondNumber.text = `${probe.innerRadius}`
-                                        showDevices = probe.devices
-                                }
+//                                if (typeMission) {
+//                                } else {
+//                                }
 
                             }
                         }
@@ -106,7 +91,7 @@ ApplicationWindow  {
                         anchors.topMargin: 15
                         Text {
 
-                            text: index >= 0 && index < listViewProbes.count ? '<b>Аппарат:</b> ' + model.name : ""
+                            text: index >= 0 && index < listViewProbes.count ? '<b>Аппарат:</b> ' + model.probeName : ""
                         }
                     }
                 }
@@ -135,38 +120,23 @@ ApplicationWindow  {
                 enabled: false
 
                 onClicked: {
-                    if (typeMission) {
-                        probesPlanets.append({
-                                          name: `probe`,
-                                          number: probesPlanets.count,
-                                          outerRadius: '0',
-                                          innerRadius: '0',
-                                          devices: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
-                                          stepsActivity: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
-                                          stepsLanding: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
-                                          pythonCode: ""
-                                             })
+//                    if (typeMission) {
+                        probe.appendProbe("probe", 0, 0, "")
+//                    } else {
+//                        probesEarth.append({
+//                                          name: `probe`,
+//                                          number: probesPlanets.count,
+//                                          outerRadius: '0',
+//                                          innerRadius: '0',
+//                                          devices: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
+//                                          pythonCode: ""
+//                                           })
+//                        listViewProbes.model = probesEarth
+//                        listViewProbes.currentIndex = probesEarth.count - 1
+//                        probe = probesEarth.get(listViewProbes.currentIndex)
+//                    }
 
-                        listViewProbes.model = probesPlanets
-                        listViewProbes.currentIndex = probesPlanets.count - 1
-                        probe = probesPlanets.get(listViewProbes.currentIndex)
-                        showStepsLanding = probe.stepsLanding
-                        showStepsActivity = probe.stepsActivity
-                    } else {
-                        probesEarth.append({
-                                          name: `probe`,
-                                          number: probesPlanets.count,
-                                          outerRadius: '0',
-                                          innerRadius: '0',
-                                          devices: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
-                                          pythonCode: ""
-                                           })
-                        listViewProbes.model = probesEarth
-                        listViewProbes.currentIndex = probesEarth.count - 1
-                        probe = probesEarth.get(listViewProbes.currentIndex)
-                    }
-
-                    probeName.text = `${probe.name}`
+                    probeName.text = `${probe.probeName}`
                     firstNumber.text = `${probe.outerRadius}`
                     secondNumber.text = `${probe.innerRadius}`
                     showDevices = probe.devices
@@ -325,7 +295,9 @@ ApplicationWindow  {
                             clip: true
                             enabled: itemsEnabled
                             visible: showPlanetsDevices
-                            model: showDevices
+                            model: DevicesModel {
+                                list: devices
+                            }
 
 
 
@@ -449,7 +421,9 @@ ApplicationWindow  {
                                     clip: true
                                     enabled: itemsEnabled
                                     visible: showPlanetsElems
-                                    model: showStepsLanding
+                                    model: StepsActivityModel {
+                                        list: stepsActivityAndLanding
+                                    }
 
 
                                     ScrollBar.vertical: ScrollBar {
@@ -542,7 +516,9 @@ ApplicationWindow  {
                                         clip: true
                                         enabled: itemsEnabled
                                         visible: showPlanetsElems
-                                        model: showStepsActivity
+                                        model: StepsActivityModel {
+                                            list: stepsActivityAndLanding
+                                        }
 
 
                                         ScrollBar.vertical: ScrollBar {
@@ -638,7 +614,7 @@ ApplicationWindow  {
                         id: pythonCodeTextArea
                         anchors.fill: parent
                         enabled: itemsEnabled
-                        text: probe ? probe.pythonCode : ""
+                        text: ""
 
                     }
                 }

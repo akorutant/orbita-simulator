@@ -73,20 +73,13 @@ Dialog  {
                     probeName.text = ""
                     firstNumber.text = ""
                     secondNumber.text = ""
-                    showDevices = clear
 
                     if (missonSelect.currentText === "Планеты") {
-                        listViewProbes.model = probesPlanets
-
-                        if (probesPlanets.get(probesPlanets.currentIndex)) {
-                            listViewProbes.currentIndex = probesPlanets.count - 1
-                            probe = probesPlanets.get(listViewProbes.currentIndex)
-                            showStepsLanding = probe.stepsLanding
-                            showStepsActivity = probe.stepsActivity
-                            probeName.text = `${probe.name}`
+                        if (true) {
+                            listViewProbes.currentIndex = 0
+                            probeName.text = `${probe.probeName}`
                             firstNumber.text = `${probe.outerRadius}`
                             secondNumber.text = `${probe.innerRadius}`
-                            showDevices = probe.devices
                         } else {
                             itemsEnabled = false
                         }

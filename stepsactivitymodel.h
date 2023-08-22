@@ -9,6 +9,7 @@ class StepsActivityAndLanding;
 class StepsActivityModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(StepsActivityAndLanding *list READ list WRITE setList)
 
 public:
     explicit StepsActivityModel(QObject *parent = nullptr);
