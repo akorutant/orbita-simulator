@@ -11,7 +11,8 @@ SOURCES += \
         probe.cpp \
         probemodel.cpp \
         stepsactivitymodel.cpp \
-        stepsitems.cpp
+        stepsitems.cpp \
+        stepslandingmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -37,4 +38,5 @@ HEADERS += \
     probe.h \
     probemodel.h \
     stepsactivitymodel.h \
-    stepsitems.h
+    stepsitems.h \
+    stepslandingmodel.h

@@ -32,7 +32,6 @@ void StepsActivityAndLanding::appendItem(Probe* probe, bool typeCommand, int pro
         mActivityItems.append({mActivityItems.size(), time, device, command, argument});
     else
         mLandingItems.append({mLandingItems.size(), time, device, command, argument});
-    \
 
     probe->appendActivityAndLandingItem(probeIndex, typeCommand, time, device, command, argument);
 

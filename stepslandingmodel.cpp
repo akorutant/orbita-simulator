@@ -1,26 +1,26 @@
-#include "stepsactivitymodel.h"
+#include "stepslandingmodel.h"
 
-StepsActivityModel::StepsActivityModel(QObject *parent)
+StepsLandingModel::StepsLandingModel(QObject *parent)
     : QAbstractListModel(parent)
     , mList(nullptr)
 {
 }
 
-int StepsActivityModel::rowCount(const QModelIndex &parent) const
+int StepsLandingModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid() || !mList)
         return 0;
 
-    return mList->activityItems().size();
+    return mList->landingItems().size();
 }
 
-QVariant StepsActivityModel::data(const QModelIndex &index, int role) const
+QVariant StepsLandingModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-    const StepsActivityAndLandingItem item = mList->activityItems().at(index.row());
+    const StepsActivityAndLandingItem item = mList->landingItems().at(index.row());
     switch (role) {
     case idRole:
         return QVariant(item.id);
@@ -37,13 +37,13 @@ QVariant StepsActivityModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool StepsActivityModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool StepsLandingModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (!mList) {
         return false;
     }
 
-    StepsActivityAndLandingItem item = mList->activityItems().at(index.row());
+    StepsActivityAndLandingItem item = mList->landingItems().at(index.row());
 
     switch (role) {
     case idRole:
@@ -63,14 +63,14 @@ bool StepsActivityModel::setData(const QModelIndex &index, const QVariant &value
         break;
     }
 
-    if (mList->setActivityItem(index.row(), item)) {
+    if (mList->setLandingItems(index.row(), item)) {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
     return false;
 }
 
-Qt::ItemFlags StepsActivityModel::flags(const QModelIndex &index) const
+Qt::ItemFlags StepsLandingModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
@@ -78,7 +78,7 @@ Qt::ItemFlags StepsActivityModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEditable;
 }
 
-QHash<int, QByteArray> StepsActivityModel::roleNames() const
+QHash<int, QByteArray> StepsLandingModel::roleNames() const
 {
     QHash<int, QByteArray> names;
     names[idRole] = "id";
@@ -89,12 +89,12 @@ QHash<int, QByteArray> StepsActivityModel::roleNames() const
     return names;
 }
 
-StepsActivityAndLanding *StepsActivityModel::list() const
+StepsActivityAndLanding *StepsLandingModel::list() const
 {
     return mList;
 }
 
-void StepsActivityModel::setList(StepsActivityAndLanding *list)
+void StepsLandingModel::setList(StepsActivityAndLanding *list)
 {
     beginResetModel();
 
@@ -105,7 +105,7 @@ void StepsActivityModel::setList(StepsActivityAndLanding *list)
 
     if (mList) {
         connect(mList, &StepsActivityAndLanding::preItemAppended, this, [=] () {
-            const int index = mList->activityItems().size();
+            const int index = mList->landingItems().size();
             beginInsertRows(QModelIndex(), index, index);
         });
         connect(mList, &StepsActivityAndLanding::postItemAppended, this, [=] () {

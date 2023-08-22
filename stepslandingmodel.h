@@ -1,17 +1,17 @@
-#ifndef STEPSACTIVITYMODEL_H
-#define STEPSACTIVITYMODEL_H
+#ifndef STEPSLANDINGMODEL_H
+#define STEPSLANDINGMODEL_H
 
 #include <QAbstractListModel>
 #include "stepsitems.h"
 
 class StepsActivityAndLanding;
 
-class StepsActivityModel : public QAbstractListModel
+class StepsLandingModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    explicit StepsActivityModel(QObject *parent = nullptr);
+    explicit StepsLandingModel(QObject *parent = nullptr);
 
     enum {
         idRole = Qt::UserRole,
@@ -41,4 +41,4 @@ private:
     StepsActivityAndLanding *mList;
 };
 
-#endif // STEPSACTIVITYMODEL_H
+#endif // STEPSLANDINGMODEL_H
