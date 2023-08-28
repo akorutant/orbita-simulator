@@ -58,6 +58,8 @@ public slots:
     void appendActivityAndLandingItem(int probeIndex, bool typCommand, double time, QString device, QString command, QString argument);
     void removeActivityAndLandingItem(int probeIndex, bool typeCommand, int index);
 
+    int size();
+
 private:
     QVector<ProbeItem> mItems;
 };

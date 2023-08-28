@@ -4,7 +4,10 @@
 #include <QObject>
 #include <QVector>
 #include "probe.h"
+#include "devices.h"
 
+struct DevicesItem;
+struct ProbeItem;
 class Probe;
 
 struct StepsActivityAndLandingItem {
@@ -14,6 +17,7 @@ struct StepsActivityAndLandingItem {
     QString command;
     QString argument;
 };
+
 
 class StepsActivityAndLanding : public QObject
 {

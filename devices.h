@@ -4,7 +4,10 @@
 #include <QObject>
 #include <QVector>
 #include "probe.h"
+#include "stepsitems.h"
 
+struct StepsActivityAndLandingItem;
+struct ProbeItem;
 class Probe;
 
 struct DevicesItem
@@ -35,6 +38,8 @@ signals:
 public slots:
     void appendDevicesItem(Probe* probe, int probeIndex, QString deviceName, QString startState, bool inSafeMode);
     void removeDevicesItem(Probe* probe, int probeIndex, int index);
+
+    bool changeDevices(Probe* probe, int probeIndex);
 
 private:
     QVector<DevicesItem> mItems;

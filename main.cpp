@@ -12,7 +12,6 @@
 #include "probemodel.h"
 #include "stepsactivitymodel.h"
 
-
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -40,15 +39,13 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<StepsActivityAndLanding>("StepsActivityAndLanding", 1, 0, "StepsActivityAndLanding",
                                         QStringLiteral("StepsActivityAndLanding should not be created in QML."));
 
-
-
-    Probe probe;
-    Devices devices;
+    Probe probes;
+    Devices modelDevices;
     StepsActivityAndLanding stepsActivityAndLanding;
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty(QStringLiteral("probe"), &probe);
-    engine.rootContext()->setContextProperty(QStringLiteral("devices"), &devices);
+    engine.rootContext()->setContextProperty(QStringLiteral("probes"), &probes);
+    engine.rootContext()->setContextProperty(QStringLiteral("modelDevices"), &modelDevices);
     engine.rootContext()->setContextProperty(QStringLiteral("stepsActivityAndLanding"), &stepsActivityAndLanding);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));

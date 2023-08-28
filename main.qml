@@ -29,6 +29,7 @@ ApplicationWindow  {
     property bool showDiagrammButton: false
     property bool whatIsWindow: false
     property bool typeMission: true
+    property var currentProbe: undefined
 
     RowLayout {
         anchors.fill: parent
@@ -49,7 +50,7 @@ ApplicationWindow  {
                 clip: true
                 enabled: itemsEnabled
                 model: ProbeModel {
-                    list: probe
+                    list: probes
                 }
 
                 ScrollBar.vertical: ScrollBar {
@@ -63,6 +64,8 @@ ApplicationWindow  {
                 }
 
                 delegate: Item {
+                    property variant probesModelData: model
+
                     width: listViewProbes.width
                     height: 50
 
@@ -77,10 +80,12 @@ ApplicationWindow  {
                             anchors.fill: parent
                             onClicked: {
                                 listViewProbes.currentIndex = index
-//                                if (typeMission) {
-//                                } else {
-//                                }
+                                currentProbe = listViewProbes.currentItem.probesModelData
 
+                                modelDevices.changeDevices(probes, index)
+                                probeNameText.text = `${model.probeName}`
+                                firstNumber.text = `${model.outerRadius}`
+                                secondNumber.text = `${model.innerRadius}`
                             }
                         }
                     }
@@ -107,7 +112,8 @@ ApplicationWindow  {
                 anchors.bottomMargin: 125
                 onClicked: {
                     missionDialog.open()
-
+                    if (missionDialog.Accepted)
+                        itemsEnabled = true
                 }
             }
 
@@ -120,26 +126,13 @@ ApplicationWindow  {
                 enabled: false
 
                 onClicked: {
-//                    if (typeMission) {
-                        probe.appendProbe("probe", 0, 0, "")
-//                    } else {
-//                        probesEarth.append({
-//                                          name: `probe`,
-//                                          number: probesPlanets.count,
-//                                          outerRadius: '0',
-//                                          innerRadius: '0',
-//                                          devices: Qt.createQmlObject("import QtQml.Models 2.14; ListModel { }", mainWindow),
-//                                          pythonCode: ""
-//                                           })
-//                        listViewProbes.model = probesEarth
-//                        listViewProbes.currentIndex = probesEarth.count - 1
-//                        probe = probesEarth.get(listViewProbes.currentIndex)
-//                    }
+                    probes.appendProbe("probe", 0, 0, "")
+                    listViewProbes.currentIndex = 0
+                    currentProbe = listViewProbes.currentItem.probesModelData
 
-                    probeName.text = `${probe.probeName}`
-                    firstNumber.text = `${probe.outerRadius}`
-                    secondNumber.text = `${probe.innerRadius}`
-                    showDevices = probe.devices
+                    probeNameText.text = `${currentProbe.probeName}`
+                    firstNumber.text = `${currentProbe.outerRadius}`
+                    secondNumber.text = `${currentProbe.innerRadius}`
                     itemsEnabled = true
                 }
             }
@@ -185,26 +178,26 @@ ApplicationWindow  {
                 RowLayout {
                     Layout.preferredHeight: 20
                     Text {
-                        height: probeName.implicitHeight
+                        height: probeNameText.implicitHeight
                         text: "Название:"
                     }
                     TextInput {
-                        id: probeName
+                        id: probeNameText
                         width: 200
                         height: 10
                         enabled: itemsEnabled
                         onTextChanged: {
-                            if (probeName.text.length > 30) {
-                                probeName.text = probeName.text.substring(0, 30);
+                            if (probeNameText.text.length > 30) {
+                                probeNameText.text = probeNameText.text.substring(0, 30);
                             }
                         }
 
                         property string placeholderText: "Введите название..."
 
                         Text {
-                            text: probeName.placeholderText
+                            text: probeNameText.placeholderText
                             color: "#aaa"
-                            visible: !probeName.text
+                            visible: !probeNameText.text
                         }
                     }
                 }
@@ -296,7 +289,7 @@ ApplicationWindow  {
                             enabled: itemsEnabled
                             visible: showPlanetsDevices
                             model: DevicesModel {
-                                list: devices
+                                list: modelDevices
                             }
 
 
@@ -334,9 +327,9 @@ ApplicationWindow  {
                                     anchors.leftMargin: 5
                                     anchors.topMargin: 15
 
-                                    Text { text: index >= 0 && index < listViewDevices.count && model.number ? '<b>Номер:</b> ' + model.number : "<b>Номер:</b> None" }
+                                    Text { text: index >= 0 && index < listViewDevices.count && model.deviceNumber ? '<b>Номер:</b> ' + model.deviceNumber : "<b>Номер:</b> None" }
 
-                                    Text { text: index >= 0 && index < listViewDevices.count && model.name ? '<b>Тип:</b> ' + model.name : "<b>Название:</b> None" }
+                                    Text { text: index >= 0 && index < listViewDevices.count && model.deviceName ? '<b>Тип:</b> ' + model.deviceName : "<b>Название:</b> None" }
 
                                     Text { text: index >= 0 && index < listViewDevices.count && model.startState ? '<b>Начальное состояние:</b> ' + model.startState : "<b>Начальное состояние:</b> None" }
 
@@ -376,12 +369,12 @@ ApplicationWindow  {
                                 text: "Удалить"
                                 enabled: itemsEnabled
                                 onClicked: {
-                                    if (probe.devices.count) {
-                                        successDialog.message = `Успешно удалено устройство ${probe.devices.get(listViewDevices.currentIndex).name}`
-                                        probe.devices.remove(listViewDevices.currentIndex)
-                                        if (probe.devices.count >= 0)
-                                            for(var i = 0; i < probe.devices.rowCount(); i++) {
-                                                probe.devices.set(i, {number: probe.devices.get(i).number === '1' ? '1' : `${probe.devices.get(i).number - 1}`})
+                                    if (currentProbe.devices.count) {
+                                        successDialog.message = `Успешно удалено устройство ${currentProbe.devices.get(listViewDevices.currentIndex).name}`
+                                        currentProbe.remove(listViewDevices.currentIndex)
+                                        if (currentProbe.devices.count >= 0)
+                                            for(var i = 0; i < currentProbe.devices.rowCount(); i++) {
+                                                currentProbe.devices.set(i, {number: currentProbe.devices.get(i).number === '1' ? '1' : `${currentProbe.devices.get(i).number - 1}`})
                                             }
                                         successDialog.open()
                                     }
@@ -493,7 +486,7 @@ ApplicationWindow  {
                                         onClicked: {
                                             if (stepsLanding.count) {
                                                 successDialog.message = "Успшено удалено"
-                                                probe.stepsLanding.remove(listViewStepsLanding.index)}
+                                                currentProbe.stepsLanding.remove(listViewStepsLanding.index)}
                                                 successDialog.open()
                                             }
 
@@ -588,7 +581,7 @@ ApplicationWindow  {
                                             onClicked: {
                                                 if (stepsActivity.count) {
                                                     successDialog.message = "Успешно удалено"
-                                                    probe.stepsActivity.remove(listViewStepsPlanetActivity.index)
+                                                    currentProbe.stepsActivity.remove(listViewStepsPlanetActivity.index)
                                                     successDialog.open()
                                                 }
 
@@ -656,11 +649,11 @@ ApplicationWindow  {
                             probesPlanets.set(listViewProbes.currentIndex,
                                        {
                                            name: probeName.text,
-                                           number: probe.number,
+                                           number: currentProbe.number,
                                            outerRadius: firstNumber.text,
                                            innerRadius: secondNumber.text,
-                                           devices: probe.devices,
-                                           stepsActivity: probe.stepsActivity,
+                                           devices: currentProbe.devices,
+                                           stepsActivity: currentProbe.stepsActivity,
                                            stepsLanding: probe.stepsLanding,
                                            pythonCode: pythonCodeTextArea.text
                                        })

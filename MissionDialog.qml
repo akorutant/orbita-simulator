@@ -70,16 +70,16 @@ Dialog  {
                 Layout.preferredWidth: parent.width * 0.5
                 text: "ОК"
                 onClicked: {
-                    probeName.text = ""
+                    probeNameText.text = ""
                     firstNumber.text = ""
                     secondNumber.text = ""
 
                     if (missonSelect.currentText === "Планеты") {
-                        if (true) {
+                        if (currentProbe) {
                             listViewProbes.currentIndex = 0
-                            probeName.text = `${probe.probeName}`
-                            firstNumber.text = `${probe.outerRadius}`
-                            secondNumber.text = `${probe.innerRadius}`
+                            probeNameText.text = `${currentProbe.probeName}`
+                            firstNumber.text = `${currentProbe.outerRadius}`
+                            secondNumber.text = `${currentProbe.innerRadius}`
                         } else {
                             itemsEnabled = false
                         }
@@ -93,7 +93,7 @@ Dialog  {
                         if (probesEarth.get(probesEarth.currentIndex)) {
                             listViewProbes.currentIndex = probesEarth.count - 1
                             probe = probesEarth.get(listViewProbes.currentIndex)
-                            probeName.text = `${probe.name}`
+                            probeNameText.text = `${probe.name}`
                             firstNumber.text = `${probe.outerRadius}`
                             secondNumber.text = `${probe.innerRadius}`
                             showDevices = probe.devices
