@@ -80,6 +80,7 @@ Dialog  {
                             probeNameText.text = `${currentProbe.probeName}`
                             firstNumber.text = `${currentProbe.outerRadius}`
                             secondNumber.text = `${currentProbe.innerRadius}`
+                            itemsEnabled = true
                         } else {
                             itemsEnabled = false
                         }
@@ -96,7 +97,7 @@ Dialog  {
                             probeNameText.text = `${probe.name}`
                             firstNumber.text = `${probe.outerRadius}`
                             secondNumber.text = `${probe.innerRadius}`
-                            showDevices = probe.devices
+                            itemsEnabled = true
                         } else {
                             itemsEnabled = false
                         }

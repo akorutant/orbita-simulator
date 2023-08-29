@@ -106,13 +106,14 @@ Dialog  {
             Layout.row: 4
             text: "ОК"
             onClicked: {
-                probe.devices.append({
-                                         name: deviceBox.currentValue,
-                                         number: `${probe.devices.count === 0 ? 1 : probe.devices.count + 1}`,
-                                         startState: startStateBox.currentValue,
-                                         inSafeMode: safeModeBox.currentIndex === 1 ? false : true,
-                                     })
-                listViewDevices.currentIndex = probe.devices.count - 1
+                modelDevices.appendDevicesItem(
+                            probes,
+                            listViewProbes.currentIndex,
+                            deviceBox.currentValue,
+                            startStateBox.currentValue,
+                            safeModeBox.currentIndex === 1 ? false : true)
+
+                listViewDevices.currentIndex = modelDevices.size() - 1
 
                 deviceDialog.accepted()
                 deviceDialog.close()
@@ -129,6 +130,7 @@ Dialog  {
             Layout.row: 4
             text: "Отмена"
             onClicked: {
+
                 deviceDialog.rejected()
                 deviceDialog.close()
             }

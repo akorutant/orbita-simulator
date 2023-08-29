@@ -3,7 +3,7 @@
 Devices::Devices(QObject *parent)
     : QObject{parent}
 {
-    mItems.append({1, "test", "turnoff", true});
+
 }
 
 QVector<DevicesItem> Devices::items() const
@@ -44,16 +44,30 @@ void Devices::removeDevicesItem(Probe* probe, int probeIndex, int index)
     emit postDevicesItemRemoved();
 }
 
-bool Devices::changeDevices(Probe *probe, int probeIndex)
+void Devices::changeDevices(Probe *probe, int probeIndex)
 {
-    emit preDevicesItemAppended();
 
-    mItems.clear();
-    mItems = probe->items()[probeIndex].devices;
-    if (mItems.size())
-        return true;
 
-    return false;
+    for (int i = 0; i < mItems.size(); i++) {
+        emit preDevicesItemRemoved(i);
+        mItems.removeAt(i);
+        emit postDevicesItemRemoved();
 
-    emit postDevicesItemAppended();
+    };
+
+    for (int i = 0; i < probe->items()[probeIndex].devices.size(); i++) {
+        emit preDevicesItemAppended();
+
+        mItems.append({mItems.size(), probe->items()[probeIndex].devices[i].deviceName,
+                       probe->items()[probeIndex].devices[i].startState,
+                       probe->items()[probeIndex].devices[i].inSafeMode
+                      });
+
+        emit postDevicesItemAppended();
+    }
+}
+
+int Devices::size()
+{
+    return mItems.size();
 }

@@ -4,7 +4,6 @@ Probe::Probe(QObject *parent)
     : QObject{parent}
 {
     mItems.append({1, "Apollo", 1200, 1500, {}, {}, {}, "python"});
-    mItems[0].devices.append({1, "test", "test", true});
     mItems.append({2, "Apollo2", 1200, 1500, {}, {}, {}, "python"});
 }
 

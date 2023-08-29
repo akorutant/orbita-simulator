@@ -82,10 +82,10 @@ ApplicationWindow  {
                                 listViewProbes.currentIndex = index
                                 currentProbe = listViewProbes.currentItem.probesModelData
 
-                                modelDevices.changeDevices(probes, index)
                                 probeNameText.text = `${model.probeName}`
                                 firstNumber.text = `${model.outerRadius}`
                                 secondNumber.text = `${model.innerRadius}`
+                                modelDevices.changeDevices(probes, index)
                             }
                         }
                     }
@@ -111,9 +111,9 @@ ApplicationWindow  {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 125
                 onClicked: {
+                    listViewProbes.currentIndex = 0
+                    currentProbe = listViewProbes.currentItem.probesModelData
                     missionDialog.open()
-                    if (missionDialog.Accepted)
-                        itemsEnabled = true
                 }
             }
 
@@ -127,7 +127,7 @@ ApplicationWindow  {
 
                 onClicked: {
                     probes.appendProbe("probe", 0, 0, "")
-                    listViewProbes.currentIndex = 0
+                    listViewProbes.currentIndex = probes.size() - 1
                     currentProbe = listViewProbes.currentItem.probesModelData
 
                     probeNameText.text = `${currentProbe.probeName}`
@@ -327,7 +327,7 @@ ApplicationWindow  {
                                     anchors.leftMargin: 5
                                     anchors.topMargin: 15
 
-                                    Text { text: index >= 0 && index < listViewDevices.count && model.deviceNumber ? '<b>Номер:</b> ' + model.deviceNumber : "<b>Номер:</b> None" }
+                                    Text { text: '<b>Номер:</b> ' + model.deviceNumber  }
 
                                     Text { text: index >= 0 && index < listViewDevices.count && model.deviceName ? '<b>Тип:</b> ' + model.deviceName : "<b>Название:</b> None" }
 
@@ -369,15 +369,16 @@ ApplicationWindow  {
                                 text: "Удалить"
                                 enabled: itemsEnabled
                                 onClicked: {
-                                    if (currentProbe.devices.count) {
-                                        successDialog.message = `Успешно удалено устройство ${currentProbe.devices.get(listViewDevices.currentIndex).name}`
-                                        currentProbe.remove(listViewDevices.currentIndex)
-                                        if (currentProbe.devices.count >= 0)
-                                            for(var i = 0; i < currentProbe.devices.rowCount(); i++) {
-                                                currentProbe.devices.set(i, {number: currentProbe.devices.get(i).number === '1' ? '1' : `${currentProbe.devices.get(i).number - 1}`})
-                                            }
-                                        successDialog.open()
-                                    }
+                                     modelDevices.removeDevicesItem(probes, listViewProbes.currentIndex, listViewDevices.currentIndex)
+//                                    if (currentProbe.devices.count) {
+//                                        successDialog.message = `Успешно удалено устройство ${currentProbe.devices.get(listViewDevices.currentIndex).name}`
+//                                        currentProbe.remove(listViewDevices.currentIndex)
+//                                        if (currentProbe.devices.count >= 0)
+//                                            for(var i = 0; i < currentProbe.devices.rowCount(); i++) {
+//                                                currentProbe.devices.set(i, {number: currentProbe.devices.get(i).number === '1' ? '1' : `${currentProbe.devices.get(i).number - 1}`})
+//                                            }
+//                                        successDialog.open()
+//                                    }
 
                                 }
                             }

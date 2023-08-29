@@ -1,4 +1,4 @@
-#ifndef DEVICES_H
+﻿#ifndef DEVICES_H
 #define DEVICES_H
 
 #include <QObject>
@@ -35,11 +35,16 @@ signals:
     void preDevicesItemRemoved(int index);
     void postDevicesItemRemoved();
 
+    void preDevicesItemCleared();
+    void postDevicesItemCleared();
+
 public slots:
     void appendDevicesItem(Probe* probe, int probeIndex, QString deviceName, QString startState, bool inSafeMode);
     void removeDevicesItem(Probe* probe, int probeIndex, int index);
 
-    bool changeDevices(Probe* probe, int probeIndex);
+    void changeDevices(Probe* probe, int probeIndex);
+
+    int size();
 
 private:
     QVector<DevicesItem> mItems;
