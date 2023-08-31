@@ -86,6 +86,7 @@ ApplicationWindow  {
                                 firstNumber.text = `${model.outerRadius}`
                                 secondNumber.text = `${model.innerRadius}`
                                 modelDevices.changeDevices(probes, index)
+
                             }
                         }
                     }

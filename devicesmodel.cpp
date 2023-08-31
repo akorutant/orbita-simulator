@@ -119,3 +119,4 @@ void DevicesModel::setList(Devices *list)
     }
     endResetModel();
 }
+

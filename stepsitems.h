@@ -42,6 +42,7 @@ signals:
 public slots:
     void appendItem(Probe* probe, bool typeCommand, int probeIndex, double time, QString device, QString command, QString argument);
     void removeItem(Probe* probe, bool typeCommand, int probeIndex, int index);
+    void changeSteps(Probe* probe, bool typeCommand, int probeIndex);
 
 private:
     QVector<StepsActivityAndLandingItem> mActivityItems;

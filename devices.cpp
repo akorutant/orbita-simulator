@@ -47,15 +47,13 @@ void Devices::removeDevicesItem(Probe* probe, int probeIndex, int index)
 void Devices::changeDevices(Probe *probe, int probeIndex)
 {
 
-
-    for (int i = 0; i < mItems.size(); i++) {
+    for (int i = mItems.size() - 1; i >= 0; --i) {
         emit preDevicesItemRemoved(i);
         mItems.removeAt(i);
         emit postDevicesItemRemoved();
+    }
 
-    };
-
-    for (int i = 0; i < probe->items()[probeIndex].devices.size(); i++) {
+    for (int i = 0; i < probe->items()[probeIndex].devices.size(); ++i) {
         emit preDevicesItemAppended();
 
         mItems.append({mItems.size(), probe->items()[probeIndex].devices[i].deviceName,

@@ -52,6 +52,48 @@ void StepsActivityAndLanding::removeItem(Probe* probe, bool typeCommand, int pro
     emit postItemRemoved();
 }
 
+void StepsActivityAndLanding::changeSteps(Probe *probe, bool typeCommand, int probeIndex)
+{
+    if (typeCommand) {
+        for (int i = mActivityItems.size() - 1; i >= 0; --i) {
+            emit preItemRemoved(i);
+            mActivityItems.removeAt(i);
+            emit postItemRemoved();
+        }
+
+        for (int i = 0; i < probe->items()[probeIndex].stepsActivity.size(); ++i) {
+            emit preItemAppended();
+
+            mActivityItems.append({mActivityItems.size(), probe->items()[probeIndex].stepsActivity[i].time,
+                                   probe->items()[probeIndex].stepsActivity[i].device,
+                                   probe->items()[probeIndex].stepsActivity[i].command,
+                                   probe->items()[probeIndex].stepsActivity[i].argument
+                          });
+
+            emit postItemAppended();
+        }
+    } else {
+        for (int i = mLandingItems.size() - 1; i >= 0; --i) {
+            emit preItemRemoved(i);
+            mLandingItems.removeAt(i);
+            emit postItemRemoved();
+        }
+
+        for (int i = 0; i < probe->items()[probeIndex].stepsLanding.size(); ++i) {
+            emit preItemAppended();
+
+            mLandingItems.append({mLandingItems.size(), probe->items()[probeIndex].stepsLanding[i].time,
+                                   probe->items()[probeIndex].stepsLanding[i].device,
+                                   probe->items()[probeIndex].stepsLanding[i].command,
+                                   probe->items()[probeIndex].stepsLanding[i].argument
+                          });
+
+            emit postItemAppended();
+        }
+    }
+
+}
+
 const QVector<StepsActivityAndLandingItem> StepsActivityAndLanding::landingItems() const
 {
     return mLandingItems;
