@@ -3,6 +3,8 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import ComboBoxDevicesModel 1.0
+
 Dialog  {
     id: commandDialog
     width: 287
@@ -65,14 +67,13 @@ Dialog  {
             Layout.row: 1
             Layout.column: 1
             editable: false
-            model: ListModel {
+            model: ComboBoxDevicesModel {
                 id: modelDevices
-                ListElement { name: "Test 1" }
-                ListElement { name: "Test 2" }
+                list: devicesItems
             }
             onAccepted: {
                 if (find(editText) === -1)
-                    model.append({text: editText})
+                    model.append({name: editText})
             }
         }
 
@@ -117,7 +118,6 @@ Dialog  {
             Layout.preferredHeight: 23
             Layout.row: 3
             Layout.column: 1
-            enabled: false
             onTextChanged: {
                 if (argumentInput.text.length > 30) {
                     argumentInput.text = argumentInput.text.substring(0, 30);
@@ -143,26 +143,30 @@ Dialog  {
             text: "ОК"
             onClicked: {
                 if (whatIsWindow) {
-                    probe.stepsLanding.append({
-                                                  time: timeInput.text,
-                                                  device: devicesBox.currentValue,
-                                                  command: commandsBox.currentValue,
-                                                  argument: argumentInput.text
-                                              })
-                    listViewStepsLanding.currentIndex = probe.stepsLanding.count - 1
+                    stepsLandingItems.appendItem(probes,
+                                                 whatIsWindow,
+                                                 listViewProbes.currentIndex,
+                                                 timeInput.text, devicesBox.currentValue,
+                                                 commandsBox.currentValue,
+                                                 argumentInput.text);
+                    listViewStepsLanding.currentIndex = stepsLandingItems.size()
                 } else {
-                    probe.stepsActivity.append({
-                                                   time: timeInput.text,
-                                                   device: devicesBox.currentValue,
-                                                   command: commandsBox.currentValue,
-                                                   argument: argumentInput.text
-                                               })
-                    listViewStepsPlanetActivity.currentIndex = probe.stepsActivity.count - 1
+                    stepsActivityItems.appendItem(probes,
+                                                  whatIsWindow,
+                                                  listViewProbes.currentIndex,
+                                                  timeInput.text, devicesBox.currentValue,
+                                                  commandsBox.currentValue,
+                                                  argumentInput.text);
+                    listViewStepsPlanetActivity.currentIndex = stepsActivityItems.size()
                 }
+
+
 
 
                 timeInput.text = ""
                 argumentInput.text = ""
+                commandsBox.currentIndex = 0
+                devicesBox.currentIndex = 0
                 commandDialog.accepted()
                 commandDialog.close()
             }
@@ -178,6 +182,10 @@ Dialog  {
             Layout.row: 4
             text: "Отмена"
             onClicked: {
+                timeInput.text = ""
+                argumentInput.text = ""
+                commandsBox.currentIndex = 0
+                devicesBox.currentIndex = 0
                 commandDialog.rejected()
                 commandDialog.close()
             }

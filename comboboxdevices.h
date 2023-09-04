@@ -1,25 +1,22 @@
-#ifndef STEPSLANDINGMODEL_H
-#define STEPSLANDINGMODEL_H
+#ifndef COMBOBOXDEVICES_H
+#define COMBOBOXDEVICES_H
 
 #include <QAbstractListModel>
-#include "stepslanding.h"
+#include "devices.h"
 
-class StepsLanding;
+class Devices;
 
-class StepsLandingModel : public QAbstractListModel
+class ComboBoxDevices : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(StepsLanding *list READ list WRITE setList)
+
+    Q_PROPERTY(Devices *list READ list WRITE setList)
 
 public:
-    explicit StepsLandingModel(QObject *parent = nullptr);
+    explicit ComboBoxDevices(QObject *parent = nullptr);
 
     enum {
-        idRole = Qt::UserRole,
-        timeRole,
-        deviceRole,
-        commandRole,
-        argumentRole
+        textRole
     };
 
     // Basic functionality:
@@ -34,12 +31,12 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     virtual QHash<int, QByteArray> roleNames() const override;
+    Devices *list() const;
+    void setList(Devices *list);
 
-    StepsLanding *list() const;
-    void setList(StepsLanding *list);
 
 private:
-    StepsLanding *mList;
+    Devices *mList;
 };
 
-#endif // STEPSLANDINGMODEL_H
+#endif // COMBOBOXDEVICES_H

@@ -13,14 +13,14 @@ int StepsLandingModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid() || !mList)
         return 0;
 
-    return mList->landingItems().size();
+    return mList->items().size();
 }
 
 QVariant StepsLandingModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-    const StepsActivityAndLandingItem item = mList->landingItems().at(index.row());
+    const StepsLandingItem item = mList->items().at(index.row());
     switch (role) {
     case idRole:
         return QVariant(item.id);
@@ -43,7 +43,7 @@ bool StepsLandingModel::setData(const QModelIndex &index, const QVariant &value,
         return false;
     }
 
-    StepsActivityAndLandingItem item = mList->landingItems().at(index.row());
+    StepsLandingItem item = mList->items().at(index.row());
 
     switch (role) {
     case idRole:
@@ -63,7 +63,7 @@ bool StepsLandingModel::setData(const QModelIndex &index, const QVariant &value,
         break;
     }
 
-    if (mList->setLandingItems(index.row(), item)) {
+    if (mList->setItem(index.row(), item)) {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
@@ -89,12 +89,12 @@ QHash<int, QByteArray> StepsLandingModel::roleNames() const
     return names;
 }
 
-StepsActivityAndLanding *StepsLandingModel::list() const
+StepsLanding *StepsLandingModel::list() const
 {
     return mList;
 }
 
-void StepsLandingModel::setList(StepsActivityAndLanding *list)
+void StepsLandingModel::setList(StepsLanding *list)
 {
     beginResetModel();
 
@@ -104,18 +104,18 @@ void StepsLandingModel::setList(StepsActivityAndLanding *list)
     mList = list;
 
     if (mList) {
-        connect(mList, &StepsActivityAndLanding::preItemAppended, this, [=] () {
-            const int index = mList->landingItems().size();
+        connect(mList, &StepsLanding::preItemAppended, this, [=] () {
+            const int index = mList->items().size();
             beginInsertRows(QModelIndex(), index, index);
         });
-        connect(mList, &StepsActivityAndLanding::postItemAppended, this, [=] () {
+        connect(mList, &StepsLanding::postItemAppended, this, [=] () {
             endInsertRows();
         });
 
-        connect(mList, &StepsActivityAndLanding::preItemRemoved, this, [=] (int index) {
+        connect(mList, &StepsLanding::preItemRemoved, this, [=] (int index) {
             beginRemoveRows(QModelIndex(), index, index);
         });
-        connect(mList, &StepsActivityAndLanding::postItemRemoved, this, [=] () {
+        connect(mList, &StepsLanding::postItemRemoved, this, [=] () {
             endRemoveRows();
         });
     }

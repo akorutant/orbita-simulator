@@ -2,14 +2,14 @@
 #define STEPSACTIVITYMODEL_H
 
 #include <QAbstractListModel>
-#include "stepsitems.h"
+#include "stepsactivity.h"
 
-class StepsActivityAndLanding;
+class StepsActivity;
 
 class StepsActivityModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(StepsActivityAndLanding *list READ list WRITE setList)
+    Q_PROPERTY(StepsActivity *list READ list WRITE setList)
 
 public:
     explicit StepsActivityModel(QObject *parent = nullptr);
@@ -35,11 +35,11 @@ public:
 
     virtual QHash<int, QByteArray> roleNames() const override;
 
-    StepsActivityAndLanding *list() const;
-    void setList(StepsActivityAndLanding *list);
+    StepsActivity *list() const;
+    void setList(StepsActivity *list);
 
 private:
-    StepsActivityAndLanding *mList;
+    StepsActivity *mList;
 };
 
 #endif // STEPSACTIVITYMODEL_H

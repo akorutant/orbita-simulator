@@ -66,9 +66,9 @@ void Probe::appendActivityAndLandingItem(int probeIndex, bool typeCommand, doubl
     emit preActivityAndLandingItemAppended();
 
     if (typeCommand)
-        mItems[probeIndex].stepsActivity.append({mItems[probeIndex].stepsActivity.size(), time, device, command, argument});
-    else
         mItems[probeIndex].stepsLanding.append({mItems[probeIndex].stepsActivity.size(), time, device, command, argument});
+    else
+        mItems[probeIndex].stepsActivity.append({mItems[probeIndex].stepsActivity.size(), time, device, command, argument});
 
     emit postActivityAndLandingItemAppended();
 }
@@ -78,9 +78,9 @@ void Probe::removeActivityAndLandingItem(int probeIndex, bool typeCommand, int i
     emit preActivityAndLandingItemRemoved(index);
 
     if (typeCommand)
-        mItems[probeIndex].stepsActivity.removeAt(index);
-    else
         mItems[probeIndex].stepsLanding.removeAt(index);
+    else
+        mItems[probeIndex].stepsActivity.removeAt(index);
 
     emit postActivityAndLandingItemRemoved();
 

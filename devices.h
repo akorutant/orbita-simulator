@@ -4,10 +4,7 @@
 #include <QObject>
 #include <QVector>
 #include "probe.h"
-#include "stepsitems.h"
 
-struct StepsActivityAndLandingItem;
-struct ProbeItem;
 class Probe;
 
 struct DevicesItem

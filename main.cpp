@@ -8,9 +8,12 @@
 
 #include "probe.h"
 #include "devices.h"
-#include "stepsitems.h"
+#include "stepslanding.h"
+#include "stepsactivity.h"
 #include "probemodel.h"
 #include "stepsactivitymodel.h"
+#include "stepslandingmodel.h"
+#include "comboboxdevices.h"
 
 int main(int argc, char *argv[])
 {
@@ -32,21 +35,27 @@ int main(int argc, char *argv[])
     qmlRegisterType<ProbeModel>("ProbeModel", 1, 0, "ProbeModel");
     qmlRegisterType<DevicesModel>("DevicesModel", 1, 0, "DevicesModel");
     qmlRegisterType<StepsActivityModel>("StepsActivityModel", 1, 0, "StepsActivityModel");
+    qmlRegisterType<StepsLandingModel>("StepsLandingModel", 1, 0, "StepsLandingModel");
+    qmlRegisterType<ComboBoxDevices>("ComboBoxDevicesModel", 1, 0, "ComboBoxDevicesModel");
     qmlRegisterUncreatableType<Probe>("Probe", 1, 0, "Probe",
                                         QStringLiteral("Probe should not be created in QML."));
     qmlRegisterUncreatableType<Devices>("Devices", 1, 0, "Devices",
                                         QStringLiteral("Devices should not be created in QML."));
-    qmlRegisterUncreatableType<StepsActivityAndLanding>("StepsActivityAndLanding", 1, 0, "StepsActivityAndLanding",
-                                        QStringLiteral("StepsActivityAndLanding should not be created in QML."));
+    qmlRegisterUncreatableType<StepsActivity>("StepsActivity", 1, 0, "StepsActivity",
+                                        QStringLiteral("StepsActivity should not be created in QML."));
+    qmlRegisterUncreatableType<StepsActivity>("StepsLanding", 1, 0, "StepsLanding",
+                                        QStringLiteral("StepsLanding should not be created in QML."));
 
     Probe probes;
-    Devices modelDevices;
-    StepsActivityAndLanding stepsActivityAndLanding;
+    Devices devicesItems;
+    StepsActivity stepsActivityItems;
+    StepsLanding stepsLandingItems;
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty(QStringLiteral("probes"), &probes);
-    engine.rootContext()->setContextProperty(QStringLiteral("modelDevices"), &modelDevices);
-    engine.rootContext()->setContextProperty(QStringLiteral("stepsActivityAndLanding"), &stepsActivityAndLanding);
+    engine.rootContext()->setContextProperty(QStringLiteral("devicesItems"), &devicesItems);
+    engine.rootContext()->setContextProperty(QStringLiteral("stepsActivityItems"), &stepsActivityItems);
+    engine.rootContext()->setContextProperty(QStringLiteral("stepsLandingItems"), &stepsLandingItems);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

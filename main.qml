@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.15
 import ProbeModel 1.0
 import DevicesModel 1.0
 import StepsActivityModel 1.0
-
+import StepsLandingModel 1.0
 
 ApplicationWindow  {
     id: mainWindow
@@ -85,7 +85,9 @@ ApplicationWindow  {
                                 probeNameText.text = `${model.probeName}`
                                 firstNumber.text = `${model.outerRadius}`
                                 secondNumber.text = `${model.innerRadius}`
-                                modelDevices.changeDevices(probes, index)
+                                devicesItems.changeDevices(probes, index)
+                                stepsActivityItems.changeSteps(probes, index)
+                                stepsLandingItems.changeSteps(probes, index)
 
                             }
                         }
@@ -290,7 +292,7 @@ ApplicationWindow  {
                             enabled: itemsEnabled
                             visible: showPlanetsDevices
                             model: DevicesModel {
-                                list: modelDevices
+                                list: devicesItems
                             }
 
 
@@ -306,6 +308,7 @@ ApplicationWindow  {
                             }
 
                             delegate: Item {
+                                property variant devicesModelData: model
 
                                 width: listViewDevices.width
                                 height: 100
@@ -335,7 +338,6 @@ ApplicationWindow  {
                                     Text { text: index >= 0 && index < listViewDevices.count && model.startState ? '<b>Начальное состояние:</b> ' + model.startState : "<b>Начальное состояние:</b> None" }
 
                                     Text {
-                                        visible: typeMission
                                         text: index >= 0 && index < listViewDevices.count ? '<b>Safe Mode:</b> ' + model.inSafeMode : ""
                                     }
 
@@ -370,16 +372,11 @@ ApplicationWindow  {
                                 text: "Удалить"
                                 enabled: itemsEnabled
                                 onClicked: {
-                                     modelDevices.removeDevicesItem(probes, listViewProbes.currentIndex, listViewDevices.currentIndex)
-//                                    if (currentProbe.devices.count) {
-//                                        successDialog.message = `Успешно удалено устройство ${currentProbe.devices.get(listViewDevices.currentIndex).name}`
-//                                        currentProbe.remove(listViewDevices.currentIndex)
-//                                        if (currentProbe.devices.count >= 0)
-//                                            for(var i = 0; i < currentProbe.devices.rowCount(); i++) {
-//                                                currentProbe.devices.set(i, {number: currentProbe.devices.get(i).number === '1' ? '1' : `${currentProbe.devices.get(i).number - 1}`})
-//                                            }
-//                                        successDialog.open()
-//                                    }
+                                    if (devicesItems.size()) {
+                                        successDialog.message = `Успешно удалено устройство ${listViewDevices.currentItem.devicesModelData.deviceName}`
+                                        devicesItems.removeDevicesItem(probes, listViewProbes.currentIndex, listViewDevices.currentIndex)
+                                        successDialog.open()
+                                    }
 
                                 }
                             }
@@ -416,8 +413,8 @@ ApplicationWindow  {
                                     clip: true
                                     enabled: itemsEnabled
                                     visible: showPlanetsElems
-                                    model: StepsActivityModel {
-                                        list: stepsActivityAndLanding
+                                    model: StepsLandingModel {
+                                        list: stepsLandingItems
                                     }
 
 
@@ -457,7 +454,7 @@ ApplicationWindow  {
 
                                             Text { text: index >= 0 && index < listViewStepsLanding.count && model.device ? '<b>Устройство:</b> ' + model.device : "<b>Устройство:</b> None" }
 
-                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.command ? '<b>Команда:</b>' + model.command : "<b>Команда:</b> None" }
+                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.command ? '<b>Команда:</b> ' + model.command : "<b>Команда:</b> None" }
 
                                             Text { text: index >= 0 && index < listViewStepsLanding.count && model.argument ? '<b>Параметр:</b> ' + model.argument : "<b>Параметр:</b> None" }
                                         }
@@ -486,9 +483,9 @@ ApplicationWindow  {
                                         text: "Удалить"
                                         enabled: itemsEnabled
                                         onClicked: {
-                                            if (stepsLanding.count) {
+                                            if (stepsLandingItems.size()) {
                                                 successDialog.message = "Успшено удалено"
-                                                currentProbe.stepsLanding.remove(listViewStepsLanding.index)}
+                                                stepsLandingItems.removeItem(probes, true, listViewProbes.currentIndex, listViewStepsLanding.currentIndex)}
                                                 successDialog.open()
                                             }
 
@@ -512,7 +509,7 @@ ApplicationWindow  {
                                         enabled: itemsEnabled
                                         visible: showPlanetsElems
                                         model: StepsActivityModel {
-                                            list: stepsActivityAndLanding
+                                            list: stepsActivityItems
                                         }
 
 
@@ -581,9 +578,9 @@ ApplicationWindow  {
                                             text: "Удалить"
                                             enabled: itemsEnabled
                                             onClicked: {
-                                                if (stepsActivity.count) {
+                                                if (stepsActivityItems.size()) {
                                                     successDialog.message = "Успешно удалено"
-                                                    currentProbe.stepsActivity.remove(listViewStepsPlanetActivity.index)
+                                                    stepsActivityItems.removeItem(probes, false, listViewProbes.currentIndex, listViewStepsPlanetActivity.currentIndex)
                                                     successDialog.open()
                                                 }
 

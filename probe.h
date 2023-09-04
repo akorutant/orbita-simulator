@@ -4,10 +4,12 @@
 #include <QObject>
 #include <QVector>
 #include "devices.h"
-#include "stepsitems.h"
+#include "stepsactivity.h"
+#include "stepslanding.h"
 
 struct DevicesItem;
-struct StepsActivityAndLandingItem;
+struct StepsActivityItem;
+struct StepsLandingItem;
 
 struct ProbeItem
 {
@@ -16,8 +18,8 @@ struct ProbeItem
     int outerRadius;
     int innerRadius;
     QVector<DevicesItem> devices;
-    QVector<StepsActivityAndLandingItem> stepsActivity;
-    QVector<StepsActivityAndLandingItem> stepsLanding;
+    QVector<StepsActivityItem> stepsActivity;
+    QVector<StepsLandingItem> stepsLanding;
     QString pythonCode;
 };
 
