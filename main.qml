@@ -166,6 +166,7 @@ ApplicationWindow  {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 67
                 enabled: itemsEnabled
+                onClicked: probes.saveToXml(listViewProbes.currentIndex, "text.xml")
             }
 
             Button {

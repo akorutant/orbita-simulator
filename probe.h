@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QVector>
+#include <QFile>
+#include <QXmlStreamWriter>
 #include "devices.h"
 #include "stepsactivity.h"
 #include "stepslanding.h"
@@ -59,6 +61,8 @@ public slots:
 
     void appendActivityAndLandingItem(int probeIndex, bool typCommand, double time, QString device, QString command, QString argument);
     void removeActivityAndLandingItem(int probeIndex, bool typeCommand, int index);
+
+    void saveToXml(int probeIndex, const QString &filename);
 
     int size();
 
