@@ -34,15 +34,40 @@ void Devices::appendDevicesItem(Probe* probe, int probeIndex, QString deviceName
 
 }
 
-void Devices::removeDevicesItem(Probe* probe, int probeIndex, int index)
+void Devices::removeDevicesItem(Probe* probe, StepsActivity* stepsActivity, StepsLanding* stepsLanding, int probeIndex, int index)
 {
     emit preDevicesItemRemoved(index);
+
+    QString deviceNameToRemove = mItems[index].deviceName;
+
+    if (stepsActivity->items().size()) {
+        for (int i = stepsActivity->items().size() - 1; i >= 0; --i)
+        {
+            if (stepsActivity->items()[i].device == deviceNameToRemove)
+            {
+                stepsActivity->removeItem(probe, false, probeIndex, i);
+                break;
+            }
+        }
+    }
+
+    if (stepsLanding->items().size()) {
+        for (int i = stepsLanding->items().size() - 1; i >= 0; --i)
+        {
+            if (stepsLanding->items()[i].device == deviceNameToRemove)
+            {
+                stepsLanding->removeItem(probe, true, probeIndex, i);
+                break;
+            }
+        }
+    }
 
     mItems.removeAt(index);
     probe->removeDevicesItem(probeIndex, index);
 
     emit postDevicesItemRemoved();
 }
+
 
 void Devices::changeDevices(Probe *probe, int probeIndex)
 {

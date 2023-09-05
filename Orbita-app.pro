@@ -44,3 +44,5 @@ HEADERS += \
     stepsactivitymodel.h \
     stepslanding.h \
     stepslandingmodel.h
+
+DISTFILES +=

@@ -22,6 +22,8 @@ ApplicationWindow  {
     ErrorMessage {id: errorDialog}
     SuccessMessage {id: successDialog}
     DeviceForEarthDialog {id: deviceEarthDialog}
+    VersionDialog {id: versionDialog}
+    property ListModel modelSolutions: ListModel {}
     property bool itemsEnabled: false
     property bool showPlanetsDevices: false
     property bool showPlanetsElems: false
@@ -46,7 +48,7 @@ ApplicationWindow  {
                 anchors.fill: parent
                 width: parent.width
                 height: parent.height - newProbeButton.height
-                anchors.bottomMargin: 158
+                anchors.bottomMargin: 187
                 clip: true
                 enabled: itemsEnabled
                 model: ProbeModel {
@@ -105,6 +107,17 @@ ApplicationWindow  {
                 }
             }
 
+            Button {
+                id: selectVersionButton
+
+                width: parent.width; height: 23
+                text: "Выбрать версию"
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 154
+                onClicked: {
+                    versionDialog.open()
+                }
+            }
 
             Button {
                 id: selectMissonButton
@@ -113,9 +126,12 @@ ApplicationWindow  {
                 text: "Выбрать миссию"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 125
+                enabled: false
                 onClicked: {
+                    if (typeMission) {
+                        currentProbe = listViewProbes.currentItem.probesModelData
+                    }
                     listViewProbes.currentIndex = 0
-                    currentProbe = listViewProbes.currentItem.probesModelData
                     missionDialog.open()
                 }
             }
@@ -132,6 +148,9 @@ ApplicationWindow  {
                     probes.appendProbe("probe", 0, 0, "")
                     listViewProbes.currentIndex = probes.size() - 1
                     currentProbe = listViewProbes.currentItem.probesModelData
+                    devicesItems.changeDevices(probes, listViewProbes.currentIndex)
+                    stepsActivityItems.changeSteps(probes, listViewProbes.currentIndex)
+                    stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
 
                     probeNameText.text = `${currentProbe.probeName}`
                     firstNumber.text = `${currentProbe.outerRadius}`
@@ -374,7 +393,7 @@ ApplicationWindow  {
                                 onClicked: {
                                     if (devicesItems.size()) {
                                         successDialog.message = `Успешно удалено устройство ${listViewDevices.currentItem.devicesModelData.deviceName}`
-                                        devicesItems.removeDevicesItem(probes, listViewProbes.currentIndex, listViewDevices.currentIndex)
+                                        devicesItems.removeDevicesItem(probes, stepsActivityItems, stepsLandingItems, listViewProbes.currentIndex, listViewDevices.currentIndex)
                                         successDialog.open()
                                     }
 
@@ -456,7 +475,7 @@ ApplicationWindow  {
 
                                             Text { text: index >= 0 && index < listViewStepsLanding.count && model.command ? '<b>Команда:</b> ' + model.command : "<b>Команда:</b> None" }
 
-                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.argument ? '<b>Параметр:</b> ' + model.argument : "<b>Параметр:</b> None" }
+                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.argument ? '<b>Параметр:</b> ' + model.argument : "" }
                                         }
                                     }
                                 }
@@ -485,9 +504,10 @@ ApplicationWindow  {
                                         onClicked: {
                                             if (stepsLandingItems.size()) {
                                                 successDialog.message = "Успшено удалено"
-                                                stepsLandingItems.removeItem(probes, true, listViewProbes.currentIndex, listViewStepsLanding.currentIndex)}
+                                                stepsLandingItems.removeItem(probes, true, listViewProbes.currentIndex, listViewStepsLanding.currentIndex)
                                                 successDialog.open()
                                             }
+                                        }
 
                                     }
                                 }
@@ -551,7 +571,7 @@ ApplicationWindow  {
 
                                                 Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.command ? '<b>Команда:</b>' + model.command : "<b>Команда:</b> None" }
 
-                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.argument ? '<b>Параметр:</b> ' + model.argument : "<b>Параметр:</b> None" }
+                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.argument ? '<b>Параметр:</b> ' + model.argument : "" }
                                             }
                                         }
                                     }
@@ -635,41 +655,41 @@ ApplicationWindow  {
                     }
                 }
 
-                Button {
-                    width: parent.width * 0.4
-                    height: 23
-                    Layout.preferredHeight: height
-                    Layout.preferredWidth: width
-                    Layout.alignment: Qt.AlignBottom | Qt.AlignRight
-                    enabled: itemsEnabled
-                    text: "Сохранить изменения"
-                    onClicked: {
-                        if (typeMission) {
-                            probesPlanets.set(listViewProbes.currentIndex,
-                                       {
-                                           name: probeName.text,
-                                           number: currentProbe.number,
-                                           outerRadius: firstNumber.text,
-                                           innerRadius: secondNumber.text,
-                                           devices: currentProbe.devices,
-                                           stepsActivity: currentProbe.stepsActivity,
-                                           stepsLanding: probe.stepsLanding,
-                                           pythonCode: pythonCodeTextArea.text
-                                       })
-                        } else {
-                            probesEarth.set(listViewProbes.currentIndex,
-                                       {
-                                           name: probeName.text,
-                                           number: probe.number,
-                                           outerRadius: firstNumber.text,
-                                           innerRadius: secondNumber.text,
-                                           devices: probe.devices,
-                                           pythonCode: pythonCodeTextArea.text
-                                       })
-                        }
+//                Button {
+//                    width: parent.width * 0.4
+//                    height: 23
+//                    Layout.preferredHeight: height
+//                    Layout.preferredWidth: width
+//                    Layout.alignment: Qt.AlignBottom | Qt.AlignRight
+//                    enabled: itemsEnabled
+//                    text: "Сохранить изменения"
+//                    onClicked: {
+//                        if (typeMission) {
+//                            probesPlanets.set(listViewProbes.currentIndex,
+//                                       {
+//                                           name: probeName.text,
+//                                           number: currentProbe.number,
+//                                           outerRadius: firstNumber.text,
+//                                           innerRadius: secondNumber.text,
+//                                           devices: currentProbe.devices,
+//                                           stepsActivity: currentProbe.stepsActivity,
+//                                           stepsLanding: probe.stepsLanding,
+//                                           pythonCode: pythonCodeTextArea.text
+//                                       })
+//                        } else {
+//                            probesEarth.set(listViewProbes.currentIndex,
+//                                       {
+//                                           name: probeName.text,
+//                                           number: probe.number,
+//                                           outerRadius: firstNumber.text,
+//                                           innerRadius: secondNumber.text,
+//                                           devices: probe.devices,
+//                                           pythonCode: pythonCodeTextArea.text
+//                                       })
+//                        }
 
-                    }
-                }
+//                    }
+//                }
             }
 
         }

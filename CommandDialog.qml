@@ -11,6 +11,7 @@ Dialog  {
     height: 179
     visible: false
     modal: true
+    ErrorMessage {id: errorDialog}
 
     x: mainWindow.width / 2 - width / 2
     y: mainWindow.height / 2 - height / 2
@@ -142,33 +143,46 @@ Dialog  {
             Layout.row: 4
             text: "ОК"
             onClicked: {
-                if (whatIsWindow) {
-                    stepsLandingItems.appendItem(probes,
-                                                 whatIsWindow,
-                                                 listViewProbes.currentIndex,
-                                                 timeInput.text, devicesBox.currentValue,
-                                                 commandsBox.currentValue,
-                                                 argumentInput.text);
-                    listViewStepsLanding.currentIndex = stepsLandingItems.size()
+                if (devicesBox.currentValue) {
+                    if (!timeInput.text) {
+                        errorDialog.textOfError = "Укажите время!"
+                        errorDialog.open()
+                        return
+                    }
+
+                    if (whatIsWindow) {
+                        stepsLandingItems.appendItem(probes,
+                                                     whatIsWindow,
+                                                     listViewProbes.currentIndex,
+                                                     timeInput.text, devicesBox.currentValue,
+                                                     commandsBox.currentValue,
+                                                     argumentInput.text);
+                        listViewStepsLanding.currentIndex = stepsLandingItems.size() - 1
+                    } else {
+                        stepsActivityItems.appendItem(probes,
+                                                      whatIsWindow,
+                                                      listViewProbes.currentIndex,
+                                                      timeInput.text, devicesBox.currentValue,
+                                                      commandsBox.currentValue,
+                                                      argumentInput.text);
+                        listViewStepsPlanetActivity.currentIndex = stepsActivityItems.size() - 1
+                    }
+
+
+
+
+                    timeInput.text = ""
+                    argumentInput.text = ""
+                    commandsBox.currentIndex = 0
+                    devicesBox.currentIndex = 0
+                    commandDialog.accepted()
+                    commandDialog.close()
                 } else {
-                    stepsActivityItems.appendItem(probes,
-                                                  whatIsWindow,
-                                                  listViewProbes.currentIndex,
-                                                  timeInput.text, devicesBox.currentValue,
-                                                  commandsBox.currentValue,
-                                                  argumentInput.text);
-                    listViewStepsPlanetActivity.currentIndex = stepsActivityItems.size()
+                    errorDialog.textOfError = "Выберите устройство!"
+                    errorDialog.open()
+                    return
                 }
 
-
-
-
-                timeInput.text = ""
-                argumentInput.text = ""
-                commandsBox.currentIndex = 0
-                devicesBox.currentIndex = 0
-                commandDialog.accepted()
-                commandDialog.close()
             }
 
         }

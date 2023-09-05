@@ -31,8 +31,8 @@ Dialog  {
                 editable: false
                 model: ListModel {
                     id: modelMissions
-                    ListElement { text: "Планеты" }
-                    ListElement { text: "Земля" }
+                    ListElement { text: "Луна" }
+                    ListElement { text: "Марс" }
                 }
                 onAccepted: {
                     if (find(editText) === -1)
@@ -41,18 +41,13 @@ Dialog  {
             }
 
             ComboBox {
-                id: typeSelect
+                id: solutionSelect
                 width: parent.width * 0.55
                 height: parent.height
                 Layout.preferredWidth: width
                 Layout.preferredHeight: height
                 editable: false
-                model: ListModel {
-                    id: modelDevice
-                    ListElement { text: "Python" }
-                    ListElement { text: "Таблица" }
-                    ListElement { text: "Диаграмма" }
-                }
+                model: modelSolutions
                 onAccepted: {
                     if (find(editText) === -1)
                         model.append({text: editText})
@@ -74,79 +69,58 @@ Dialog  {
                     firstNumber.text = ""
                     secondNumber.text = ""
 
-                    if (missonSelect.currentText === "Планеты") {
-                        if (currentProbe) {
-                            listViewProbes.currentIndex = 0
-                            probeNameText.text = `${currentProbe.probeName}`
-                            firstNumber.text = `${currentProbe.outerRadius}`
-                            secondNumber.text = `${currentProbe.innerRadius}`
-                            itemsEnabled = true
-                        } else {
-                            itemsEnabled = false
+                    if (solutionSelect.currentText) {
+                        if (solutionSelect.currentText === "Python" && (stepsLandingItems.size() || stepsActivityItems.size())) {
+                            errorDialog.textOfError = "Удалите команды для устройств, \nчтобы использовать Python"
+                            errorDialog.open()
+                            return
                         }
 
-                        typeMission = true
-                    }
 
-                    if (missonSelect.currentText === "Земля") {
-                        listViewProbes.model = probesEarth
-
-                        if (probesEarth.get(probesEarth.currentIndex)) {
-                            listViewProbes.currentIndex = probesEarth.count - 1
-                            probe = probesEarth.get(listViewProbes.currentIndex)
-                            probeNameText.text = `${probe.name}`
-                            firstNumber.text = `${probe.outerRadius}`
-                            secondNumber.text = `${probe.innerRadius}`
-                            itemsEnabled = true
-                        } else {
-                            itemsEnabled = false
+                        if (solutionSelect.currentText === "Таблица" && pythonCodeTextArea.text) {
+                            errorDialog.textOfError = "Удалите Python код для устройств, \nчтобы использовать таблицу"
+                            errorDialog.open()
+                            return
                         }
-                        typeMission = false
-                    }
 
-                    if (missonSelect.currentText === "Планеты" && typeSelect.currentText === "Таблица") {
-                        showPlanetsElems = true
-                        showPlanetsDevices = true
-                        showPythonArea = false
-                        showDiagrammButton = false
-                        showPythonArea.text = ""
+                        if (solutionSelect.currentText === "Таблица") {
+                            showPlanetsElems = true
+                            showPlanetsDevices = true
+                            showPythonArea = false
+                            showDiagrammButton = false
+                            showPythonArea.text = ""
 
-                    }
+                        }
 
-                    if (missonSelect.currentText === "Планеты" && typeSelect.currentText === "Диаграмма") {
-                        errorDialog.textOfError = "Для миссий из группы Планеты \nневозможно выбрать диаграмму!"
+                        if (solutionSelect.currentText === "Python") {
+                            showPlanetsElems = false
+                            showPlanetsDevices = true
+                            showPythonArea = true
+                            showDiagrammButton = false
+                        }
+
+                        if (solutionSelect.currentText === "Диаграмма") {
+                            showPlanetsElems = false
+                            showPlanetsDevices = true
+                            showPythonArea = false
+                            showDiagrammButton = true
+                            showPythonArea.text = ""
+                        }
+
+
+                        missonSelect.currentIndex = 0
+                        solutionSelect.currentIndex = 0
+                        newProbeButton.enabled = true
+                        loadProbeButton.enabled = true
+
+                        missionDialog.accepted()
+                        missionDialog.close()
+                    } else {
+                        errorDialog.textOfError = "Вы не выбрали способ решения"
                         errorDialog.open()
                         return
                     }
 
-
-                    if (missonSelect.currentText === "Земля" && typeSelect.currentText === "Таблица") {
-                        errorDialog.textOfError = "Для миссий из группы Земля \nневозможно выбрать таблицу!"
-                        errorDialog.open()
-                        return
-                    }
-
-                    if (typeSelect.currentText === "Python") {
-                        showPlanetsElems = false
-                        showPlanetsDevices = true
-                        showPythonArea = true
-                        showDiagrammButton = false
-                    };
-
-                    if (missonSelect.currentText === "Земля" && typeSelect.currentText === "Диаграмма") {
-                        showPlanetsElems = false
-                        showPlanetsDevices = true
-                        showPythonArea = false
-                        showDiagrammButton = true
-                        showPythonArea.text = ""
-                    };
-
-
-
-                    newProbeButton.enabled = true
-                    loadProbeButton.enabled = true
-                    missionDialog.accepted()
-                    missionDialog.close()
                 }
             }
 
@@ -155,6 +129,8 @@ Dialog  {
                 Layout.preferredWidth: parent.width * 0.5
                 text: "Отмена"
                 onClicked: {
+                    missonSelect.currentIndex = 0
+                    solutionSelect.currentIndex = 0
                     missionDialog.rejected()
                     missionDialog.close()
                 }
