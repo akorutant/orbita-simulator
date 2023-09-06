@@ -63,7 +63,9 @@ public slots:
     void removeActivityAndLandingItem(int probeIndex, bool typeCommand, int index);
 
     void saveToXml(int probeIndex, const QString &filename);
+    void loadFromXml(const QString &filename);
 
+    void saveProbe(int probeIndex, QString probeName, int innerRadius, int outerRadius);
     int size();
 
 private:

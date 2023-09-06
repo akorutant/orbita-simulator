@@ -23,6 +23,7 @@ ApplicationWindow  {
     SuccessMessage {id: successDialog}
     DeviceForEarthDialog {id: deviceEarthDialog}
     VersionDialog {id: versionDialog}
+    FileSavePathDialog {id: fileSaveDialog}
     property ListModel modelSolutions: ListModel {}
     property bool itemsEnabled: false
     property bool showPlanetsDevices: false
@@ -153,8 +154,8 @@ ApplicationWindow  {
                     stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
 
                     probeNameText.text = `${currentProbe.probeName}`
-                    firstNumber.text = `${currentProbe.outerRadius}`
-                    secondNumber.text = `${currentProbe.innerRadius}`
+                    firstNumber.text = `${currentProbe.innerRadius}`
+                    secondNumber.text = `${currentProbe.outerRadius}`
                     itemsEnabled = true
                 }
             }
@@ -166,7 +167,10 @@ ApplicationWindow  {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 67
                 enabled: itemsEnabled
-                onClicked: probes.saveToXml(listViewProbes.currentIndex, "text.xml")
+                onClicked: {
+                    probes.saveProbe(listViewProbes.currentIndex, probeNameText.text, firstNumber.text, secondNumber.text)
+                    fileSaveDialog.open()
+                }
             }
 
             Button {

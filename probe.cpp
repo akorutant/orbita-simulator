@@ -3,8 +3,6 @@
 Probe::Probe(QObject *parent)
     : QObject{parent}
 {
-    mItems.append({1, "Apollo", 1200, 1500, {}, {}, {}, "python"});
-    mItems.append({2, "Apollo2", 1200, 1500, {}, {}, {}, "python"});
 }
 
 QVector<ProbeItem> Probe::items() const
@@ -178,6 +176,58 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
     xmlWriter.writeEndDocument();
 
     file.close();
+}
+
+void Probe::loadFromXml(const QString &filename) {
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        // Обработка ошибки открытия файла
+        return;
+    }
+
+    QXmlStreamReader xmlReader(&file);
+
+    ProbeItem probeItem; // Создаем объект ProbeItem для загруженных данных
+
+    while (!xmlReader.atEnd() && !xmlReader.hasError()) {
+        xmlReader.readNext();
+
+        if (xmlReader.isStartElement()) {
+            QString elementName = xmlReader.name().toString();
+            if (elementName == "v:probe") {
+                // Пропустите начальный элемент <v:probe>
+                continue;
+            } else if (elementName == "mission") {
+                // Обработка элемента <mission>
+                QString missionName = xmlReader.attributes().value("name").toString();
+                // Добавьте код для сохранения missionName в probeItem
+            } else if (elementName == "start_height") {
+                // Обработка элемента <start_height>
+                QString startHeight = xmlReader.readElementText();
+                // Добавьте код для сохранения startHeight в probeItem
+            }
+            // Обработайте другие элементы внутри <v:probe> аналогичным образом
+        }
+    }
+
+    if (xmlReader.hasError()) {
+        // Обработка ошибки чтения XML
+        return;
+    }
+
+    // Если загрузка завершилась успешно, замените текущий объект Probe данными из probeItem
+    mItems.append({1, "", 1, 1, {}, {}, {}, ""}); // Внести данные
+
+    file.close();
+}
+
+
+
+void Probe::saveProbe(int probeIndex, QString probeName, int innerRadius, int outerRadius)
+{
+    mItems[probeIndex].probeName = probeName;
+    mItems[probeIndex].outerRadius = outerRadius;
+    mItems[probeIndex].innerRadius = innerRadius;
 }
 
 int Probe::size()
