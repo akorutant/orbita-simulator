@@ -23,11 +23,11 @@ bool Probe::setProbe(int index, const ProbeItem &item)
     return true;
 }
 
-void Probe::appendProbe(QString probeName, int outerRadius, int innerRadius, QString pythonCode)
+void Probe::appendProbe(QString probeName, QString missionName, int outerRadius, int innerRadius, QString pythonCode)
 {
     emit preProbeAppended();
 
-    mItems.append({mItems.size(), probeName, outerRadius, innerRadius, {}, {},{},  pythonCode});
+    mItems.append({mItems.size(), probeName, missionName, outerRadius, innerRadius, {}, {},{},  pythonCode});
 
     emit postProbeAppended();
 }
@@ -181,13 +181,15 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
 void Probe::loadFromXml(const QString &filename) {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        // Обработка ошибки открытия файла
         return;
     }
 
     QXmlStreamReader xmlReader(&file);
 
-    ProbeItem probeItem; // Создаем объект ProbeItem для загруженных данных
+    ProbeItem probeXmlItem;
+    QVector<DevicesItem> devicesItems;
+    QVector<StepsLandingItem> stepsLandingItems;
+    QVector<StepsActivityItem> stepsActivityItems;
 
     while (!xmlReader.atEnd() && !xmlReader.hasError()) {
         xmlReader.readNext();
@@ -195,29 +197,46 @@ void Probe::loadFromXml(const QString &filename) {
         if (xmlReader.isStartElement()) {
             QString elementName = xmlReader.name().toString();
             if (elementName == "v:probe") {
-                // Пропустите начальный элемент <v:probe>
+                probeXmlItem.probeName = xmlReader.attributes().value("name").toString();
                 continue;
             } else if (elementName == "mission") {
-                // Обработка элемента <mission>
-                QString missionName = xmlReader.attributes().value("name").toString();
-                // Добавьте код для сохранения missionName в probeItem
-            } else if (elementName == "start_height") {
-                // Обработка элемента <start_height>
-                QString startHeight = xmlReader.readElementText();
-                // Добавьте код для сохранения startHeight в probeItem
+                probeXmlItem.missionName = xmlReader.attributes().value("name").toString();
+            } else if (elementName == "radius_external") {
+                xmlReader.readNext();
+                probeXmlItem.outerRadius = xmlReader.text().toDouble();
+            } else if (xmlReader.name() == "radius_internal") {
+                xmlReader.readNext(); // Перейти к тексту элемента
+                probeXmlItem.innerRadius = xmlReader.text().toDouble();
+            } else if (xmlReader.name() == "devices") {
+                DevicesItem deviceItem;
+
+                QXmlStreamAttributes attributes = xmlReader.attributes();
+                               deviceItem.deviceNumber = attributes.value("number").toInt();
+                               deviceItem.deviceName = attributes.value("name").toString();
+                               deviceItem.startState = attributes.value("start_state").toString();
+                               deviceItem.inSafeMode = (attributes.value("in_safe_mode").toString() == "ON");
+                devicesItems.append(deviceItem);
+
+                while (!(xmlReader.isEndElement() && xmlReader.name() == "device")) {
+                    xmlReader.readNext();
+                }
+
             }
-            // Обработайте другие элементы внутри <v:probe> аналогичным образом
         }
     }
 
     if (xmlReader.hasError()) {
-        // Обработка ошибки чтения XML
         return;
     }
 
-    // Если загрузка завершилась успешно, замените текущий объект Probe данными из probeItem
-    mItems.append({1, "", 1, 1, {}, {}, {}, ""}); // Внести данные
-
+    mItems.append({mItems.size(),
+                   probeXmlItem.probeName,
+                   probeXmlItem.missionName,
+                   probeXmlItem.outerRadius, probeXmlItem.innerRadius,
+                   {},
+                   {},
+                   {},
+                   ""});
     file.close();
 }
 

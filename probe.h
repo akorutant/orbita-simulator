@@ -17,6 +17,7 @@ struct ProbeItem
 {
     int probeNumber;
     QString probeName;
+    QString missionName;
     int outerRadius;
     int innerRadius;
     QVector<DevicesItem> devices;
@@ -53,7 +54,7 @@ signals:
    void postActivityAndLandingItemRemoved();
 
 public slots:
-    void appendProbe(QString probeName, int outerRadius, int innerRadius, QString pythonCode);
+    void appendProbe(QString probeName, QString missionName, int outerRadius, int innerRadius, QString pythonCode);
     void removeProbe(int index);
 
     void appendDevicesItem(int probeIndex, QString deviceName, QString startState, bool inSafeMode);

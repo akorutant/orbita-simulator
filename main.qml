@@ -33,6 +33,7 @@ ApplicationWindow  {
     property bool whatIsWindow: false
     property bool typeMission: true
     property var currentProbe: undefined
+    property string pathFile: "/home/"
 
     RowLayout {
         anchors.fill: parent
@@ -129,7 +130,7 @@ ApplicationWindow  {
                 anchors.bottomMargin: 125
                 enabled: false
                 onClicked: {
-                    if (typeMission) {
+                    if (typeMission && probes.size()) {
                         currentProbe = listViewProbes.currentItem.probesModelData
                     }
                     listViewProbes.currentIndex = 0
@@ -146,7 +147,7 @@ ApplicationWindow  {
                 enabled: false
 
                 onClicked: {
-                    probes.appendProbe("probe", 0, 0, "")
+                    probes.appendProbe("probe", 'missonSelect.currentText', 0, 0, "")
                     listViewProbes.currentIndex = probes.size() - 1
                     currentProbe = listViewProbes.currentItem.probesModelData
                     devicesItems.changeDevices(probes, listViewProbes.currentIndex)
@@ -169,7 +170,10 @@ ApplicationWindow  {
                 enabled: itemsEnabled
                 onClicked: {
                     probes.saveProbe(listViewProbes.currentIndex, probeNameText.text, firstNumber.text, secondNumber.text)
-                    fileSaveDialog.open()
+                    if (pathFile === "/home/") {
+                        fileSaveDialog.open()
+                    }
+
                 }
             }
 
