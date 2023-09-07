@@ -23,7 +23,8 @@ ApplicationWindow  {
     SuccessMessage {id: successDialog}
     DeviceForEarthDialog {id: deviceEarthDialog}
     VersionDialog {id: versionDialog}
-    FileSavePathDialog {id: fileSaveDialog}
+    PathToSaveDialog {id: pathToSaveDialog}
+    PathToLoadDialog {id: pathToLoadDialog}
     property ListModel modelSolutions: ListModel {}
     property bool itemsEnabled: false
     property bool showPlanetsDevices: false
@@ -32,8 +33,10 @@ ApplicationWindow  {
     property bool showDiagrammButton: false
     property bool whatIsWindow: false
     property bool typeMission: true
+    property bool typePathDialog: true
     property var currentProbe: undefined
-    property string pathFile: "/home/"
+    property string pathToSave: "/home/"
+    property string pathToLoad: "/home/"
 
     RowLayout {
         anchors.fill: parent
@@ -170,10 +173,11 @@ ApplicationWindow  {
                 enabled: itemsEnabled
                 onClicked: {
                     probes.saveProbe(listViewProbes.currentIndex, probeNameText.text, firstNumber.text, secondNumber.text)
-                    if (pathFile === "/home/") {
-                        fileSaveDialog.open()
+                    if (pathToSave === "/home/") {
+                        pathToSaveDialog.open()
+                    } else {
+                        probes.saveToXml(listViewProbes.currentIndex, pathToSave)
                     }
-
                 }
             }
 
@@ -184,6 +188,13 @@ ApplicationWindow  {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 38
                 enabled: itemsEnabled
+                onClicked: {
+                    if (pathToLoad === "/home/") {
+                        pathToLoadDialog.open()
+                    } else {
+                        probes.loadFromXml(pathToLoad)
+                    }
+                }
             }
 
             Button {

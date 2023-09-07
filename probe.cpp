@@ -1,4 +1,5 @@
 #include "probe.h"
+#include <iostream>
 
 Probe::Probe(QObject *parent)
     : QObject{parent}
@@ -211,7 +212,7 @@ void Probe::loadFromXml(const QString &filename) {
                 DevicesItem deviceItem;
 
                 QXmlStreamAttributes attributes = xmlReader.attributes();
-                               deviceItem.deviceNumber = attributes.value("number").toInt();
+                               deviceItem.deviceNumber = devicesItems.size();
                                deviceItem.deviceName = attributes.value("name").toString();
                                deviceItem.startState = attributes.value("start_state").toString();
                                deviceItem.inSafeMode = (attributes.value("in_safe_mode").toString() == "ON");
@@ -221,6 +222,52 @@ void Probe::loadFromXml(const QString &filename) {
                     xmlReader.readNext();
                 }
 
+            } else if (xmlReader.name() == "program") {
+                while (!xmlReader.atEnd() && !xmlReader.hasError()) {
+                    xmlReader.readNext();
+
+                    if (xmlReader.isStartElement() && (xmlReader.name() == "stage")) {
+                        QString stageId = xmlReader.attributes().value("id").toString();
+
+                        while (!xmlReader.atEnd() && !xmlReader.hasError()) {
+                            xmlReader.readNext();
+
+                            if (xmlReader.isStartElement() && (xmlReader.name() == "command")) {
+                                StepsLandingItem landingItem;
+                                StepsActivityItem activityItem;
+
+                                double time = xmlReader.attributes().value("time").toDouble();
+                                QString device = xmlReader.attributes().value("device").toString();
+                                QString action = xmlReader.attributes().value("action").toString();
+                                QString argument = xmlReader.attributes().value("argument").toString();
+
+                                if (stageId == "Landing") {
+                                    landingItem.id = stepsActivityItems.size();
+                                    landingItem.time = time;
+                                    landingItem.device = device;
+                                    landingItem.command = action;
+                                    landingItem.argument = argument;
+                                    stepsLandingItems.append(landingItem);
+                                } else if (stageId == "Surface activity") {
+                                    activityItem.id = stepsActivityItems.size();
+                                    activityItem.time = time;
+                                    activityItem.device = device;
+                                    activityItem.command = action;
+                                    activityItem.argument = argument;
+                                    stepsActivityItems.append(activityItem);
+                                }
+
+                                while (!(xmlReader.isEndElement() && xmlReader.name() == "command")) {
+                                    xmlReader.readNext();
+                                }
+                            } else if (xmlReader.isEndElement() && xmlReader.name() == "stage") {
+                                break;
+                            }
+                        }
+                    } else if (xmlReader.isEndElement() && xmlReader.name() == "program") {
+                        break;
+                    }
+                }
             }
         }
     }
@@ -229,7 +276,10 @@ void Probe::loadFromXml(const QString &filename) {
         return;
     }
 
-    mItems.append({mItems.size(),
+    emit preProbeAppended();
+
+    int probeIndex = mItems.size();
+    mItems.append({probeIndex,
                    probeXmlItem.probeName,
                    probeXmlItem.missionName,
                    probeXmlItem.outerRadius, probeXmlItem.innerRadius,
@@ -237,6 +287,34 @@ void Probe::loadFromXml(const QString &filename) {
                    {},
                    {},
                    ""});
+
+    emit postProbeAppended();
+
+
+    for (int i = 0; i < devicesItems.size(); ++i) {
+        emit preDevicesItemAppended();
+
+        mItems[probeIndex].devices.append(devicesItems[i]);
+
+        emit postDevicesItemAppended();
+    }
+
+    for (int i = 0; i < stepsActivityItems.size(); ++i) {
+        emit preActivityAndLandingItemAppended();
+
+        mItems[probeIndex].stepsActivity.append(stepsActivityItems[i]);
+
+        emit postActivityAndLandingItemRemoved();
+    }
+
+    for (int i = 0; i < stepsLandingItems.size(); ++i) {
+        emit preActivityAndLandingItemAppended();
+
+        mItems[probeIndex].stepsLanding.append(stepsLandingItems[i]);
+
+        emit postActivityAndLandingItemRemoved();
+    }
+
     file.close();
 }
 

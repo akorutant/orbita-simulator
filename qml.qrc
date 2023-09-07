@@ -10,6 +10,7 @@
         <file>DeviceForEarthDialog.qml</file>
         <file>PlanetsDevices.qml</file>
         <file>VersionDialog.qml</file>
-        <file>FileSavePathDialog.qml</file>
+        <file>PathToSaveDialog.qml</file>
+        <file>PathToLoadDialog.qml</file>
     </qresource>
 </RCC>
