@@ -9,21 +9,13 @@ FileDialog {
     visible: false
     folder: pathToSave
     onAccepted: {
-        var folderPath = fileDialog.folder.toString()
+        var folderPath = fileToSaveDialog.folder.toString()
         if (folderPath.startsWith("file://")) {
         folderPath = folderPath.substring(7)
         }
 
         pathToSave = folderPath + `/${probeNameText.text}.xml`
         probes.saveToXml(listViewProbes.currentIndex, pathToSave)
-
-//    var filerPath = fileDialog.fileUrl.toString()
-//    if (filerPath.startsWith("file://")) {
-//    filerPath = filerPath.substring(7)
-//    }
-
-//    pathToLoad = filerPath
-//    probes.loadFromXml(pathToLoad)
 
 
     }

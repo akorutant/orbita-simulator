@@ -1,5 +1,5 @@
 #include "probe.h"
-#include <iostream>
+#include <QDebug>
 
 Probe::Probe(QObject *parent)
     : QObject{parent}
@@ -90,7 +90,6 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        // Handle the error here
         return;
     }
 
@@ -169,11 +168,9 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
     }
     xmlWriter.writeEndElement();
 
-    // Write stages and commands here
-    xmlWriter.writeEndElement(); // Close program
+    xmlWriter.writeEndElement();
 
-    // Close the root element
-    xmlWriter.writeEndElement(); // Close v:probe
+    xmlWriter.writeEndElement();
     xmlWriter.writeEndDocument();
 
     file.close();
@@ -197,29 +194,39 @@ void Probe::loadFromXml(const QString &filename) {
 
         if (xmlReader.isStartElement()) {
             QString elementName = xmlReader.name().toString();
-            if (elementName == "v:probe") {
+            if (elementName == "probe") {
                 probeXmlItem.probeName = xmlReader.attributes().value("name").toString();
-                continue;
             } else if (elementName == "mission") {
                 probeXmlItem.missionName = xmlReader.attributes().value("name").toString();
             } else if (elementName == "radius_external") {
                 xmlReader.readNext();
                 probeXmlItem.outerRadius = xmlReader.text().toDouble();
             } else if (xmlReader.name() == "radius_internal") {
-                xmlReader.readNext(); // Перейти к тексту элемента
+                xmlReader.readNext();
                 probeXmlItem.innerRadius = xmlReader.text().toDouble();
             } else if (xmlReader.name() == "devices") {
-                DevicesItem deviceItem;
-
-                QXmlStreamAttributes attributes = xmlReader.attributes();
-                               deviceItem.deviceNumber = devicesItems.size();
-                               deviceItem.deviceName = attributes.value("name").toString();
-                               deviceItem.startState = attributes.value("start_state").toString();
-                               deviceItem.inSafeMode = (attributes.value("in_safe_mode").toString() == "ON");
-                devicesItems.append(deviceItem);
-
-                while (!(xmlReader.isEndElement() && xmlReader.name() == "device")) {
+                while (!xmlReader.atEnd() && !xmlReader.hasError()) {
                     xmlReader.readNext();
+
+                    if (xmlReader.isStartElement() && xmlReader.name() == "device") {
+                        DevicesItem deviceItem;
+
+
+                        QXmlStreamAttributes attributes = xmlReader.attributes();
+                        deviceItem.deviceNumber = devicesItems.size();
+                        deviceItem.deviceName = attributes.value("name").toString();
+                        deviceItem.startState = attributes.value("start_state").toString();
+                        deviceItem.inSafeMode = (attributes.value("in_safe_mode").toString() == "ON");
+
+                        devicesItems.append(deviceItem);
+
+
+                        while (!(xmlReader.isEndElement() && xmlReader.name() == "device")) {
+                            xmlReader.readNext();
+                        }
+                    } else if (xmlReader.isEndElement() && xmlReader.name() == "devices") {
+                        break;
+                    }
                 }
 
             } else if (xmlReader.name() == "program") {
@@ -236,10 +243,10 @@ void Probe::loadFromXml(const QString &filename) {
                                 StepsLandingItem landingItem;
                                 StepsActivityItem activityItem;
 
-                                double time = xmlReader.attributes().value("time").toDouble();
+                                int time = xmlReader.attributes().value("time").toInt();
                                 QString device = xmlReader.attributes().value("device").toString();
                                 QString action = xmlReader.attributes().value("action").toString();
-                                QString argument = xmlReader.attributes().value("argument").toString();
+                                int argument = xmlReader.attributes().value("argument").toInt();
 
                                 if (stageId == "Landing") {
                                     landingItem.id = stepsActivityItems.size();
@@ -279,10 +286,12 @@ void Probe::loadFromXml(const QString &filename) {
     emit preProbeAppended();
 
     int probeIndex = mItems.size();
+
     mItems.append({probeIndex,
                    probeXmlItem.probeName,
                    probeXmlItem.missionName,
-                   probeXmlItem.outerRadius, probeXmlItem.innerRadius,
+                   probeXmlItem.outerRadius,
+                   probeXmlItem.innerRadius,
                    {},
                    {},
                    {},

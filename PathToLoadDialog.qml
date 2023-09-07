@@ -10,10 +10,26 @@ FileDialog {
     folder: pathToLoad
     onAccepted: {
         var filePath = fileToLoadDialog.fileUrl.toString()
-        if (filePath.startsWith("file://")) {
-            pathToLoad = filePath.substring(7)
+        var folderPath = fileToLoadDialog.folder.toString()
+
+        if (filePath.startsWith("file://") || folderPath.startsWith("file://")) {
+            pathToLoad = folderPath.substring(7)
+            var fileToSave = filePath.substring(7)
         }
 
-        probes.loadFromXml(pathToLoad)
+        probes.loadFromXml(fileToSave)
+        listViewProbes.currentIndex = probes.size() - 1
+        currentProbe = listViewProbes.currentItem.probesModelData
+
+        devicesItems.changeDevices(probes, listViewProbes.currentIndex)
+        stepsActivityItems.changeSteps(probes, listViewProbes.currentIndex)
+        stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
+
+        probeNameText.text = `${currentProbe.probeName}`
+
+        firstNumber.text = `${currentProbe.innerRadius}`
+        secondNumber.text = `${currentProbe.outerRadius}`
+
+        itemsEnabled = true
     }
 }

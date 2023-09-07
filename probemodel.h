@@ -17,6 +17,7 @@ public:
     enum {
         probeNumberRole = Qt::UserRole,
         probeNameRole,
+        missionRole,
         outerRadiusRole,
         innerRadiusRole,
         pythonCodeRole

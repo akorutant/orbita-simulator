@@ -95,7 +95,6 @@ ApplicationWindow  {
                                 devicesItems.changeDevices(probes, index)
                                 stepsActivityItems.changeSteps(probes, index)
                                 stepsLandingItems.changeSteps(probes, index)
-
                             }
                         }
                     }
@@ -103,10 +102,14 @@ ApplicationWindow  {
                     Column {
                         anchors.fill: parent
                         anchors.leftMargin: 5
-                        anchors.topMargin: 15
+                        anchors.topMargin: 5
+                        spacing: 5
                         Text {
-
                             text: index >= 0 && index < listViewProbes.count ? '<b>Аппарат:</b> ' + model.probeName : ""
+                        }
+
+                        Text {
+                            text: index >= 0 && index < listViewProbes.count ? '<b>Миссия:</b> ' + model.missionName : ""
                         }
                     }
                 }
@@ -158,8 +161,10 @@ ApplicationWindow  {
                     stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
 
                     probeNameText.text = `${currentProbe.probeName}`
+
                     firstNumber.text = `${currentProbe.innerRadius}`
                     secondNumber.text = `${currentProbe.outerRadius}`
+
                     itemsEnabled = true
                 }
             }
@@ -189,11 +194,7 @@ ApplicationWindow  {
                 anchors.bottomMargin: 38
                 enabled: itemsEnabled
                 onClicked: {
-                    if (pathToLoad === "/home/") {
-                        pathToLoadDialog.open()
-                    } else {
-                        probes.loadFromXml(pathToLoad)
-                    }
+                    pathToLoadDialog.open()
                 }
             }
 

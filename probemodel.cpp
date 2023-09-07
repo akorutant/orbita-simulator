@@ -28,6 +28,8 @@ QVariant ProbeModel::data(const QModelIndex &index, int role) const
         return QVariant(item.probeNumber);
     case probeNameRole:
         return QVariant(item.probeName);
+    case missionRole:
+        return QVariant(item.missionName);
     case outerRadiusRole:
         return QVariant(item.outerRadius);
     case innerRadiusRole:
@@ -53,6 +55,9 @@ bool ProbeModel::setData(const QModelIndex &index, const QVariant &value, int ro
         break;
     case probeNameRole:
         item.probeName = value.toString();
+        break;
+    case missionRole:
+        item.missionName = value.toString();
         break;
     case outerRadiusRole:
         item.outerRadius = value.toInt();
@@ -84,6 +89,7 @@ QHash<int, QByteArray> ProbeModel::roleNames() const
     QHash<int, QByteArray> names;
     names[probeNumberRole] = "probeNumber";
     names[probeNameRole] = "probeName";
+    names[missionRole] = "missionName";
     names[outerRadiusRole] = "outerRadius";
     names[innerRadiusRole] = "innerRadius";
     names[pythonCodeRole] = "pythonCode";
