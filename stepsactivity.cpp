@@ -23,13 +23,13 @@ bool StepsActivity::setItem(int index, const StepsActivityItem &item)
     return true;
 }
 
-void StepsActivity::appendItem(Probe *probe, bool typeCommand, int probeIndex, double time, QString device, QString command, QString argument)
+void StepsActivity::appendItem(Probe *probe, bool typeCommand, int probeIndex, int deviceNumber, double time, QString device, QString command, QString argument)
 {
     emit preItemAppended();
 
-    mItems.append({mItems.size(), time, device, command, argument});
+    mItems.append({mItems.size(), deviceNumber, time, device, command, argument});
 
-    probe->appendActivityAndLandingItem(probeIndex, typeCommand, time, device, command, argument);
+    probe->appendActivityAndLandingItem(probeIndex, typeCommand, deviceNumber, time, device, command, argument);
 
     emit postItemAppended();
 }
@@ -56,10 +56,12 @@ void StepsActivity::changeSteps(Probe *probe, int probeIndex)
     for (int i = 0; i < probe->items()[probeIndex].stepsActivity.size(); ++i) {
         emit preItemAppended();
 
-        mItems.append({mItems.size(), probe->items()[probeIndex].stepsActivity[i].time,
-                               probe->items()[probeIndex].stepsActivity[i].device,
-                               probe->items()[probeIndex].stepsActivity[i].command,
-                               probe->items()[probeIndex].stepsActivity[i].argument
+        mItems.append({mItems.size(),
+                       probe->items()[probeIndex].stepsActivity[i].deviceNumber,
+                       probe->items()[probeIndex].stepsActivity[i].time,
+                       probe->items()[probeIndex].stepsActivity[i].device,
+                       probe->items()[probeIndex].stepsActivity[i].command,
+                       probe->items()[probeIndex].stepsActivity[i].argument
                       });
 
         emit postItemAppended();

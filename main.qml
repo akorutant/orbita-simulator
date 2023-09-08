@@ -177,7 +177,7 @@ ApplicationWindow  {
                 anchors.bottomMargin: 67
                 enabled: itemsEnabled
                 onClicked: {
-                    probes.saveProbe(listViewProbes.currentIndex, probeNameText.text, firstNumber.text, secondNumber.text)
+                    probes.saveProbe(listViewProbes.currentIndex, probeNameText.text, firstNumber.text, secondNumber.text, pythonCodeTextArea.text)
                     if (pathToSave === "/home/") {
                         pathToSaveDialog.open()
                     } else {
@@ -470,7 +470,7 @@ ApplicationWindow  {
 
                                     delegate: Item {
                                         width: listViewStepsLanding.width
-                                        height: 80
+                                        height: 85
                                         Rectangle {
                                             width: parent.width - devicesScrollBar.width
                                             height: parent.height - 5
@@ -488,7 +488,9 @@ ApplicationWindow  {
                                         Column {
                                             anchors.fill: parent
                                             anchors.leftMargin: 5
-                                            anchors.topMargin: 8
+                                            anchors.topMargin: 2
+
+                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.time? '<b>Номер устройства:</b> ' + model.deviceNumber : "<b>Номер устройства:</b> None" }
 
                                             Text { text: index >= 0 && index < listViewStepsLanding.count && model.time? '<b>Время:</b> ' + model.time : "<b>Время:</b> None" }
 
@@ -566,7 +568,7 @@ ApplicationWindow  {
 
                                         delegate: Item {
                                             width: listViewStepsPlanetActivity.width
-                                            height: 80
+                                            height: 85
                                             Rectangle {
                                                 width: parent.width - devicesScrollBar.width
                                                 height: parent.height - 5
@@ -584,7 +586,9 @@ ApplicationWindow  {
                                             Column {
                                                 anchors.fill: parent
                                                 anchors.leftMargin: 5
-                                                anchors.topMargin: 8
+                                                anchors.topMargin: 2
+
+                                                Text { text: index >= 0 && index < listViewStepsLanding.count && model.time? '<b>Номер устройства:</b> ' + model.deviceNumber : "<b>Номер устройства:</b> None" }
 
                                                 Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.time? '<b>Время:</b> ' + model.time : "<b>Время:</b> None" }
 

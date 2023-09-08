@@ -13,6 +13,7 @@ class StepsLanding;
 
 struct DevicesItem
 {
+    int id;
     int deviceNumber;
     QString deviceName;
     QString startState;

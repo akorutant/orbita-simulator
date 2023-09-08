@@ -119,9 +119,10 @@ Dialog  {
             Layout.preferredHeight: 23
             Layout.row: 3
             Layout.column: 1
+            validator: IntValidator {}
             onTextChanged: {
-                if (argumentInput.text.length > 30) {
-                    argumentInput.text = argumentInput.text.substring(0, 30);
+                if (argumentInput.text.length > 15) {
+                    argumentInput.text = argumentInput.text.substring(0, 15);
                 }
             }
 
@@ -154,7 +155,9 @@ Dialog  {
                         stepsLandingItems.appendItem(probes,
                                                      whatIsWindow,
                                                      listViewProbes.currentIndex,
-                                                     timeInput.text, devicesBox.currentValue,
+                                                     listViewDevices.currentItem.devicesModelData.deviceNumber,
+                                                     timeInput.text,
+                                                     devicesBox.currentValue,
                                                      commandsBox.currentValue,
                                                      argumentInput.text);
                         listViewStepsLanding.currentIndex = stepsLandingItems.size() - 1
@@ -162,7 +165,9 @@ Dialog  {
                         stepsActivityItems.appendItem(probes,
                                                       whatIsWindow,
                                                       listViewProbes.currentIndex,
-                                                      timeInput.text, devicesBox.currentValue,
+                                                      listViewDevices.currentItem.devicesModelData.deviceNumber,
+                                                      timeInput.text,
+                                                      devicesBox.currentValue,
                                                       commandsBox.currentValue,
                                                       argumentInput.text);
                         listViewStepsPlanetActivity.currentIndex = stepsActivityItems.size() - 1

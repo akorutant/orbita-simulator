@@ -24,7 +24,7 @@ bool Probe::setProbe(int index, const ProbeItem &item)
     return true;
 }
 
-void Probe::appendProbe(QString probeName, QString missionName, int outerRadius, int innerRadius, QString pythonCode)
+void Probe::appendProbe(QString probeName, QString missionName, double outerRadius, double innerRadius, QString pythonCode)
 {
     emit preProbeAppended();
 
@@ -42,11 +42,11 @@ void Probe::removeProbe(int index)
     emit postProbeRemoved();
 }
 
-void Probe::appendDevicesItem(int probeIndex, QString deviceName, QString startState, bool inSafeMode)
+void Probe::appendDevicesItem(int probeIndex, int deviceNumber, QString deviceName, QString startState, bool inSafeMode)
 {
     emit preDevicesItemAppended();
 
-    mItems[probeIndex].devices.append({mItems[probeIndex].devices.size(), deviceName, startState, inSafeMode});
+    mItems[probeIndex].devices.append({mItems[probeIndex].devices.size(), deviceNumber, deviceName, startState, inSafeMode});
 
     emit postDevicesItemAppended();
 }
@@ -60,14 +60,14 @@ void Probe::removeDevicesItem(int probeIndex, int index)
     emit postDevicesItemRemoved();
 }
 
-void Probe::appendActivityAndLandingItem(int probeIndex, bool typeCommand, double time, QString device, QString command, QString argument)
+void Probe::appendActivityAndLandingItem(int probeIndex, bool typeCommand, int deviceNumber, double time, QString device, QString command, QString argument)
 {
     emit preActivityAndLandingItemAppended();
 
     if (typeCommand)
-        mItems[probeIndex].stepsLanding.append({mItems[probeIndex].stepsActivity.size(), time, device, command, argument});
+        mItems[probeIndex].stepsLanding.append({mItems[probeIndex].stepsActivity.size(), deviceNumber, time, device, command, argument});
     else
-        mItems[probeIndex].stepsActivity.append({mItems[probeIndex].stepsActivity.size(), time, device, command, argument});
+        mItems[probeIndex].stepsActivity.append({mItems[probeIndex].stepsActivity.size(), deviceNumber, time, device, command, argument});
 
     emit postActivityAndLandingItemAppended();
 }
@@ -98,6 +98,7 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
 
     xmlWriter.writeStartDocument();
     xmlWriter.writeStartElement("v:probe");
+
     xmlWriter.writeAttribute("name", mItems[probeIndex].probeName);
     xmlWriter.writeNamespace("venus", "v");
 
@@ -122,53 +123,64 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
 
     xmlWriter.writeStartElement("devices");
 
-    for (const DevicesItem &deviceItem : mItems[probeIndex].devices)
-    {
-        xmlWriter.writeStartElement("device");
-        xmlWriter.writeAttribute("number", QString::number(deviceItem.deviceNumber));
-        xmlWriter.writeAttribute("name", QString(deviceItem.deviceName));
-        xmlWriter.writeAttribute("start_state", QString(deviceItem.startState));
-        if (deviceItem.inSafeMode) {
-            xmlWriter.writeAttribute("in_safe_mode", "ON");
-        } else {
-            xmlWriter.writeAttribute("in_safe_mode", "OFF");
+    if (mItems[probeIndex].devices.size()) {
+        for (const DevicesItem &deviceItem : mItems[probeIndex].devices)
+        {
+            xmlWriter.writeStartElement("device");
+            xmlWriter.writeAttribute("number", QString::number(deviceItem.deviceNumber));
+            xmlWriter.writeAttribute("name", QString(deviceItem.deviceName));
+            xmlWriter.writeAttribute("start_state", QString(deviceItem.startState));
+            if (deviceItem.inSafeMode) {
+                xmlWriter.writeAttribute("in_safe_mode", "ON");
+            } else {
+                xmlWriter.writeAttribute("in_safe_mode", "OFF");
+            }
+            xmlWriter.writeEndElement();
         }
-        xmlWriter.writeEndElement();
     }
 
+
     xmlWriter.writeEndElement();
 
+    if (mItems[probeIndex].stepsLanding.size() || mItems[probeIndex].stepsActivity.size()) {
+        xmlWriter.writeStartElement("program");
+        if (mItems[probeIndex].stepsLanding.size()) {
+            xmlWriter.writeStartElement("stage");
+            xmlWriter.writeAttribute("id", "Landing");
+            for (const StepsLandingItem &stepsLanding : mItems[probeIndex].stepsLanding)
+            {
+                xmlWriter.writeStartElement("command");
+                xmlWriter.writeAttribute("time", QString::number(stepsLanding.time));
+                xmlWriter.writeAttribute("device", QString(stepsLanding.device));
+                xmlWriter.writeAttribute("action", QString(stepsLanding.command));
+                xmlWriter.writeAttribute("argument", QString(stepsLanding.argument));
+                xmlWriter.writeEndElement();
+            }
+            xmlWriter.writeEndElement();
+        }
 
-    xmlWriter.writeStartElement("program");
+        if (mItems[probeIndex].stepsActivity.size()) {
+            xmlWriter.writeStartElement("stage");
+            xmlWriter.writeAttribute("id", "Surface activity");
 
-    xmlWriter.writeStartElement("stage");
-    xmlWriter.writeAttribute("id", "Landing");
-    for (const StepsLandingItem &stepsLanding : mItems[probeIndex].stepsLanding)
-    {
-        xmlWriter.writeStartElement("command");
-        xmlWriter.writeAttribute("time", QString::number(stepsLanding.time));
-        xmlWriter.writeAttribute("device", QString(stepsLanding.device));
-        xmlWriter.writeAttribute("action", QString(stepsLanding.command));
-        xmlWriter.writeAttribute("argument", QString(stepsLanding.argument));
+            for (const StepsActivityItem &stepsActivity : mItems[probeIndex].stepsActivity)
+            {
+                xmlWriter.writeStartElement("command");
+                xmlWriter.writeAttribute("time", QString::number(stepsActivity.time));
+                xmlWriter.writeAttribute("device", QString(stepsActivity.device));
+                xmlWriter.writeAttribute("action", QString(stepsActivity.command));
+                xmlWriter.writeAttribute("argument", QString(stepsActivity.argument));
+                xmlWriter.writeEndElement();
+            }
+            xmlWriter.writeEndElement();
+        }
+
+        xmlWriter.writeEndElement();
+    } else if (!mItems[probeIndex].pythonCode.isEmpty()) {
+        xmlWriter.writeStartElement("python_code");
+        xmlWriter.writeCDATA("\n" + mItems[probeIndex].pythonCode + "\n");
         xmlWriter.writeEndElement();
     }
-    xmlWriter.writeEndElement();
-
-    xmlWriter.writeStartElement("stage");
-    xmlWriter.writeAttribute("id", "Surface activity");
-
-    for (const StepsActivityItem &stepsActivity : mItems[probeIndex].stepsActivity)
-    {
-        xmlWriter.writeStartElement("command");
-        xmlWriter.writeAttribute("time", QString::number(stepsActivity.time));
-        xmlWriter.writeAttribute("device", QString(stepsActivity.device));
-        xmlWriter.writeAttribute("action", QString(stepsActivity.command));
-        xmlWriter.writeAttribute("argument", QString(stepsActivity.argument));
-        xmlWriter.writeEndElement();
-    }
-    xmlWriter.writeEndElement();
-
-    xmlWriter.writeEndElement();
 
     xmlWriter.writeEndElement();
     xmlWriter.writeEndDocument();
@@ -185,6 +197,7 @@ void Probe::loadFromXml(const QString &filename) {
     QXmlStreamReader xmlReader(&file);
 
     ProbeItem probeXmlItem;
+    probeXmlItem.pythonCode = "";
     QVector<DevicesItem> devicesItems;
     QVector<StepsLandingItem> stepsLandingItems;
     QVector<StepsActivityItem> stepsActivityItems;
@@ -275,6 +288,11 @@ void Probe::loadFromXml(const QString &filename) {
                         break;
                     }
                 }
+            } else if (elementName == "python_code") {
+                xmlReader.readNext();
+                if (xmlReader.isCDATA()) {
+                    probeXmlItem.pythonCode = xmlReader.text().toString();
+                }
             }
         }
     }
@@ -295,45 +313,54 @@ void Probe::loadFromXml(const QString &filename) {
                    {},
                    {},
                    {},
-                   ""});
+                   probeXmlItem.pythonCode});
 
     emit postProbeAppended();
 
+    if (devicesItems.size()) {
+        for (int i = 0; i < devicesItems.size(); ++i) {
+            emit preDevicesItemAppended();
 
-    for (int i = 0; i < devicesItems.size(); ++i) {
-        emit preDevicesItemAppended();
+            mItems[probeIndex].devices.append(devicesItems[i]);
 
-        mItems[probeIndex].devices.append(devicesItems[i]);
-
-        emit postDevicesItemAppended();
+            emit postDevicesItemAppended();
+        }
     }
 
-    for (int i = 0; i < stepsActivityItems.size(); ++i) {
-        emit preActivityAndLandingItemAppended();
 
-        mItems[probeIndex].stepsActivity.append(stepsActivityItems[i]);
+    if (stepsActivityItems.size()) {
+        for (int i = 0; i < stepsActivityItems.size(); ++i) {
+            emit preActivityAndLandingItemAppended();
 
-        emit postActivityAndLandingItemRemoved();
+            mItems[probeIndex].stepsActivity.append(stepsActivityItems[i]);
+
+            emit postActivityAndLandingItemRemoved();
+        }
     }
 
-    for (int i = 0; i < stepsLandingItems.size(); ++i) {
-        emit preActivityAndLandingItemAppended();
+    if (stepsLandingItems.size()) {
+        for (int i = 0; i < stepsLandingItems.size(); ++i) {
+            emit preActivityAndLandingItemAppended();
 
-        mItems[probeIndex].stepsLanding.append(stepsLandingItems[i]);
+            mItems[probeIndex].stepsLanding.append(stepsLandingItems[i]);
 
-        emit postActivityAndLandingItemRemoved();
+            emit postActivityAndLandingItemRemoved();
+        }
     }
+
 
     file.close();
 }
 
 
 
-void Probe::saveProbe(int probeIndex, QString probeName, int innerRadius, int outerRadius)
+void Probe::saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode)
 {
     mItems[probeIndex].probeName = probeName;
     mItems[probeIndex].outerRadius = outerRadius;
     mItems[probeIndex].innerRadius = innerRadius;
+    if (!pythonCode.isEmpty())
+        mItems[probeIndex].pythonCode = pythonCode;
 }
 
 int Probe::size()

@@ -27,8 +27,17 @@ void Devices::appendDevicesItem(Probe* probe, int probeIndex, QString deviceName
 {
     emit preDevicesItemAppended();
 
-    mItems.append({mItems.size(), deviceName, startState, inSafeMode});
-    probe->appendDevicesItem(probeIndex, deviceName, startState, inSafeMode);
+    int numberDevice = 1;
+
+    for (int i = 0; i < mItems.size(); ++i)
+    {
+        if (mItems[i].deviceName == deviceName)
+        {
+            numberDevice++;
+        }
+    }
+    mItems.append({mItems.size(), numberDevice, deviceName, startState, inSafeMode});
+    probe->appendDevicesItem(probeIndex, numberDevice, deviceName, startState, inSafeMode);
 
     emit postDevicesItemAppended();
 
@@ -38,12 +47,12 @@ void Devices::removeDevicesItem(Probe* probe, StepsActivity* stepsActivity, Step
 {
     emit preDevicesItemRemoved(index);
 
-    QString deviceNameToRemove = mItems[index].deviceName;
+    int deviceNumberToRemove = mItems[index].deviceNumber;
 
     if (stepsActivity->items().size()) {
         for (int i = stepsActivity->items().size() - 1; i >= 0; --i)
         {
-            if (stepsActivity->items()[i].device == deviceNameToRemove)
+            if (stepsActivity->items()[i].deviceNumber == deviceNumberToRemove)
             {
                 stepsActivity->removeItem(probe, false, probeIndex, i);
                 break;
@@ -54,7 +63,7 @@ void Devices::removeDevicesItem(Probe* probe, StepsActivity* stepsActivity, Step
     if (stepsLanding->items().size()) {
         for (int i = stepsLanding->items().size() - 1; i >= 0; --i)
         {
-            if (stepsLanding->items()[i].device == deviceNameToRemove)
+            if (stepsLanding->items()[i].deviceNumber == deviceNumberToRemove)
             {
                 stepsLanding->removeItem(probe, true, probeIndex, i);
                 break;
@@ -81,7 +90,9 @@ void Devices::changeDevices(Probe *probe, int probeIndex)
     for (int i = 0; i < probe->items()[probeIndex].devices.size(); ++i) {
         emit preDevicesItemAppended();
 
-        mItems.append({mItems.size(), probe->items()[probeIndex].devices[i].deviceName,
+        mItems.append({mItems.size(),
+                       probe->items()[probeIndex].devices[i].deviceNumber,
+                       probe->items()[probeIndex].devices[i].deviceName,
                        probe->items()[probeIndex].devices[i].startState,
                        probe->items()[probeIndex].devices[i].inSafeMode
                       });

@@ -16,6 +16,7 @@ public:
 
     enum {
         idRole = Qt::UserRole,
+        deviceNumberRole,
         timeRole,
         deviceRole,
         commandRole,

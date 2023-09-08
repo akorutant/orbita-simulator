@@ -18,8 +18,8 @@ struct ProbeItem
     int probeNumber;
     QString probeName;
     QString missionName;
-    int outerRadius;
-    int innerRadius;
+    double outerRadius;
+    double innerRadius;
     QVector<DevicesItem> devices;
     QVector<StepsActivityItem> stepsActivity;
     QVector<StepsLandingItem> stepsLanding;
@@ -54,19 +54,19 @@ signals:
    void postActivityAndLandingItemRemoved();
 
 public slots:
-    void appendProbe(QString probeName, QString missionName, int outerRadius, int innerRadius, QString pythonCode);
+    void appendProbe(QString probeName, QString missionName, double outerRadius, double innerRadius, QString pythonCode);
     void removeProbe(int index);
 
-    void appendDevicesItem(int probeIndex, QString deviceName, QString startState, bool inSafeMode);
+    void appendDevicesItem(int probeIndex, int deviceNumber, QString deviceName, QString startState, bool inSafeMode);
     void removeDevicesItem(int probeIndex,int index);
 
-    void appendActivityAndLandingItem(int probeIndex, bool typCommand, double time, QString device, QString command, QString argument);
+    void appendActivityAndLandingItem(int probeIndex, bool typCommand, int deviceNumber, double time, QString device, QString command, QString argument);
     void removeActivityAndLandingItem(int probeIndex, bool typeCommand, int index);
 
     void saveToXml(int probeIndex, const QString &filename);
     void loadFromXml(const QString &filename);
 
-    void saveProbe(int probeIndex, QString probeName, int innerRadius, int outerRadius);
+    void saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode);
     int size();
 
 private:

@@ -29,6 +29,8 @@ FileDialog {
 
         firstNumber.text = `${currentProbe.innerRadius}`
         secondNumber.text = `${currentProbe.outerRadius}`
+        if (currentProbe.pythonCode)
+            pythonCodeTextArea.text = currentProbe.pythonCode
 
         itemsEnabled = true
     }

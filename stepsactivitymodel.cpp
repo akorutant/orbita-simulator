@@ -24,6 +24,8 @@ QVariant StepsActivityModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case idRole:
         return QVariant(item.id);
+    case deviceNumberRole:
+        return QVariant(item.deviceNumber);
     case timeRole:
         return QVariant(item.time);
     case deviceRole:
@@ -48,6 +50,9 @@ bool StepsActivityModel::setData(const QModelIndex &index, const QVariant &value
     switch (role) {
     case idRole:
         item.id = value.toInt();
+        break;
+    case deviceNumberRole:
+        item.deviceNumber = value.toInt();
         break;
     case timeRole:
         item.time = value.toDouble();
@@ -82,6 +87,7 @@ QHash<int, QByteArray> StepsActivityModel::roleNames() const
 {
     QHash<int, QByteArray> names;
     names[idRole] = "id";
+    names[deviceNumberRole] = "deviceNumber";
     names[timeRole] = "time";
     names[deviceRole] = "device";
     names[commandRole] = "command";
