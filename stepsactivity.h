@@ -13,7 +13,7 @@ struct StepsActivityItem {
     double time;
     QString device;
     QString command;
-    QString argument;
+    int argument;
 };
 
 class StepsActivity : public QObject
@@ -32,7 +32,7 @@ signals:
     void postItemRemoved();
 
 public slots:
-    void appendItem(Probe* probe, bool typeCommand, int probeIndex, int deviceNumber, double time, QString device, QString command, QString argument);
+    void appendItem(Probe* probe, bool typeCommand, int probeIndex, int deviceNumber, double time, QString device, QString command, int argument);
     void removeItem(Probe* probe, bool typeCommand, int probeIndex, int index);
     void changeSteps(Probe* probe, int probeIndex);
 

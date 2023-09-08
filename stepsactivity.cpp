@@ -23,7 +23,7 @@ bool StepsActivity::setItem(int index, const StepsActivityItem &item)
     return true;
 }
 
-void StepsActivity::appendItem(Probe *probe, bool typeCommand, int probeIndex, int deviceNumber, double time, QString device, QString command, QString argument)
+void StepsActivity::appendItem(Probe *probe, bool typeCommand, int probeIndex, int deviceNumber, double time, QString device, QString command, int argument)
 {
     emit preItemAppended();
 

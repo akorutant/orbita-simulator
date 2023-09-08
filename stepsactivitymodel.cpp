@@ -64,7 +64,7 @@ bool StepsActivityModel::setData(const QModelIndex &index, const QVariant &value
         item.command = value.toString();
         break;
     case argumentRole:
-        item.argument = value.toString();
+        item.argument = value.toInt();
         break;
     }
 

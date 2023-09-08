@@ -25,7 +25,7 @@ QVariant ComboBoxDevices::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case textRole:
-        return QVariant(item.deviceName + " " + deviceNumber);
+        return QVariant(item.deviceName + deviceNumber);
     }
 
 
@@ -42,7 +42,7 @@ bool ComboBoxDevices::setData(const QModelIndex &index, const QVariant &value, i
 
     switch (role) {
     case textRole:
-        item.deviceName = value.toString() + " " + deviceNumber;
+        item.deviceName = value.toString() + deviceNumber;
         break;
     }
 

@@ -23,7 +23,7 @@ bool StepsLanding::setItem(int index, const StepsLandingItem &item)
     return true;
 }
 
-void StepsLanding::appendItem(Probe *probe, bool typeCommand, int probeIndex, int deviceNumber, double time, QString device, QString command, QString argument)
+void StepsLanding::appendItem(Probe *probe, bool typeCommand, int probeIndex, int deviceNumber, double time, QString device, QString command, int argument)
 {
     emit preItemAppended();
 

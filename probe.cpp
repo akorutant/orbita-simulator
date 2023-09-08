@@ -60,7 +60,7 @@ void Probe::removeDevicesItem(int probeIndex, int index)
     emit postDevicesItemRemoved();
 }
 
-void Probe::appendActivityAndLandingItem(int probeIndex, bool typeCommand, int deviceNumber, double time, QString device, QString command, QString argument)
+void Probe::appendActivityAndLandingItem(int probeIndex, bool typeCommand, int deviceNumber, double time, QString device, QString command, int argument)
 {
     emit preActivityAndLandingItemAppended();
 
@@ -167,7 +167,7 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
             {
                 xmlWriter.writeStartElement("command");
                 xmlWriter.writeAttribute("time", QString::number(stepsActivity.time));
-                xmlWriter.writeAttribute("device", QString(stepsActivity.device));
+                xmlWriter.writeAttribute("device", QString(stepsActivity.device + stepsActivity.deviceNumber));
                 xmlWriter.writeAttribute("action", QString(stepsActivity.command));
                 xmlWriter.writeAttribute("argument", QString(stepsActivity.argument));
                 xmlWriter.writeEndElement();
@@ -253,6 +253,7 @@ void Probe::loadFromXml(const QString &filename) {
                             xmlReader.readNext();
 
                             if (xmlReader.isStartElement() && (xmlReader.name() == "command")) {
+                                QRegExp rx("([A-Za-z]+)(\\d+)");
                                 StepsLandingItem landingItem;
                                 StepsActivityItem activityItem;
 
@@ -262,16 +263,23 @@ void Probe::loadFromXml(const QString &filename) {
                                 int argument = xmlReader.attributes().value("argument").toInt();
 
                                 if (stageId == "Landing") {
+                                    if (rx.indexIn(device) != -1) {
+                                        landingItem.device = rx.cap(1);
+                                        landingItem.deviceNumber = rx.cap(2).toInt();
+                                    }
+
                                     landingItem.id = stepsActivityItems.size();
                                     landingItem.time = time;
-                                    landingItem.device = device;
                                     landingItem.command = action;
                                     landingItem.argument = argument;
                                     stepsLandingItems.append(landingItem);
                                 } else if (stageId == "Surface activity") {
+                                    if (rx.indexIn(device) != -1) {
+                                        activityItem.device = rx.cap(1);
+                                        activityItem.deviceNumber = rx.cap(3).toInt();
+                                    }
                                     activityItem.id = stepsActivityItems.size();
                                     activityItem.time = time;
-                                    activityItem.device = device;
                                     activityItem.command = action;
                                     activityItem.argument = argument;
                                     stepsActivityItems.append(activityItem);

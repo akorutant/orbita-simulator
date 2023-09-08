@@ -60,7 +60,7 @@ public slots:
     void appendDevicesItem(int probeIndex, int deviceNumber, QString deviceName, QString startState, bool inSafeMode);
     void removeDevicesItem(int probeIndex,int index);
 
-    void appendActivityAndLandingItem(int probeIndex, bool typCommand, int deviceNumber, double time, QString device, QString command, QString argument);
+    void appendActivityAndLandingItem(int probeIndex, bool typCommand, int deviceNumber, double time, QString device, QString command, int argument);
     void removeActivityAndLandingItem(int probeIndex, bool typeCommand, int index);
 
     void saveToXml(int probeIndex, const QString &filename);
