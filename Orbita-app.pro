@@ -9,6 +9,10 @@ SOURCES += \
         devices.cpp \
         devicesmodel.cpp \
         main.cpp \
+        planetdevices.cpp \
+        planets.cpp \
+        planetsdevicesmodel.cpp \
+        planetsmodel.cpp \
         probe.cpp \
         probemodel.cpp \
         stepsactivity.cpp \
@@ -38,6 +42,10 @@ HEADERS += \
     comboboxdevices.h \
     devices.h \
     devicesmodel.h \
+    planetdevices.h \
+    planets.h \
+    planetsdevicesmodel.h \
+    planetsmodel.h \
     probe.h \
     probemodel.h \
     stepsactivity.h \

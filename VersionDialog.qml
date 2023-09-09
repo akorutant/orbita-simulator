@@ -59,7 +59,8 @@ Dialog  {
                         mainWindow.typeMission = false
                     }
                     modelSolutions.append({text: "Python"})
-                    selectMissonButton.enabled = true
+                    newProbeButton.enabled = true
+                    loadProbeButton.enabled = true
                     versionSelect.currentIndex = 0
 
                     versionDialog.accepted()

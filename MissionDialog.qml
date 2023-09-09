@@ -3,6 +3,9 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import PlanetsModel 1.0
+
+
 Dialog  {
     id: missionDialog
     width: 264
@@ -29,10 +32,9 @@ Dialog  {
                 Layout.preferredWidth: width
                 Layout.preferredHeight: height
                 editable: false
-                model: ListModel {
+                model: PlanetsModel {
                     id: modelMissions
-                    ListElement { text: "Луна" }
-                    ListElement { text: "Марс" }
+                    list: planetsItems
                 }
                 onAccepted: {
                     if (find(editText) === -1)
@@ -107,14 +109,31 @@ Dialog  {
                             showPythonArea.text = ""
                         }
 
+                        missionIndex = missonSelect.currentIndex
+
+                        probes.appendProbe("probe", missonSelect.currentText, 0, 0, "")
+                        listViewProbes.currentIndex = probes.size() - 1
+                        currentProbe = listViewProbes.currentItem.probesModelData
+                        devicesItems.changeDevices(probes, listViewProbes.currentIndex)
+                        stepsActivityItems.changeSteps(probes, listViewProbes.currentIndex)
+                        stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
+
+                        probeNameText.text = `${currentProbe.probeName}`
+
+                        firstNumber.text = `${currentProbe.innerRadius}`
+                        secondNumber.text = `${currentProbe.outerRadius}`
+
+                        itemsEnabled = true
 
                         missonSelect.currentIndex = 0
                         solutionSelect.currentIndex = 0
-                        newProbeButton.enabled = true
-                        loadProbeButton.enabled = true
 
                         missionDialog.accepted()
                         missionDialog.close()
+                    } else if (!missonSelect.currentText) {
+                        errorDialog.textOfError = "Вы не выбрали миссию"
+                        errorDialog.open()
+                        return
                     } else {
                         errorDialog.textOfError = "Вы не выбрали способ решения"
                         errorDialog.open()

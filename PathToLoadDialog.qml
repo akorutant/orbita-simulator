@@ -29,8 +29,18 @@ FileDialog {
 
         firstNumber.text = `${currentProbe.innerRadius}`
         secondNumber.text = `${currentProbe.outerRadius}`
-        if (currentProbe.pythonCode)
+        if (currentProbe.pythonCode) {
+            showPlanetsElems = false
+            showPlanetsDevices = true
+            showPythonArea = true
+            showDiagrammButton = false
             pythonCodeTextArea.text = currentProbe.pythonCode
+        } else {
+            showPlanetsElems = true
+            showPlanetsDevices = true
+            showPythonArea = false
+            showDiagrammButton = false
+        }
 
         itemsEnabled = true
     }

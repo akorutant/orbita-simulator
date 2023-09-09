@@ -17,13 +17,13 @@ bool Devices::setDevicesItem(int index, const DevicesItem &item)
         return false;
 
     const DevicesItem &olditem = mItems.at(index);
-    if (item.deviceNumber == olditem.deviceNumber)
+    if (item.id == olditem.id)
         return false;
     mItems[index] = item;
     return true;
 }
 
-void Devices::appendDevicesItem(Probe* probe, int probeIndex, QString deviceName, QString startState, bool inSafeMode)
+void Devices::appendDevicesItem(Probe* probe, int probeIndex, QString deviceName, QString deviceCode, QString deviceEngName, QString startState, bool inSafeMode)
 {
     emit preDevicesItemAppended();
 
@@ -36,8 +36,8 @@ void Devices::appendDevicesItem(Probe* probe, int probeIndex, QString deviceName
             numberDevice++;
         }
     }
-    mItems.append({mItems.size(), numberDevice, deviceName, startState, inSafeMode});
-    probe->appendDevicesItem(probeIndex, numberDevice, deviceName, startState, inSafeMode);
+    mItems.append({mItems.size(), numberDevice, deviceName, deviceCode, deviceEngName, startState, inSafeMode});
+    probe->appendDevicesItem(probeIndex, numberDevice, deviceName, deviceCode, deviceEngName, startState, inSafeMode);
 
     emit postDevicesItemAppended();
 
@@ -93,6 +93,8 @@ void Devices::changeDevices(Probe *probe, int probeIndex)
         mItems.append({mItems.size(),
                        probe->items()[probeIndex].devices[i].deviceNumber,
                        probe->items()[probeIndex].devices[i].deviceName,
+                       probe->items()[probeIndex].devices[i].deviceCode,
+                       probe->items()[probeIndex].devices[i].deviceEngName,
                        probe->items()[probeIndex].devices[i].startState,
                        probe->items()[probeIndex].devices[i].inSafeMode
                       });

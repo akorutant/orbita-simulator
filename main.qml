@@ -37,6 +37,7 @@ ApplicationWindow  {
     property var currentProbe: undefined
     property string pathToSave: "/home/"
     property string pathToLoad: "/home/"
+    property int missionIndex: 0
 
     RowLayout {
         anchors.fill: parent
@@ -53,7 +54,7 @@ ApplicationWindow  {
                 anchors.fill: parent
                 width: parent.width
                 height: parent.height - newProbeButton.height
-                anchors.bottomMargin: 187
+                anchors.bottomMargin: 158
                 clip: true
                 enabled: itemsEnabled
                 model: ProbeModel {
@@ -121,26 +122,9 @@ ApplicationWindow  {
                 width: parent.width; height: 23
                 text: "Выбрать версию"
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 154
+                anchors.bottomMargin: 125
                 onClicked: {
                     versionDialog.open()
-                }
-            }
-
-            Button {
-                id: selectMissonButton
-
-                width: parent.width; height: 23
-                text: "Выбрать миссию"
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 125
-                enabled: false
-                onClicked: {
-                    if (typeMission && probes.size()) {
-                        currentProbe = listViewProbes.currentItem.probesModelData
-                    }
-                    listViewProbes.currentIndex = 0
-                    missionDialog.open()
                 }
             }
 
@@ -153,19 +137,7 @@ ApplicationWindow  {
                 enabled: false
 
                 onClicked: {
-                    probes.appendProbe("probe", 'missonSelect.currentText', 0, 0, "")
-                    listViewProbes.currentIndex = probes.size() - 1
-                    currentProbe = listViewProbes.currentItem.probesModelData
-                    devicesItems.changeDevices(probes, listViewProbes.currentIndex)
-                    stepsActivityItems.changeSteps(probes, listViewProbes.currentIndex)
-                    stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
-
-                    probeNameText.text = `${currentProbe.probeName}`
-
-                    firstNumber.text = `${currentProbe.innerRadius}`
-                    secondNumber.text = `${currentProbe.outerRadius}`
-
-                    itemsEnabled = true
+                    missionDialog.open()
                 }
             }
 
@@ -181,7 +153,7 @@ ApplicationWindow  {
                     if (pathToSave === "/home/") {
                         pathToSaveDialog.open()
                     } else {
-                        probes.saveToXml(listViewProbes.currentIndex, pathToSave)
+                        probes.saveToXml(listViewProbes.currentIndex, planetsItems, missionIndex, pathToSave)
                     }
                 }
             }
@@ -252,8 +224,8 @@ ApplicationWindow  {
 
                     GridLayout {
                         height: parent.height
-                        columns: 2 // Две колонки
-                        rows: 2    // Две строки
+                        columns: 2
+                        rows: 2
 
                         Text {
                             text: "Внутренний радиус (м)"
@@ -263,16 +235,15 @@ ApplicationWindow  {
 
                         TextInput {
                             id: firstNumber
-                            Layout.row: 0    // Первая строка
-                            Layout.column: 1 // Вторая колонка
+                            Layout.row: 0
+                            Layout.column: 1
                             width: 200
                             height: 10
-                            validator: IntValidator {}
                             enabled: itemsEnabled
 
                             onTextChanged: {
-                                if (firstNumber.text.length > 10) {
-                                    firstNumber.text = firstNumber.text.substring(0, 10);
+                                if (!/^[-]?[0-9]*[.]?[0-9]*$/.test(firstNumber.text)) {
+                                    firstNumber.text = firstNumber.text.replace(new RegExp("[^\\d.\\-]", "g"), "");
                                 }
                             }
 
@@ -297,12 +268,11 @@ ApplicationWindow  {
                             Layout.column: 1
                             width: 200
                             height: 10
-                            validator: IntValidator {}
                             enabled: itemsEnabled
 
                             onTextChanged: {
-                                if (secondNumber.text.length > 10) {
-                                    secondNumber.text = secondNumber.text.substring(0, 10);
+                                if (!/^[-]?[0-9]*[.]?[0-9]*$/.test(secondNumber.text)) {
+                                    secondNumber.text = secondNumber.text.replace(new RegExp("[^\\d.\\-]", "g"), "");
                                 }
                             }
 

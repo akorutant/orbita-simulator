@@ -16,6 +16,8 @@ struct DevicesItem
     int id;
     int deviceNumber;
     QString deviceName;
+    QString deviceCode;
+    QString deviceEngName;
     QString startState;
     bool inSafeMode;
 };
@@ -41,7 +43,7 @@ signals:
     void postDevicesItemCleared();
 
 public slots:
-    void appendDevicesItem(Probe* probe, int probeIndex, QString deviceName, QString startState, bool inSafeMode);
+    void appendDevicesItem(Probe* probe, int probeIndex, QString deviceName, QString deviceCode, QString deviceEngName, QString startState, bool inSafeMode);
     void removeDevicesItem(Probe* probe, StepsActivity* stepsActivity, StepsLanding* stepsLanding, int probeIndex, int index);
 
     void changeDevices(Probe* probe, int probeIndex);

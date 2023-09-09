@@ -15,7 +15,7 @@ FileDialog {
         }
 
         pathToSave = folderPath + `/${probeNameText.text}.xml`
-        probes.saveToXml(listViewProbes.currentIndex, pathToSave)
+        probes.saveToXml(listViewProbes.currentIndex, planetsItems, missionIndex, pathToSave)
 
 
     }

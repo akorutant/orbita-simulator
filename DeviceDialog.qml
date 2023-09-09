@@ -3,146 +3,164 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import PlanetsDevicesModel 1.0
+
 Dialog  {
     id: deviceDialog
-    width: 264
+    width: 450
     height: 146
     visible: false
     modal: true
     x: mainWindow.width / 2 - width / 2
     y: mainWindow.height / 2 - height / 2
-    PlanetsDevices {id: planetsDevices}
 
-    GridLayout {
+    ColumnLayout {
         anchors.fill: parent
-        columns: 2
-        rows: 5
+        width: parent.width
+        height: parent.height
 
-        Text {
-            id: deviceText
-            Layout.preferredWidth: parent.width * 0.5
-            Layout.preferredHeight: 23
-            text: "Устройство"
-            Layout.row: 0
-            Layout.column: 0
-        }
-
-        ComboBox {
-            id: deviceBox
-            Layout.preferredWidth: parent.width * 0.5
-            Layout.preferredHeight: 23
-            Layout.row: 0
-            Layout.column: 1
-
-            editable: false
-            model: planetsDevices
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({type: editText})
-                    currentIndex = find(editText)
-            }
-        }
-
-        Text {
-            Layout.preferredWidth: parent.width * 0.5
-            Layout.preferredHeight: 23
-            text: "Нач. состояние"
-            Layout.row: 1
-            Layout.column: 0
-        }
-
-        ComboBox {
-            id: startStateBox
-            Layout.preferredWidth: parent.width * 0.5
-            Layout.preferredHeight: 23
-            Layout.row: 1
-            Layout.column: 1
-            editable: false
-            model: ListModel {
-                id: modelStates
-                ListElement { text: "ON" }
-                ListElement { text: "OFF" }
-            }
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({text: editText})
-            }
-        }
-
-        Text {
-            Layout.preferredWidth: parent.width * 0.5
-            Layout.preferredHeight: 23
-            text: "Safe Mode"
-            Layout.row: 2
-            Layout.column: 0
-        }
-
-        ComboBox {
-            id: safeModeBox
-            Layout.preferredWidth: parent.width * 0.5
-            Layout.preferredHeight: 23
-            Layout.row: 2
-            Layout.column: 1
-            editable: false
-            model: ListModel {
-                id: modelCommands
-                ListElement { text: "ON" }
-                ListElement { text: "OFF" }
-            }
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({text: editText})
-            }
-        }
-
-
-
-        Button {
-            height: 23
+        RowLayout {
             width: parent.width
-            Layout.preferredHeight: 23
-            Layout.preferredWidth: parent.width * 0.5
-            Layout.column: 0
-            Layout.row: 4
-            text: "ОК"
-            onClicked: {
-                devicesItems.appendDevicesItem(
-                            probes,
-                            listViewProbes.currentIndex,
-                            deviceBox.currentValue,
-                            startStateBox.currentValue,
-                            safeModeBox.currentIndex === 1 ? false : true)
-
-                listViewDevices.currentIndex = devicesItems.size() - 1
-
-                deviceBox.currentIndex = 0
-                startStateBox.currentIndex = 0
-                safeModeBox.currentIndex = 0
-                deviceDialog.accepted()
-                deviceDialog.close()
+            height: parent.height * 0.2
+            Layout.preferredWidth: parent.width
+            Layout.preferredHeight: parent.height * 0.2
+            Text {
+                id: deviceText
+                Layout.preferredWidth: parent.width * 0.3
+                Layout.preferredHeight: 23
+                text: "Устройство"
             }
 
+            ComboBox {
+                id: deviceBox
+                Layout.preferredWidth: parent.width * 0.7
+                Layout.preferredHeight: 23
+                editable: false
+                model: PlanetsDevicesModel {
+                    list: planetDevicesItems
+                }
+                onAccepted: {
+                    if (find(editText) === -1)
+                        model.append({type: editText})
+                        currentIndex = find(editText)
+                }
+            }
         }
 
-        Button {
-            height: 23
+        GridLayout {
             width: parent.width
-            Layout.preferredHeight: 23
-            Layout.preferredWidth: parent.width * 0.5
-            Layout.column: 1
-            Layout.row: 4
-            text: "Отмена"
-            onClicked: {
-                deviceBox.currentIndex = 0
-                startStateBox.currentIndex = 0
-                safeModeBox.currentIndex = 0
-                deviceDialog.rejected()
-                deviceDialog.close()
+            height: parent.height * 0.8
+            Layout.preferredWidth: parent.width
+            Layout.preferredHeight: parent.height * 0.8
+            columns: 2
+            rows: 4
+
+            Text {
+                Layout.preferredWidth: parent.width * 0.5
+                Layout.preferredHeight: 23
+                text: "Нач. состояние"
+                Layout.row: 1
+                Layout.column: 0
             }
 
+            ComboBox {
+                id: startStateBox
+                Layout.preferredWidth: parent.width * 0.5
+                Layout.preferredHeight: 23
+                Layout.row: 1
+                Layout.column: 1
+                editable: false
+                model: ListModel {
+                    id: modelStates
+                    ListElement { text: "ON" }
+                    ListElement { text: "OFF" }
+                }
+                onAccepted: {
+                    if (find(editText) === -1)
+                        model.append({text: editText})
+                }
+            }
+
+            Text {
+                Layout.preferredWidth: parent.width * 0.5
+                Layout.preferredHeight: 23
+                text: "Safe Mode"
+                Layout.row: 2
+                Layout.column: 0
+            }
+
+            ComboBox {
+                id: safeModeBox
+                Layout.preferredWidth: parent.width * 0.5
+                Layout.preferredHeight: 23
+                Layout.row: 2
+                Layout.column: 1
+                editable: false
+                model: ListModel {
+                    id: modelCommands
+                    ListElement { text: "ON" }
+                    ListElement { text: "OFF" }
+                }
+                onAccepted: {
+                    if (find(editText) === -1)
+                        model.append({text: editText})
+                }
+            }
+
+
+
+            Button {
+                height: 23
+                width: parent.width
+                Layout.preferredHeight: 23
+                Layout.preferredWidth: parent.width * 0.5
+                Layout.column: 0
+                Layout.row: 3
+                text: "ОК"
+                onClicked: {
+                    var deviceCode = planetDevicesItems.getDeviceCode(deviceBox.currentValue)
+                    var deviceEngName = planetDevicesItems.getDeviceEngName(deviceBox.currentValue)
+
+                    devicesItems.appendDevicesItem(
+                                probes,
+                                listViewProbes.currentIndex,
+                                deviceBox.currentValue,
+                                deviceCode,
+                                deviceEngName,
+                                startStateBox.currentValue,
+                                safeModeBox.currentIndex === 1 ? false : true)
+
+                    listViewDevices.currentIndex = devicesItems.size() - 1
+
+                    deviceBox.currentIndex = 0
+                    startStateBox.currentIndex = 0
+                    safeModeBox.currentIndex = 0
+                    deviceDialog.accepted()
+                    deviceDialog.close()
+                }
+
+            }
+
+            Button {
+                height: 23
+                width: parent.width
+                Layout.preferredHeight: 23
+                Layout.preferredWidth: parent.width * 0.5
+                Layout.column: 1
+                Layout.row: 3
+                text: "Отмена"
+                onClicked: {
+                    deviceBox.currentIndex = 0
+                    startStateBox.currentIndex = 0
+                    safeModeBox.currentIndex = 0
+                    deviceDialog.rejected()
+                    deviceDialog.close()
+                }
+
+            }
+
+
         }
-
-
     }
 
 }

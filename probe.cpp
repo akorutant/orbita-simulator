@@ -42,11 +42,11 @@ void Probe::removeProbe(int index)
     emit postProbeRemoved();
 }
 
-void Probe::appendDevicesItem(int probeIndex, int deviceNumber, QString deviceName, QString startState, bool inSafeMode)
+void Probe::appendDevicesItem(int probeIndex, int deviceNumber, QString deviceName, QString deviceCode, QString deviceEngName, QString startState, bool inSafeMode)
 {
     emit preDevicesItemAppended();
 
-    mItems[probeIndex].devices.append({mItems[probeIndex].devices.size(), deviceNumber, deviceName, startState, inSafeMode});
+    mItems[probeIndex].devices.append({mItems[probeIndex].devices.size(), deviceNumber, deviceName, deviceCode, deviceEngName, startState, inSafeMode});
 
     emit postDevicesItemAppended();
 }
@@ -85,7 +85,7 @@ void Probe::removeActivityAndLandingItem(int probeIndex, bool typeCommand, int i
 
 }
 
-void Probe::saveToXml(int probeIndex, const QString &filename)
+void Probe::saveToXml(int probeIndex, Planets *planetsData, int planetIndex, const QString &filename)
 {
     QFile file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -105,10 +105,10 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
     xmlWriter.writeStartElement("flight");
 
     xmlWriter.writeStartElement("mission");
-    xmlWriter.writeAttribute("name", "Moon");
+    xmlWriter.writeAttribute("name", planetsData->items()[planetIndex].planetName);
     xmlWriter.writeEndElement();
 
-    xmlWriter.writeTextElement("start_height", "50000");
+    xmlWriter.writeTextElement("start_height", QString::number(planetsData->items()[planetIndex].height));
 
     xmlWriter.writeEndElement();
 
@@ -116,8 +116,14 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
     xmlWriter.writeStartElement("parameters");
     xmlWriter.writeTextElement("radius_external", QString::number(mItems[probeIndex].outerRadius));
     xmlWriter.writeTextElement("radius_internal", QString::number(mItems[probeIndex].innerRadius));
-    xmlWriter.writeTextElement("absorber", "OFF");
-    xmlWriter.writeTextElement("isolator", "OFF");
+    if (planetsData->items()[planetIndex].planetName == "Mercury" || planetsData->items()[planetIndex].planetName == "Venus") {
+        xmlWriter.writeTextElement("absorber", "ON");
+        xmlWriter.writeTextElement("isolator", "ON");
+    } else {
+        xmlWriter.writeTextElement("absorber", "OFF");
+        xmlWriter.writeTextElement("isolator", "OFF");
+    }
+
 
     xmlWriter.writeEndElement();
 
@@ -128,7 +134,7 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
         {
             xmlWriter.writeStartElement("device");
             xmlWriter.writeAttribute("number", QString::number(deviceItem.deviceNumber));
-            xmlWriter.writeAttribute("name", QString(deviceItem.deviceName));
+            xmlWriter.writeAttribute("name", QString(deviceItem.deviceEngName));
             xmlWriter.writeAttribute("start_state", QString(deviceItem.startState));
             if (deviceItem.inSafeMode) {
                 xmlWriter.writeAttribute("in_safe_mode", "ON");
@@ -153,7 +159,7 @@ void Probe::saveToXml(int probeIndex, const QString &filename)
                 xmlWriter.writeAttribute("time", QString::number(stepsLanding.time));
                 xmlWriter.writeAttribute("device", QString(stepsLanding.device));
                 xmlWriter.writeAttribute("action", QString(stepsLanding.command));
-                xmlWriter.writeAttribute("argument", QString(stepsLanding.argument));
+                xmlWriter.writeAttribute("argument", QString::number(stepsLanding.argument));
                 xmlWriter.writeEndElement();
             }
             xmlWriter.writeEndElement();
@@ -224,9 +230,8 @@ void Probe::loadFromXml(const QString &filename) {
                     if (xmlReader.isStartElement() && xmlReader.name() == "device") {
                         DevicesItem deviceItem;
 
-
                         QXmlStreamAttributes attributes = xmlReader.attributes();
-                        deviceItem.deviceNumber = devicesItems.size();
+                        deviceItem.deviceNumber = attributes.value("number").toInt();
                         deviceItem.deviceName = attributes.value("name").toString();
                         deviceItem.startState = attributes.value("start_state").toString();
                         deviceItem.inSafeMode = (attributes.value("in_safe_mode").toString() == "ON");

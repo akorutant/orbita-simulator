@@ -8,6 +8,7 @@
 #include "devices.h"
 #include "stepsactivity.h"
 #include "stepslanding.h"
+#include "planets.h"
 
 struct DevicesItem;
 struct StepsActivityItem;
@@ -25,6 +26,8 @@ struct ProbeItem
     QVector<StepsLandingItem> stepsLanding;
     QString pythonCode;
 };
+
+class Planets;
 
 class Probe : public QObject
 {
@@ -57,13 +60,13 @@ public slots:
     void appendProbe(QString probeName, QString missionName, double outerRadius, double innerRadius, QString pythonCode);
     void removeProbe(int index);
 
-    void appendDevicesItem(int probeIndex, int deviceNumber, QString deviceName, QString startState, bool inSafeMode);
+    void appendDevicesItem(int probeIndex, int deviceNumber, QString deviceName, QString deviceCode,  QString deviceEngName, QString startState, bool inSafeMode);
     void removeDevicesItem(int probeIndex,int index);
 
     void appendActivityAndLandingItem(int probeIndex, bool typCommand, int deviceNumber, double time, QString device, QString command, int argument);
     void removeActivityAndLandingItem(int probeIndex, bool typeCommand, int index);
 
-    void saveToXml(int probeIndex, const QString &filename);
+    void saveToXml(int probeIndex, Planets *planetsData, int planetIndex, const QString &filename);
     void loadFromXml(const QString &filename);
 
     void saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode);

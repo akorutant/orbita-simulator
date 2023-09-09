@@ -8,7 +8,6 @@
         <file>ErrorMessage.qml</file>
         <file>SuccessMessage.qml</file>
         <file>DeviceForEarthDialog.qml</file>
-        <file>PlanetsDevices.qml</file>
         <file>VersionDialog.qml</file>
         <file>PathToSaveDialog.qml</file>
         <file>PathToLoadDialog.qml</file>
