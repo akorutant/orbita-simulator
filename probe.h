@@ -9,6 +9,7 @@
 #include "stepsactivity.h"
 #include "stepslanding.h"
 #include "planets.h"
+#include "planetdevices.h"
 
 struct DevicesItem;
 struct StepsActivityItem;
@@ -28,6 +29,7 @@ struct ProbeItem
 };
 
 class Planets;
+class PlanetDevices;
 
 class Probe : public QObject
 {
@@ -67,7 +69,7 @@ public slots:
     void removeActivityAndLandingItem(int probeIndex, bool typeCommand, int index);
 
     void saveToXml(int probeIndex, Planets *planetsData, int planetIndex, const QString &filename);
-    void loadFromXml(const QString &filename);
+    void loadFromXml(const QString &filename, PlanetDevices *planetDevicesData);
 
     void saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode);
     int size();

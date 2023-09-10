@@ -38,6 +38,7 @@ ApplicationWindow  {
     property string pathToSave: "/home/"
     property string pathToLoad: "/home/"
     property int missionIndex: 0
+    property string pythonCodeProperty: ""
 
     RowLayout {
         anchors.fill: parent
@@ -94,8 +95,23 @@ ApplicationWindow  {
                                 firstNumber.text = `${model.outerRadius}`
                                 secondNumber.text = `${model.innerRadius}`
                                 devicesItems.changeDevices(probes, index)
-                                stepsActivityItems.changeSteps(probes, index)
-                                stepsLandingItems.changeSteps(probes, index)
+
+                                if (currentProbe.pythonCode) {
+                                    showPlanetsElems = false
+                                    showPlanetsDevices = true
+                                    showPythonArea = true
+                                    pythonCodeProperty = currentProbe.pythonCode
+                                    showDiagrammButton = false
+                                } else {
+                                    showPlanetsElems = true
+                                    showPlanetsDevices = true
+                                    showPythonArea = false
+                                    showDiagrammButton = false
+                                    pythonCodeProperty = ""
+                                    stepsActivityItems.changeSteps(probes, index)
+                                    stepsLandingItems.changeSteps(probes, index)
+                                }
+
                             }
                         }
                     }
@@ -149,7 +165,7 @@ ApplicationWindow  {
                 anchors.bottomMargin: 67
                 enabled: itemsEnabled
                 onClicked: {
-                    probes.saveProbe(listViewProbes.currentIndex, probeNameText.text, firstNumber.text, secondNumber.text, pythonCodeTextArea.text)
+                    probes.saveProbe(listViewProbes.currentIndex, probeNameText.text, firstNumber.text, secondNumber.text, pythonCodeProperty)
                     if (pathToSave === "/home/") {
                         pathToSaveDialog.open()
                     } else {
@@ -343,7 +359,7 @@ ApplicationWindow  {
 
                                     Text { text: '<b>Номер:</b> ' + model.deviceNumber  }
 
-                                    Text { text: index >= 0 && index < listViewDevices.count && model.deviceName ? '<b>Тип:</b> ' + model.deviceName : "<b>Название:</b> None" }
+                                    Text { text: index >= 0 && index < listViewDevices.count && model.deviceName ? '<b>Название:</b> ' + model.deviceName : "<b>Название:</b> None" }
 
                                     Text { text: index >= 0 && index < listViewDevices.count && model.startState ? '<b>Начальное состояние:</b> ' + model.startState : "<b>Начальное состояние:</b> None" }
 
@@ -464,7 +480,7 @@ ApplicationWindow  {
 
                                             Text { text: index >= 0 && index < listViewStepsLanding.count && model.time? '<b>Время:</b> ' + model.time : "<b>Время:</b> None" }
 
-                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.device ? '<b>Устройство:</b> ' + model.device : "<b>Устройство:</b> None" }
+                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.device ? '<b>Тип:</b> ' + model.device : "<b>Тип:</b> None" }
 
                                             Text { text: index >= 0 && index < listViewStepsLanding.count && model.command ? '<b>Команда:</b> ' + model.command : "<b>Команда:</b> None" }
 
@@ -562,7 +578,7 @@ ApplicationWindow  {
 
                                                 Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.time? '<b>Время:</b> ' + model.time : "<b>Время:</b> None" }
 
-                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.device ? '<b>Устройство:</b> ' + model.device : "<b>Устройство:</b> None" }
+                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.device ? '<b>Тип:</b> ' + model.device : "<b>Тип:</b> None" }
 
                                                 Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.command ? '<b>Команда:</b>' + model.command : "<b>Команда:</b> None" }
 
@@ -621,7 +637,20 @@ ApplicationWindow  {
                         id: pythonCodeTextArea
                         anchors.fill: parent
                         enabled: itemsEnabled
-                        text: ""
+                        text: pythonCodeProperty
+
+                        onTextChanged: {
+                            pythonCodeProperty = text;
+                        }
+
+                        Keys.onPressed: {
+                            if (event.key === Qt.Key_Tab) {
+                                event.accepted = true;
+                                var cursorPos = cursorPosition;
+                                text = text.slice(0, cursorPos) + "    " + text.slice(cursorPos);
+                                cursorPosition = cursorPos + 4;
+                            }
+                        }
 
                     }
                 }
@@ -649,42 +678,6 @@ ApplicationWindow  {
 
                     }
                 }
-
-//                Button {
-//                    width: parent.width * 0.4
-//                    height: 23
-//                    Layout.preferredHeight: height
-//                    Layout.preferredWidth: width
-//                    Layout.alignment: Qt.AlignBottom | Qt.AlignRight
-//                    enabled: itemsEnabled
-//                    text: "Сохранить изменения"
-//                    onClicked: {
-//                        if (typeMission) {
-//                            probesPlanets.set(listViewProbes.currentIndex,
-//                                       {
-//                                           name: probeName.text,
-//                                           number: currentProbe.number,
-//                                           outerRadius: firstNumber.text,
-//                                           innerRadius: secondNumber.text,
-//                                           devices: currentProbe.devices,
-//                                           stepsActivity: currentProbe.stepsActivity,
-//                                           stepsLanding: probe.stepsLanding,
-//                                           pythonCode: pythonCodeTextArea.text
-//                                       })
-//                        } else {
-//                            probesEarth.set(listViewProbes.currentIndex,
-//                                       {
-//                                           name: probeName.text,
-//                                           number: probe.number,
-//                                           outerRadius: firstNumber.text,
-//                                           innerRadius: secondNumber.text,
-//                                           devices: probe.devices,
-//                                           pythonCode: pythonCodeTextArea.text
-//                                       })
-//                        }
-
-//                    }
-//                }
             }
 
         }

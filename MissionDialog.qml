@@ -72,19 +72,6 @@ Dialog  {
                     secondNumber.text = ""
 
                     if (solutionSelect.currentText) {
-                        if (solutionSelect.currentText === "Python" && (stepsLandingItems.size() || stepsActivityItems.size())) {
-                            errorDialog.textOfError = "Удалите команды для устройств, \nчтобы использовать Python"
-                            errorDialog.open()
-                            return
-                        }
-
-
-                        if (solutionSelect.currentText === "Таблица" && pythonCodeTextArea.text) {
-                            errorDialog.textOfError = "Удалите Python код для устройств, \nчтобы использовать таблицу"
-                            errorDialog.open()
-                            return
-                        }
-
                         if (solutionSelect.currentText === "Таблица") {
                             showPlanetsElems = true
                             showPlanetsDevices = true
@@ -92,13 +79,27 @@ Dialog  {
                             showDiagrammButton = false
                             showPythonArea.text = ""
 
+                            probes.appendProbe("probe", missonSelect.currentText, 0, 0, "")
+                            listViewProbes.currentIndex = probes.size() - 1
+                            currentProbe = listViewProbes.currentItem.probesModelData
+                            devicesItems.changeDevices(probes, listViewProbes.currentIndex)
+                            stepsActivityItems.changeSteps(probes, listViewProbes.currentIndex)
+                            stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
                         }
 
                         if (solutionSelect.currentText === "Python") {
                             showPlanetsElems = false
                             showPlanetsDevices = true
+
                             showPythonArea = true
                             showDiagrammButton = false
+
+                            probes.appendProbe("probe", missonSelect.currentText, 0, 0, "print('Hello World!')")
+                            listViewProbes.currentIndex = probes.size() - 1
+                            currentProbe = listViewProbes.currentItem.probesModelData
+                            devicesItems.changeDevices(probes, listViewProbes.currentIndex)
+                            pythonCodeProperty = currentProbe.pythonCode
+
                         }
 
                         if (solutionSelect.currentText === "Диаграмма") {
@@ -110,13 +111,6 @@ Dialog  {
                         }
 
                         missionIndex = missonSelect.currentIndex
-
-                        probes.appendProbe("probe", missonSelect.currentText, 0, 0, "")
-                        listViewProbes.currentIndex = probes.size() - 1
-                        currentProbe = listViewProbes.currentItem.probesModelData
-                        devicesItems.changeDevices(probes, listViewProbes.currentIndex)
-                        stepsActivityItems.changeSteps(probes, listViewProbes.currentIndex)
-                        stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
 
                         probeNameText.text = `${currentProbe.probeName}`
 

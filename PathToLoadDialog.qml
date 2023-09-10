@@ -17,7 +17,7 @@ FileDialog {
             var fileToSave = filePath.substring(7)
         }
 
-        probes.loadFromXml(fileToSave)
+        probes.loadFromXml(fileToSave, planetDevicesItems)
         listViewProbes.currentIndex = probes.size() - 1
         currentProbe = listViewProbes.currentItem.probesModelData
 

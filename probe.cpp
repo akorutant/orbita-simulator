@@ -194,7 +194,7 @@ void Probe::saveToXml(int probeIndex, Planets *planetsData, int planetIndex, con
     file.close();
 }
 
-void Probe::loadFromXml(const QString &filename) {
+void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesData) {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         return;
@@ -232,7 +232,11 @@ void Probe::loadFromXml(const QString &filename) {
 
                         QXmlStreamAttributes attributes = xmlReader.attributes();
                         deviceItem.deviceNumber = attributes.value("number").toInt();
-                        deviceItem.deviceName = attributes.value("name").toString();
+                        for (int i = 0; i < planetDevicesData->items().size(); ++i) {
+                            if (planetDevicesData->items()[i].deviceEngName == attributes.value("name").toString())
+                                deviceItem.deviceName = planetDevicesData->items()[i].deviceName;
+                        }
+
                         deviceItem.startState = attributes.value("start_state").toString();
                         deviceItem.inSafeMode = (attributes.value("in_safe_mode").toString() == "ON");
 

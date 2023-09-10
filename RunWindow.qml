@@ -9,6 +9,8 @@ Window  {
     height: 610
     visible: false
     flags: Qt.Window | Qt.WindowFixedSize
+    property var simulationProcess;
+    property bool simulationRunning: false;
 
     ColumnLayout {
         anchors.fill: parent
@@ -43,14 +45,19 @@ Window  {
                    Column {
                        Layout.preferredWidth: parent.width
                        Layout.preferredHeight: 15
-                       Text {text: "Миссия: "}
+                       Text {text: "Миссия: " + currentProbe.missionName}
                    }
 
-                   TextField {
+                   ScrollView {
                        Layout.preferredWidth: parent.width
                        Layout.preferredHeight: 381
-                       id: missionInfo
-                       readOnly: true
+
+                       TextArea {
+                           id: missionInfo
+                           anchors.fill: parent
+                           readOnly: true
+                           text: simulationController.telemetryLogContents
+                       }
                    }
 
                    Button {
@@ -58,7 +65,15 @@ Window  {
                        Layout.preferredWidth: parent.width
                        id: startButton
                        text: "Cтарт!"
-
+                       onClicked: {
+                           if (simulationRunning) {
+                               simulationController.stopSimulation();
+                               simulationRunning = false;
+                           } else {
+                               simulationController.startSimulation(`${pathToLoad}/${currentProbe.probeName}.xml`);
+                               simulationRunning = true;
+                           }
+                       }
 
                    }
                    Button {
@@ -66,7 +81,10 @@ Window  {
                        Layout.preferredWidth: parent.width
                        id: stopButton
                        text: "Остановить"
-
+                       onClicked: {
+                            simulationController.stopSimulation();
+                            simulationRunning = false;
+                       }
                    }
                    Button {
                        Layout.preferredHeight: 23
@@ -80,14 +98,32 @@ Window  {
            }
 
            GroupBox {
-               title: qsTr("Полный журнал полёта")
+               title: qsTr("Графики")
                Layout.preferredHeight: parent.height
                Layout.preferredWidth: parent.width * 0.5
-               TextField {
+               ListView {
                    anchors.fill: parent
-                   id: missionFullInfo
-                   readOnly: true
+                   clip: true
+                   model: ListModel {
+                       ListElement { imageSource: "" }
+                       ListElement { imageSource: "" }
+                   }
+
+                   delegate: Item {
+                       anchors.fill: parent
+                       width: parent.width
+                       height: parent.height
+
+                       Image {
+                           width: parent.width
+                           height: parent.height
+                           fillMode: Image.PreserveAspectFit
+
+                           source: model.imageSource
+                       }
+                   }
                }
+
            }
         }
 

@@ -3,6 +3,7 @@
 
 #include <QLocale>
 #include <QTranslator>
+#include <QProcess>
 
 #include <QQmlContext>
 
@@ -18,6 +19,7 @@
 #include "planets.h"
 #include "planetdevices.h"
 #include "planetsdevicesmodel.h"
+#include "simulationcontroller.h"
 
 int main(int argc, char *argv[])
 {
@@ -43,6 +45,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<ComboBoxDevices>("ComboBoxDevicesModel", 1, 0, "ComboBoxDevicesModel");
     qmlRegisterType<PlanetsModel>("PlanetsModel", 1, 0, "PlanetsModel");
     qmlRegisterType<PlanetsDevicesModel>("PlanetsDevicesModel", 1, 0, "PlanetsDevicesModel");
+    qmlRegisterType<QProcess>("SimulationProcess", 1, 0, "SimulationProcess");
     qmlRegisterUncreatableType<Probe>("Probe", 1, 0, "Probe",
                                         QStringLiteral("Probe should not be created in QML."));
     qmlRegisterUncreatableType<Devices>("Devices", 1, 0, "Devices",
@@ -62,6 +65,8 @@ int main(int argc, char *argv[])
     StepsLanding stepsLandingItems;
     Planets planetsItems;
     PlanetDevices planetDevices;
+    SimulationController simulationController;
+
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty(QStringLiteral("probes"), &probes);
@@ -70,6 +75,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("stepsLandingItems"), &stepsLandingItems);
     engine.rootContext()->setContextProperty(QStringLiteral("planetsItems"), &planetsItems);
     engine.rootContext()->setContextProperty(QStringLiteral("planetDevicesItems"), &planetDevices);
+    engine.rootContext()->setContextProperty(QStringLiteral("simulationController"), &simulationController);
+
 
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));

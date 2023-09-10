@@ -3,7 +3,7 @@
 Planets::Planets(QObject *parent)
     : QObject{parent}
 {
-    QFile file("../orbita-simulator/planets data/planets.xml");
+    QFile file("./simulations/models/planets/planets.xml");
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         qDebug() << "Не удалось открыть файл";
         return;

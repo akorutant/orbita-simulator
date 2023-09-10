@@ -3,7 +3,7 @@
 PlanetDevices::PlanetDevices(QObject *parent)
     : QObject{parent}
 {
-    QFile file("../orbita-simulator/planets data/devices-ru.xml");
+    QFile file("./simulations/models/planets/devices-ru.xml");
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
         return;
