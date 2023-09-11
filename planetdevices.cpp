@@ -3,34 +3,9 @@
 PlanetDevices::PlanetDevices(QObject *parent)
     : QObject{parent}
 {
-    QFile file("./simulations/models/planets/devices-ru.xml");
-    if (!file.open(QFile::ReadOnly | QFile::Text))
-    {
-        return;
-    }
-
-    QXmlStreamReader xmlReader(&file);
-
-    while (!xmlReader.atEnd() && !xmlReader.hasError())
-    {
-        QXmlStreamReader::TokenType token = xmlReader.readNext();
-
-        if (token == QXmlStreamReader::StartElement && xmlReader.name() == "device")
-        {
-            PlanetDeviceItems device;
-            device.id = mItems.size();
-            device.deviceEngName = xmlReader.attributes().value("name").toString();
-            device.deviceName = xmlReader.attributes().value("full_name").toString();
-            device.deviceCode = xmlReader.attributes().value("code").toString();
-            mItems.append(device);
-        }
-    }
-
-    if (xmlReader.hasError())
-        return;
-
-    file.close();
 }
+
+
 
 QVector<PlanetDeviceItems> PlanetDevices::items() const
 {
@@ -48,6 +23,48 @@ bool PlanetDevices::setPlanetDevices(int index, const PlanetDeviceItems &item)
 
     mItems[index] = item;
     return true;
+}
+
+void PlanetDevices::loadDevices(const QString &filePath)
+{
+    QFile file(filePath);
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+    {
+        qDebug() << "Не удалось открыть файл устройств";
+        return;
+    }
+
+    QXmlStreamReader xmlReader(&file);
+
+    while (!xmlReader.atEnd() && !xmlReader.hasError())
+    {
+        QXmlStreamReader::TokenType token = xmlReader.readNext();
+
+        if (token == QXmlStreamReader::StartElement && xmlReader.name() == "device")
+        {
+            PlanetDeviceItems device;
+            device.id = mItems.size();
+            device.deviceEngName = xmlReader.attributes().value("name").toString();
+            device.deviceName = xmlReader.attributes().value("full_name").toString();
+            device.deviceCode = xmlReader.attributes().value("code").toString();
+
+            emit prePlanetDeviceAppended();
+
+            mItems.append(device);
+
+            emit postPlanetDeviceAppended();
+        }
+    }
+
+    if (xmlReader.hasError())
+        return;
+
+    file.close();
+}
+
+int PlanetDevices::size()
+{
+    return mItems.size();
 }
 
 QString PlanetDevices::getDeviceCode(QString deviceName)

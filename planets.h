@@ -30,6 +30,9 @@ signals:
     void prePlanetsItemRemoved(int index);
     void postPlanetsItemRemoved();
 
+public slots:
+    void loadPlanets(const QString &filePath);
+    int size();
 private:
     QVector<PlanetsItem> mItems;
 };

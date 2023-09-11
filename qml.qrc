@@ -11,5 +11,7 @@
         <file>VersionDialog.qml</file>
         <file>PathToSaveDialog.qml</file>
         <file>PathToLoadDialog.qml</file>
+        <file>SettingsDialog.qml</file>
+        <file>SimulationPathDialog.qml</file>
     </qresource>
 </RCC>

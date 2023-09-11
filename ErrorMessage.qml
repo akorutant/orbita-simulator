@@ -23,6 +23,7 @@ Dialog  {
             Layout.preferredHeight: height
             Layout.preferredWidth: width
             text: textOfError
+            wrapMode: Text.WordWrap
         }
 
         Button {

@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QFile>
 #include <QXmlStreamReader>
+#include <QDebug>
 
 struct PlanetDeviceItems {
     int id;
@@ -33,6 +34,8 @@ signals:
 public slots:
    QString getDeviceCode(QString deviceName);
    QString getDeviceEngName(QString deviceName);
+   void loadDevices(const QString &filePath);
+   int size();
 
 private:
     QVector<PlanetDeviceItems> mItems;

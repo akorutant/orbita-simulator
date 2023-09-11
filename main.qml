@@ -25,6 +25,8 @@ ApplicationWindow  {
     VersionDialog {id: versionDialog}
     PathToSaveDialog {id: pathToSaveDialog}
     PathToLoadDialog {id: pathToLoadDialog}
+    SettingsDialog  {id: settingsDialog}
+    SimulationPathDialog {id: simulationPathDialog}
     property ListModel modelSolutions: ListModel {}
     property bool itemsEnabled: false
     property bool showPlanetsDevices: false
@@ -39,6 +41,8 @@ ApplicationWindow  {
     property string pathToLoad: "/home/"
     property int missionIndex: 0
     property string pythonCodeProperty: ""
+    property string folderProbesPath: "/home/"
+    property string folderSimulation: "/home/"
 
     RowLayout {
         anchors.fill: parent
@@ -153,7 +157,12 @@ ApplicationWindow  {
                 enabled: false
 
                 onClicked: {
-                    missionDialog.open()
+                    if (planetsItems.size() > 0) {
+                        missionDialog.open()
+                    } else {
+                        errorDialog.textOfError = "Выберите папку с симулятором в настройках."
+                        errorDialog.open()
+                    }
                 }
             }
 
@@ -166,7 +175,7 @@ ApplicationWindow  {
                 enabled: itemsEnabled
                 onClicked: {
                     probes.saveProbe(listViewProbes.currentIndex, probeNameText.text, firstNumber.text, secondNumber.text, pythonCodeProperty)
-                    if (pathToSave === "/home/") {
+                    if (pathToSave === "/home/" || pathToSave === "/") {
                         pathToSaveDialog.open()
                     } else {
                         probes.saveToXml(listViewProbes.currentIndex, planetsItems, missionIndex, pathToSave)
@@ -182,7 +191,13 @@ ApplicationWindow  {
                 anchors.bottomMargin: 38
                 enabled: itemsEnabled
                 onClicked: {
-                    pathToLoadDialog.open()
+                    if (planetsItems.size() > 0) {
+                        pathToLoadDialog.open()
+                    } else {
+                        errorDialog.textOfError = "Выберите папку с симулятором в настройках."
+                        errorDialog.open()
+                    }
+
                 }
             }
 
@@ -384,7 +399,12 @@ ApplicationWindow  {
                                 enabled: itemsEnabled
                                 onClicked: {
                                     if (typeMission) {
-                                        deviceDialog.open()
+                                        if (planetDevicesItems.size()) {
+                                            deviceDialog.open()
+                                        } else {
+                                            errorDialog.textOfError = "Выберите папку с симулятором в настройках."
+                                            errorDialog.open()
+                                        }
                                     } else {
                                         deviceEarthDialog.open()
                                     }
@@ -652,6 +672,20 @@ ApplicationWindow  {
                             }
                         }
 
+                    }
+                }
+
+                Button {
+                    width: parent.width * 0.4
+                    height: 23
+                    Layout.preferredHeight: height
+                    Layout.preferredWidth: width
+                    Layout.alignment: Qt.AlignBottom | Qt.AlignRight
+                    text: "Настройки"
+                    onClicked: {
+                        folderProbesPath = settingsManager.getProbesPath()
+                        folderSimulation = settingsManager.getSimulationPath()
+                        settingsDialog.open()
                     }
                 }
 

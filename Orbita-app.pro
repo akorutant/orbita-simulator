@@ -15,6 +15,7 @@ SOURCES += \
         planetsmodel.cpp \
         probe.cpp \
         probemodel.cpp \
+        settingsmanager.cpp \
         simulationcontroller.cpp \
         stepsactivity.cpp \
         stepsactivitymodel.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
     planetsmodel.h \
     probe.h \
     probemodel.h \
+    settingsmanager.h \
     simulationcontroller.h \
     stepsactivity.h \
     stepsactivitymodel.h \

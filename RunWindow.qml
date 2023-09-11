@@ -45,7 +45,7 @@ Window  {
                    Column {
                        Layout.preferredWidth: parent.width
                        Layout.preferredHeight: 15
-                       Text {text: "Миссия: " + currentProbe.missionName}
+                       Text {text: listViewProbes.count ? "Миссия" + currentProbe.missionName : "Миссия: "}
                    }
 
                    ScrollView {

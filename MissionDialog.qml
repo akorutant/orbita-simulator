@@ -70,8 +70,15 @@ Dialog  {
                     probeNameText.text = ""
                     firstNumber.text = ""
                     secondNumber.text = ""
-
-                    if (solutionSelect.currentText) {
+                    if (!missonSelect.currentText) {
+                        errorDialog.textOfError = "Вы не выбрали миссию"
+                        errorDialog.open()
+                        return
+                    } else if (!solutionSelect.currentText) {
+                        errorDialog.textOfError = "Вы не выбрали способ решения"
+                        errorDialog.open()
+                        return
+                    } else if (solutionSelect.currentText && missonSelect.currentText) {
                         if (solutionSelect.currentText === "Таблица") {
                             showPlanetsElems = true
                             showPlanetsDevices = true
@@ -124,16 +131,7 @@ Dialog  {
 
                         missionDialog.accepted()
                         missionDialog.close()
-                    } else if (!missonSelect.currentText) {
-                        errorDialog.textOfError = "Вы не выбрали миссию"
-                        errorDialog.open()
-                        return
-                    } else {
-                        errorDialog.textOfError = "Вы не выбрали способ решения"
-                        errorDialog.open()
-                        return
                     }
-
                 }
             }
 

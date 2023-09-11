@@ -20,6 +20,7 @@
 #include "planetdevices.h"
 #include "planetsdevicesmodel.h"
 #include "simulationcontroller.h"
+#include "settingsmanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -66,6 +67,9 @@ int main(int argc, char *argv[])
     Planets planetsItems;
     PlanetDevices planetDevices;
     SimulationController simulationController;
+    SettingsManager settingsManager;
+    planetsItems.loadPlanets(settingsManager.getPlanetsPath());
+    planetDevices.loadDevices(settingsManager.getDevicesPath());
 
 
     QQmlApplicationEngine engine;
@@ -76,6 +80,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("planetsItems"), &planetsItems);
     engine.rootContext()->setContextProperty(QStringLiteral("planetDevicesItems"), &planetDevices);
     engine.rootContext()->setContextProperty(QStringLiteral("simulationController"), &simulationController);
+    engine.rootContext()->setContextProperty(QStringLiteral("settingsManager"), &settingsManager);
 
 
 

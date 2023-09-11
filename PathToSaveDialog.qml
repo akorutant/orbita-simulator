@@ -9,14 +9,16 @@ FileDialog {
     visible: false
     folder: pathToSave
     onAccepted: {
-        var folderPath = fileToSaveDialog.folder.toString()
-        if (folderPath.startsWith("file://")) {
-        folderPath = folderPath.substring(7)
+        folderProbesPath = fileToSaveDialog.folder.toString()
+        if (folderProbesPath.startsWith("file://")) {
+        folderProbesPath = folderProbesPath.substring(7)
         }
 
-        pathToSave = folderPath + `/${probeNameText.text}.xml`
-        probes.saveToXml(listViewProbes.currentIndex, planetsItems, missionIndex, pathToSave)
+        settingsManager.setProbesPath(folderProbesPath)
 
-
+        if (listViewProbes.currentItem) {
+            pathToSave = folderProbesPath + `/${probeNameText.text}.xml`
+            probes.saveToXml(listViewProbes.currentIndex, planetsItems, missionIndex, pathToSave)
+        }
     }
 }
