@@ -53,6 +53,11 @@ Dialog  {
                         modelSolutions.clear()
                         modelSolutions.append({text: "Таблица"})
                         mainWindow.typeMission = true
+                        settingsManager.loadSettingsFromFile("planets_settings.txt");
+                        pathToSave = settingsManager.getProbesPath()
+                        pathToLoad = settingsManager.getProbesPath()
+                        planetsItems.loadPlanets(settingsManager.getPlanetsPath());
+                        planetDevicesItems.loadDevices(settingsManager.getDevicesPath());
                     } else {
                         modelSolutions.clear()
                         modelSolutions.append({text: "Диаграмма"})
@@ -63,6 +68,7 @@ Dialog  {
                     loadProbeButton.enabled = true
                     versionSelect.currentIndex = 0
 
+                    settingsButton.enabled = true;
                     versionDialog.accepted()
                     versionDialog.close()
                 }

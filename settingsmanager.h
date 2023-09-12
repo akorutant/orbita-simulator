@@ -25,6 +25,8 @@ public slots:
     bool loadSettingsFromFile(const QString &filePath);
     bool saveSettingsToFile(const QString &filePath);
 
+    bool checkSimulationFile(const QString &filePath);
+
 private:
     QString probesPath = "/home/";
     QString simulationPath = "/home/";

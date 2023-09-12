@@ -22,6 +22,8 @@
 #include "simulationcontroller.h"
 #include "settingsmanager.h"
 
+#include <QDebug>
+
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -68,9 +70,6 @@ int main(int argc, char *argv[])
     PlanetDevices planetDevices;
     SimulationController simulationController;
     SettingsManager settingsManager;
-    planetsItems.loadPlanets(settingsManager.getPlanetsPath());
-    planetDevices.loadDevices(settingsManager.getDevicesPath());
-
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty(QStringLiteral("probes"), &probes);

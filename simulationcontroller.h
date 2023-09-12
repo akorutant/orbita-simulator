@@ -7,6 +7,12 @@
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
+#include <QDir>
+#include <QFileInfoList>
+
+#include "settingsmanager.h"
+
+class SettingsManager;
 
 class SimulationController : public QObject
 {
@@ -15,14 +21,17 @@ class SimulationController : public QObject
 
 public:
     explicit SimulationController(QObject *parent = nullptr);
+    QString currentProbePath;
 
 public slots:
-    void startSimulation(QString probePath);
+    void startSimulation(QString probePath, SettingsManager *settingsManager);
     void stopSimulation();
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
     QString readTelemetryLog();
     QString getTelemetryLogContents() const;
+    QStringList loadImagesFromFolder(const QString &folderPath);
+    QStringList getImages();
 
 signals:
     void telemetryLogUpdated(const QString &contents);
@@ -30,6 +39,7 @@ signals:
 private:
     QProcess *simulationProcess;
     QString telemetryLogContents;
+    QStringList images;
 
 };
 

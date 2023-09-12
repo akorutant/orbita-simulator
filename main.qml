@@ -191,6 +191,7 @@ ApplicationWindow  {
                 anchors.bottomMargin: 38
                 enabled: itemsEnabled
                 onClicked: {
+
                     if (planetsItems.size() > 0) {
                         pathToLoadDialog.open()
                     } else {
@@ -208,8 +209,17 @@ ApplicationWindow  {
                 anchors.bottom: parent.bottom
                 enabled: itemsEnabled
                 onClicked: {
-                    runWindow.visible = true
-                    mainWindow.visible = false
+                    if (settingsManager.checkSimulationFile(settingsManager.getSimulationPath() + "/simulation.py")) {
+                        settingsManager.saveSettingsToFile("planets_settings.txt");
+                        pathToSave = settingsManager.getProbesPath()
+                        pathToLoad = settingsManager.getProbesPath()
+                        runWindow.visible = true
+                        mainWindow.visible = false
+                    } else {
+                        errorDialog.textOfError = "В данной директории отсутствуют файлы симулятора."
+                        errorDialog.open()
+                        folderSimulation = "/home/"
+                    }
                 }
             }
         }
@@ -676,11 +686,13 @@ ApplicationWindow  {
                 }
 
                 Button {
+                    id: settingsButton
                     width: parent.width * 0.4
                     height: 23
                     Layout.preferredHeight: height
                     Layout.preferredWidth: width
                     Layout.alignment: Qt.AlignBottom | Qt.AlignRight
+                    enabled: false
                     text: "Настройки"
                     onClicked: {
                         folderProbesPath = settingsManager.getProbesPath()

@@ -22,6 +22,7 @@ Dialog  {
             width: parent.width
             Layout.preferredHeight: height
             Layout.preferredWidth: width
+            wrapMode: Text.WordWrap
             text: message
         }
 

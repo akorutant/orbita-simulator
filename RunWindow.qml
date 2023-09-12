@@ -11,6 +11,8 @@ Window  {
     flags: Qt.Window | Qt.WindowFixedSize
     property var simulationProcess;
     property bool simulationRunning: false;
+    property QStringList imagesList: []
+
 
     ColumnLayout {
         anchors.fill: parent
@@ -45,7 +47,8 @@ Window  {
                    Column {
                        Layout.preferredWidth: parent.width
                        Layout.preferredHeight: 15
-                       Text {text: listViewProbes.count ? "Миссия" + currentProbe.missionName : "Миссия: "}
+                       Text {text: listViewProbes.currentIndex >= 0 && listViewProbes.currentIndex < listViewProbes.count ?
+                                       "Миссия: " + listViewProbes.currentItem.probesModelData.missionName : "Миссия: "}
                    }
 
                    ScrollView {
@@ -70,7 +73,7 @@ Window  {
                                simulationController.stopSimulation();
                                simulationRunning = false;
                            } else {
-                               simulationController.startSimulation(`${pathToLoad}/${currentProbe.probeName}.xml`);
+                               simulationController.startSimulation(`${settingsManager.getProbesPath()}/${currentProbe.probeName}.xml`, settingsManager);
                                simulationRunning = true;
                            }
                        }
@@ -86,13 +89,6 @@ Window  {
                             simulationRunning = false;
                        }
                    }
-                   Button {
-                       Layout.preferredHeight: 23
-                       Layout.preferredWidth: parent.width
-                       id: printButton
-                       text: "Распечатать..."
-
-                   }
                }
 
            }
@@ -102,15 +98,15 @@ Window  {
                Layout.preferredHeight: parent.height
                Layout.preferredWidth: parent.width * 0.5
                ListView {
-                   anchors.fill: parent
-                   clip: true
+                   id: imageListView
+                   width: parent.width
+                   height: parent.height
+
                    model: ListModel {
-                       ListElement { imageSource: "" }
                        ListElement { imageSource: "" }
                    }
 
                    delegate: Item {
-                       anchors.fill: parent
                        width: parent.width
                        height: parent.height
 
@@ -123,6 +119,7 @@ Window  {
                        }
                    }
                }
+
 
            }
         }

@@ -36,6 +36,7 @@ Dialog  {
                     id: modelMissions
                     list: planetsItems
                 }
+                currentIndex: 0
                 onAccepted: {
                     if (find(editText) === -1)
                         model.append({text: editText})
@@ -50,6 +51,7 @@ Dialog  {
                 Layout.preferredHeight: height
                 editable: false
                 model: modelSolutions
+                currentIndex: 0
                 onAccepted: {
                     if (find(editText) === -1)
                         model.append({text: editText})

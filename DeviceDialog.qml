@@ -39,6 +39,7 @@ Dialog  {
                 model: PlanetsDevicesModel {
                     list: planetDevicesItems
                 }
+                currentIndex: 0
                 onAccepted: {
                     if (find(editText) === -1)
                         model.append({type: editText})

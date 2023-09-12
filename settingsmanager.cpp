@@ -2,7 +2,6 @@
 
 SettingsManager::SettingsManager(QObject *parent) : QObject(parent)
 {
-    loadSettingsFromFile("planets_settings.txt");
 }
 
 QString SettingsManager::getProbesPath() const
@@ -82,6 +81,17 @@ bool SettingsManager::saveSettingsToFile(const QString &filePath)
     out << "probes_path=" << probesPath << "\n";
     out << "devices_path=" << devicesPath << "\n";
     out << "planets_path=" << planetsPath << "\n";
+
+    file.close();
+    return true;
+}
+
+bool SettingsManager::checkSimulationFile(const QString &filePath)
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return false;
+    }
 
     file.close();
     return true;

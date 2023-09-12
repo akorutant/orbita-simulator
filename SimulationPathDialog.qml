@@ -13,10 +13,16 @@ FileDialog {
         if (folderSimulation.startsWith("file://")) {
         folderSimulation = folderSimulation.substring(7)
         }
-        settingsManager.setSimulationPath(folderSimulation);
-        settingsManager.setDevicesPath(folderSimulation + "/devices-ru.xml");
-        settingsManager.setPlanetsPath(folderSimulation + "/planets.xml");
-        planetsItems.loadPlanets(settingsManager.getPlanetsPath());
-        planetDevicesItems.loadDevices(settingsManager.getDevicesPath());
+        if (settingsManager.checkSimulationFile(folderSimulation + "/simulation.py")) {
+            settingsManager.setSimulationPath(folderSimulation);
+            settingsManager.setDevicesPath(folderSimulation + "/devices-ru.xml");
+            settingsManager.setPlanetsPath(folderSimulation + "/planets.xml");
+            planetsItems.loadPlanets(settingsManager.getPlanetsPath());
+            planetDevicesItems.loadDevices(settingsManager.getDevicesPath());
+        } else {
+            errorDialog.textOfError = "В данной директории отсутствуют файлы симулятора."
+            errorDialog.open()
+            folderSimulation = "/home/"
+        }
     }
 }

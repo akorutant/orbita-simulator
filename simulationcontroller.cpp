@@ -8,19 +8,33 @@ SimulationController::SimulationController(QObject *parent) : QObject(parent)
     connect(simulationProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
 }
 
-void SimulationController::startSimulation(QString probePath)
+
+
+void SimulationController::startSimulation(QString probePath, SettingsManager *settingsManager)
 {
     if (simulationProcess->state() != QProcess::NotRunning) {
         qDebug() << "Симуляция уже запущена или завершается.";
         return;
     }
 
-    QString simulationPath = "simulations/models/planets/simulation.py";
+    QString simulationPath = settingsManager->getSimulationPath() + "/simulation.py";
+    qDebug()<<simulationPath;
+    currentProbePath = probePath;
+
+    // Создаем папку info в probesPath, если она не существует
+    QString infoFolderPath = currentProbePath.left(currentProbePath.length() - 4) + " info";
+    QDir infoFolder(infoFolderPath);
+    if (!infoFolder.exists()) {
+        if (!infoFolder.mkpath(infoFolderPath)) {
+            qDebug() << "Ошибка при создании папки info";
+            return;
+        }
+    }
 
     QStringList arguments;
-    arguments << simulationPath << probePath
-              << "--mission-log=telemetry.log"
-              << "--image=.";
+    arguments << simulationPath << currentProbePath
+              << "--mission-log=" + infoFolderPath + "/telemetry.log"
+              << "--image=" + infoFolderPath + "/.";
 
     qDebug() << "Запуск симуляции:";
     qDebug() << "Симулятор: " << simulationPath;
@@ -40,6 +54,7 @@ void SimulationController::stopSimulation()
         qDebug() << "Симуляция не запущена.";
     }
 }
+
 
 void SimulationController::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
@@ -74,7 +89,7 @@ void SimulationController::processFinished(int exitCode, QProcess::ExitStatus ex
 QString SimulationController::readTelemetryLog()
 {
     QString content;
-    QFile file("./telemetry.log");
+    QFile file(currentProbePath.left(currentProbePath.length() - 4) + " info/telemetry.log");
 
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);
@@ -88,3 +103,24 @@ QString SimulationController::getTelemetryLogContents() const
 {
     return telemetryLogContents;
 }
+
+QStringList SimulationController::loadImagesFromFolder(const QString &folderPath)
+{
+    QDir folderDir(folderPath);
+    QFileInfoList fileInfoList = folderDir.entryInfoList(QDir::Files);
+
+    for (const QFileInfo &fileInfo : fileInfoList) {
+        if (fileInfo.suffix().toLower() == "png" || fileInfo.suffix().toLower() == "jpg" || fileInfo.suffix().toLower() == "jpeg") {
+            QString imagePath = "file://" + fileInfo.filePath();
+            images.append(imagePath);
+        }
+    }
+
+    return images;
+}
+
+QStringList SimulationController::getImages()
+{
+    return images;
+}
+

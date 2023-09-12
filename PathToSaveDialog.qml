@@ -15,6 +15,9 @@ FileDialog {
         }
 
         settingsManager.setProbesPath(folderProbesPath)
+        settingsManager.saveSettingsToFile("planets_settings.txt");
+        pathToSave = settingsManager.getProbesPath()
+        pathToLoad = settingsManager.getProbesPath()
 
         if (listViewProbes.currentItem) {
             pathToSave = folderProbesPath + `/${probeNameText.text}.xml`
