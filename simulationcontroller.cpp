@@ -121,6 +121,7 @@ QStringList SimulationController::loadImagesFromFolder(const QString &folderPath
 
 QStringList SimulationController::getImages()
 {
+    qDebug()<<images;
     return images;
 }
 

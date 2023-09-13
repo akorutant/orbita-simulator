@@ -11,7 +11,6 @@ Window  {
     flags: Qt.Window | Qt.WindowFixedSize
     property var simulationProcess;
     property bool simulationRunning: false;
-    property QStringList imagesList: []
 
 
     ColumnLayout {
@@ -69,13 +68,15 @@ Window  {
                        id: startButton
                        text: "Cтарт!"
                        onClicked: {
-                           if (simulationRunning) {
-                               simulationController.stopSimulation();
-                               simulationRunning = false;
-                           } else {
-                               simulationController.startSimulation(`${settingsManager.getProbesPath()}/${currentProbe.probeName}.xml`, settingsManager);
-                               simulationRunning = true;
-                           }
+                           simulationController.loadImagesFromFolder(settingsManager.getProbesPath() + "/apollo info")
+                           simulationController.getImages()
+//                           if (simulationRunning) {
+//                               simulationController.stopSimulation();
+//                               simulationRunning = false;
+//                           } else {
+//                               simulationController.startSimulation(`${settingsManager.getProbesPath()}/${currentProbe.probeName}.xml`, settingsManager);
+//                               simulationRunning = true;
+//                           }
                        }
 
                    }
@@ -103,7 +104,7 @@ Window  {
                    height: parent.height
 
                    model: ListModel {
-                       ListElement { imageSource: "" }
+                       ListElement { imageSource: "file:///home/akoru/orbita-simulator/simulations/models/planets/probes/apollo info/apollo-Landing-Vy.png" }
                    }
 
                    delegate: Item {
