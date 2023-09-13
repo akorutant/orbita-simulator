@@ -20,7 +20,8 @@ SOURCES += \
         stepsactivity.cpp \
         stepsactivitymodel.cpp \
         stepslanding.cpp \
-        stepslandingmodel.cpp
+        stepslandingmodel.cpp \
+        imagesitems.cpp
 
 RESOURCES += qml.qrc
 
@@ -55,6 +56,7 @@ HEADERS += \
     stepsactivity.h \
     stepsactivitymodel.h \
     stepslanding.h \
-    stepslandingmodel.h
+    stepslandingmodel.h \
+    imagesitems.h
 
 DISTFILES +=
