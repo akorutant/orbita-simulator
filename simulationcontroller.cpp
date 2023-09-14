@@ -8,6 +8,24 @@ SimulationController::SimulationController(QObject *parent) : QObject(parent)
     connect(simulationProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
 }
 
+QVector<ImageItem> SimulationController::imagesItems() const
+{
+    return images;
+}
+
+bool SimulationController::setImages(int index, const ImageItem &item)
+{
+    if (index < 0 || index >= images.size())
+        return false;
+
+    const ImageItem &olditem = images.at(index);
+    if (item.imageSource == olditem.imageSource)
+        return false;
+
+    images[index] = item;
+    return true;
+}
+
 
 
 void SimulationController::startSimulation(QString probePath, SettingsManager *settingsManager)
@@ -82,6 +100,7 @@ void SimulationController::processFinished(int exitCode, QProcess::ExitStatus ex
         }
     }
 
+    loadImagesFromFolder(currentProbePath.left(currentProbePath.length() - 4) + " info/");
     telemetryLogContents = readTelemetryLog();
     emit telemetryLogUpdated(telemetryLogContents);
 }
@@ -104,24 +123,26 @@ QString SimulationController::getTelemetryLogContents() const
     return telemetryLogContents;
 }
 
-QStringList SimulationController::loadImagesFromFolder(const QString &folderPath)
+void SimulationController::loadImagesFromFolder(const QString &folderPath)
 {
     QDir folderDir(folderPath);
     QFileInfoList fileInfoList = folderDir.entryInfoList(QDir::Files);
 
+    for (int i = images.size() - 1; i >= 0; --i) {
+        emit preImageRemoved(i);
+        images.removeAt(i);
+        emit postImageRemoved();
+    }
+
     for (const QFileInfo &fileInfo : fileInfoList) {
         if (fileInfo.suffix().toLower() == "png" || fileInfo.suffix().toLower() == "jpg" || fileInfo.suffix().toLower() == "jpeg") {
             QString imagePath = "file://" + fileInfo.filePath();
-            images.append(imagePath);
+
+            emit preImageAppended();
+            images.append({imagePath});
+            emit postImageAppended();
         }
     }
-
-    return images;
 }
 
-QStringList SimulationController::getImages()
-{
-    qDebug()<<images;
-    return images;
-}
 

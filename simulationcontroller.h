@@ -14,6 +14,10 @@
 
 class SettingsManager;
 
+struct ImageItem {
+    QString imageSource;
+};
+
 class SimulationController : public QObject
 {
     Q_OBJECT
@@ -22,6 +26,8 @@ class SimulationController : public QObject
 public:
     explicit SimulationController(QObject *parent = nullptr);
     QString currentProbePath;
+    QVector<ImageItem> imagesItems() const;
+    bool setImages(int index, const ImageItem &item);
 
 public slots:
     void startSimulation(QString probePath, SettingsManager *settingsManager);
@@ -30,16 +36,22 @@ public slots:
 
     QString readTelemetryLog();
     QString getTelemetryLogContents() const;
-    QStringList loadImagesFromFolder(const QString &folderPath);
-    QStringList getImages();
+    void loadImagesFromFolder(const QString &folderPath);
 
 signals:
     void telemetryLogUpdated(const QString &contents);
+    void imagesUpdated(const QVector<ImageItem> &contents);
+
+    void preImageAppended();
+    void postImageAppended();
+
+    void preImageRemoved(int index);
+    void postImageRemoved();
 
 private:
     QProcess *simulationProcess;
     QString telemetryLogContents;
-    QStringList images;
+    QVector<ImageItem> images;
 
 };
 

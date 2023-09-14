@@ -3,6 +3,8 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import ImagesModel 1.0
+
 Window  {
     id: runWindow
     width: 798
@@ -68,15 +70,13 @@ Window  {
                        id: startButton
                        text: "Cтарт!"
                        onClicked: {
-                           simulationController.loadImagesFromFolder(settingsManager.getProbesPath() + "/apollo info")
-                           simulationController.getImages()
-//                           if (simulationRunning) {
-//                               simulationController.stopSimulation();
-//                               simulationRunning = false;
-//                           } else {
-//                               simulationController.startSimulation(`${settingsManager.getProbesPath()}/${currentProbe.probeName}.xml`, settingsManager);
-//                               simulationRunning = true;
-//                           }
+                           if (simulationRunning) {
+                               simulationController.stopSimulation();
+                               simulationRunning = false;
+                           } else {
+                               simulationController.startSimulation(`${settingsManager.getProbesPath()}/${currentProbe.probeName}.xml`, settingsManager);
+                               simulationRunning = true;
+                           }
                        }
 
                    }
@@ -102,14 +102,15 @@ Window  {
                    id: imageListView
                    width: parent.width
                    height: parent.height
+                   clip: true
 
-                   model: ListModel {
-                       ListElement { imageSource: "file:///home/akoru/orbita-simulator/simulations/models/planets/probes/apollo info/apollo-Landing-Vy.png" }
+                   model: ImagesModel {
+                        list: simulationController
                    }
 
                    delegate: Item {
-                       width: parent.width
-                       height: parent.height
+                       width: 640
+                       height: 480
 
                        Image {
                            width: parent.width

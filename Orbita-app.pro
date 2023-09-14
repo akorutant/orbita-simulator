@@ -8,6 +8,7 @@ SOURCES += \
         comboboxdevices.cpp \
         devices.cpp \
         devicesmodel.cpp \
+        imagesmodel.cpp \
         main.cpp \
         planetdevices.cpp \
         planets.cpp \
@@ -20,8 +21,7 @@ SOURCES += \
         stepsactivity.cpp \
         stepsactivitymodel.cpp \
         stepslanding.cpp \
-        stepslandingmodel.cpp \
-        imagesitems.cpp
+        stepslandingmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -45,6 +45,7 @@ HEADERS += \
     comboboxdevices.h \
     devices.h \
     devicesmodel.h \
+    imagesmodel.h \
     planetdevices.h \
     planets.h \
     planetsdevicesmodel.h \
@@ -56,7 +57,6 @@ HEADERS += \
     stepsactivity.h \
     stepsactivitymodel.h \
     stepslanding.h \
-    stepslandingmodel.h \
-    imagesitems.h
+    stepslandingmodel.h
 
 DISTFILES +=

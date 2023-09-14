@@ -21,6 +21,7 @@
 #include "planetsdevicesmodel.h"
 #include "simulationcontroller.h"
 #include "settingsmanager.h"
+#include "imagesmodel.h"
 
 #include <QDebug>
 
@@ -49,6 +50,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<PlanetsModel>("PlanetsModel", 1, 0, "PlanetsModel");
     qmlRegisterType<PlanetsDevicesModel>("PlanetsDevicesModel", 1, 0, "PlanetsDevicesModel");
     qmlRegisterType<QProcess>("SimulationProcess", 1, 0, "SimulationProcess");
+    qmlRegisterType<ImagesModel>("ImagesModel", 1, 0, "ImagesModel");
     qmlRegisterUncreatableType<Probe>("Probe", 1, 0, "Probe",
                                         QStringLiteral("Probe should not be created in QML."));
     qmlRegisterUncreatableType<Devices>("Devices", 1, 0, "Devices",
@@ -61,6 +63,8 @@ int main(int argc, char *argv[])
                                         QStringLiteral("Planets should not be created in QML."));
     qmlRegisterUncreatableType<PlanetDevices>("PlanetDevices", 1, 0, "PlanetDevices",
                                               QStringLiteral("PlanetDevices should not be created in QML."));
+    qmlRegisterUncreatableType<SimulationController>("SimulationController", 1, 0, "SimulationController",
+                                                     QStringLiteral("SimulationController should not be created in QML."));
 
     Probe probes;
     Devices devicesItems;
