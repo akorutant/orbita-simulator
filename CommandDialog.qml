@@ -68,6 +68,7 @@ Dialog  {
             Layout.row: 1
             Layout.column: 1
             editable: false
+            currentIndex: 0
             model: ComboBoxDevicesModel {
                 id: modelDevices
                 list: devicesItems

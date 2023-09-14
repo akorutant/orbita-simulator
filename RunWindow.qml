@@ -25,7 +25,8 @@ Window  {
             Layout.preferredHeight: 20
             Layout.preferredWidth: parent.width
             Layout.topMargin: 5
-            text: "<b>Аппарат:</b "
+            text: listViewProbes.currentIndex >= 0 && listViewProbes.currentIndex < listViewProbes.count ?
+                      "<b>Аппарат:</b> " + listViewProbes.currentItem.probesModelData.probeName : "<b>Аппарат:</b> "
         }
 
 
@@ -108,9 +109,19 @@ Window  {
                         list: simulationController
                    }
 
+                   ScrollBar.vertical: ScrollBar {
+                       id: probesScrollBar
+                       anchors {
+                           right: parent.right
+                           top: parent.top
+                           bottom: parent.bottom
+                           margins: 0
+                       }
+                   }
+
                    delegate: Item {
-                       width: 640
-                       height: 480
+                       width: imageListView.width
+                       height: imageListView.height
 
                        Image {
                            width: parent.width

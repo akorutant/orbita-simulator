@@ -7,7 +7,7 @@ FileDialog {
     width: 264
     height: 146
     visible: false
-    folder: pathToLoad
+    folder: "file://" + pathToLoad
     onAccepted: {
         var filePath = fileToLoadDialog.fileUrl.toString()
         var folderPath = fileToLoadDialog.folder.toString()
