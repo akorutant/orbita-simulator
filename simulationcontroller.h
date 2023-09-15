@@ -22,12 +22,18 @@ class SimulationController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString telemetryLogContents READ getTelemetryLogContents NOTIFY telemetryLogUpdated)
+    Q_PROPERTY(QString standardOutput READ getStandardOutput NOTIFY standardOutputUpdated)
+    Q_PROPERTY(QString standardError READ getStandardError NOTIFY standardErrorUpdated)
+
 
 public:
     explicit SimulationController(QObject *parent = nullptr);
     QString currentProbePath;
     QVector<ImageItem> imagesItems() const;
     bool setImages(int index, const ImageItem &item);
+
+    QString getStandardOutput() const;
+    QString getStandardError() const;
 
 public slots:
     void startSimulation(QString probePath, SettingsManager *settingsManager);
@@ -36,11 +42,19 @@ public slots:
 
     QString readTelemetryLog();
     QString getTelemetryLogContents() const;
+    void clearInfo();
+
     void loadImagesFromFolder(const QString &folderPath);
+    void clearImages();
+
 
 signals:
     void telemetryLogUpdated(const QString &contents);
+
     void imagesUpdated(const QVector<ImageItem> &contents);
+
+    void standardOutputUpdated(const QString &output);
+    void standardErrorUpdated(const QString &error);
 
     void preImageAppended();
     void postImageAppended();
@@ -52,6 +66,9 @@ private:
     QProcess *simulationProcess;
     QString telemetryLogContents;
     QVector<ImageItem> images;
+
+    QString mStandardOutput;
+    QString mStandardError;
 
 };
 

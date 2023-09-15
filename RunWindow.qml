@@ -8,11 +8,9 @@ import ImagesModel 1.0
 Window  {
     id: runWindow
     width: 798
-    height: 610
+    height: 630
     visible: false
     flags: Qt.Window | Qt.WindowFixedSize
-    property var simulationProcess;
-    property bool simulationRunning: false;
 
 
     ColumnLayout {
@@ -25,8 +23,19 @@ Window  {
             Layout.preferredHeight: 20
             Layout.preferredWidth: parent.width
             Layout.topMargin: 5
+            wrapMode: Text.WordWrap
             text: listViewProbes.currentIndex >= 0 && listViewProbes.currentIndex < listViewProbes.count ?
                       "<b>Аппарат:</b> " + listViewProbes.currentItem.probesModelData.probeName : "<b>Аппарат:</b> "
+        }
+
+        Text {
+            height: 20
+            width: parent.width
+            Layout.preferredHeight: 20
+            Layout.preferredWidth: parent.width
+            Layout.topMargin: 5
+            wrapMode: Text.WordWrap
+            text: simulationController.standardOutput ? `<b>Итог миссии:</b> ${simulationController.standardOutput}` : `<b>Итог миссии:</b> ${simulationController.standardOutput}`
         }
 
 
@@ -71,13 +80,7 @@ Window  {
                        id: startButton
                        text: "Cтарт!"
                        onClicked: {
-                           if (simulationRunning) {
-                               simulationController.stopSimulation();
-                               simulationRunning = false;
-                           } else {
-                               simulationController.startSimulation(`${settingsManager.getProbesPath()}/${currentProbe.probeName}.xml`, settingsManager);
-                               simulationRunning = true;
-                           }
+                            simulationController.startSimulation(`${settingsManager.getProbesPath()}/${currentProbe.probeName}.xml`, settingsManager);
                        }
 
                    }
@@ -146,6 +149,8 @@ Window  {
               Layout.bottomMargin: 10
               text: "Закрыть"
               onClicked: {
+                simulationController.clearInfo()
+                simulationController.clearImages()
                 mainWindow.visible = true
                 runWindow.visible = false
               }

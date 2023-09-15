@@ -26,6 +26,16 @@ bool SimulationController::setImages(int index, const ImageItem &item)
     return true;
 }
 
+QString SimulationController::getStandardOutput() const
+{
+    return mStandardOutput;
+}
+
+QString SimulationController::getStandardError() const
+{
+    return mStandardError;
+}
+
 
 
 void SimulationController::startSimulation(QString probePath, SettingsManager *settingsManager)
@@ -36,7 +46,6 @@ void SimulationController::startSimulation(QString probePath, SettingsManager *s
     }
 
     QString simulationPath = settingsManager->getSimulationPath() + "/simulation.py";
-    qDebug()<<simulationPath;
     currentProbePath = probePath;
 
     // Создаем папку info в probesPath, если она не существует
@@ -53,10 +62,6 @@ void SimulationController::startSimulation(QString probePath, SettingsManager *s
     arguments << simulationPath << currentProbePath
               << "--mission-log=" + infoFolderPath + "/telemetry.log"
               << "--image=" + infoFolderPath + "/.";
-
-    qDebug() << "Запуск симуляции:";
-    qDebug() << "Симулятор: " << simulationPath;
-    qDebug() << "Аргументы: " << arguments.join(" ");
 
     simulationProcess->start("python3", arguments);
 }
@@ -78,28 +83,23 @@ void SimulationController::processFinished(int exitCode, QProcess::ExitStatus ex
 {
     QByteArray standardOutput = simulationProcess->readAllStandardOutput();
     QByteArray standardError = simulationProcess->readAllStandardError();
+    mStandardOutput.clear();
+    mStandardError.clear();
 
     if (exitStatus == QProcess::NormalExit && exitCode == 0) {
-        qDebug() << "Симуляция завершилась успешно.";
-        if (!standardOutput.isEmpty()) {
-            qDebug() << "Стандартный вывод симуляции:";
-            qDebug() << standardOutput;
-        }
-
+        mStandardOutput = QString::fromUtf8("Симуляция завершилась успешно");
     } else {
-        qDebug() << "Ошибка при выполнении симуляции. Код завершения: " << exitCode;
-
         if (!standardOutput.isEmpty()) {
-            qDebug() << "Стандартный вывод симуляции:";
-            qDebug() << standardOutput;
+            mStandardOutput = QString::fromUtf8(standardOutput) + ". Код завершения: " + QString::number(exitCode);
         }
 
         if (!standardError.isEmpty()) {
-            qDebug() << "Стандартная ошибка симуляции:";
-            qDebug() << standardError;
+            mStandardError = QString::fromUtf8(standardError) + ". Код завершения: " + QString::number(exitCode);
         }
     }
 
+    standardOutputUpdated(mStandardOutput);
+    standardErrorUpdated(mStandardError);
     loadImagesFromFolder(currentProbePath.left(currentProbePath.length() - 4) + " info/");
     telemetryLogContents = readTelemetryLog();
     emit telemetryLogUpdated(telemetryLogContents);
@@ -128,11 +128,7 @@ void SimulationController::loadImagesFromFolder(const QString &folderPath)
     QDir folderDir(folderPath);
     QFileInfoList fileInfoList = folderDir.entryInfoList(QDir::Files);
 
-    for (int i = images.size() - 1; i >= 0; --i) {
-        emit preImageRemoved(i);
-        images.removeAt(i);
-        emit postImageRemoved();
-    }
+    clearImages();
 
     for (const QFileInfo &fileInfo : fileInfoList) {
         if (fileInfo.suffix().toLower() == "png" || fileInfo.suffix().toLower() == "jpg" || fileInfo.suffix().toLower() == "jpeg") {
@@ -144,5 +140,26 @@ void SimulationController::loadImagesFromFolder(const QString &folderPath)
         }
     }
 }
+
+void SimulationController::clearImages()
+{
+    for (int i = images.size() - 1; i >= 0; --i) {
+        emit preImageRemoved(i);
+        images.removeAt(i);
+        emit postImageRemoved();
+    }
+}
+
+void SimulationController::clearInfo()
+{
+    telemetryLogContents.clear();
+    mStandardOutput.clear();
+    mStandardError.clear();
+    emit telemetryLogUpdated(telemetryLogContents);
+    emit standardOutputUpdated(mStandardOutput);
+    emit standardErrorUpdated(mStandardError);
+}
+
+
 
 
