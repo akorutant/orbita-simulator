@@ -28,7 +28,7 @@ void Probe::appendProbe(QString probeName, QString missionName, double outerRadi
 {
     emit preProbeAppended();
 
-    mItems.append({mItems.size(), probeName, missionName, outerRadius, innerRadius, {}, {},{},  pythonCode});
+    mItems.append({mItems.size(), probeName, missionName, outerRadius, innerRadius, {}, {},{},  pythonCode, ""});
 
     emit postProbeAppended();
 }
@@ -321,7 +321,6 @@ void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesDat
     emit preProbeAppended();
 
     int probeIndex = mItems.size();
-
     mItems.append({probeIndex,
                    probeXmlItem.probeName,
                    probeXmlItem.missionName,
@@ -330,7 +329,9 @@ void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesDat
                    {},
                    {},
                    {},
-                   probeXmlItem.pythonCode});
+                   probeXmlItem.pythonCode,
+                   filename
+                  });
 
     emit postProbeAppended();
 
@@ -371,11 +372,12 @@ void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesDat
 
 
 
-void Probe::saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode)
+void Probe::saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode, const QString &filePath)
 {
     mItems[probeIndex].probeName = probeName;
     mItems[probeIndex].outerRadius = outerRadius;
     mItems[probeIndex].innerRadius = innerRadius;
+    mItems[probeIndex].filePath = filePath;
     if (!pythonCode.isEmpty())
         mItems[probeIndex].pythonCode = pythonCode;
 }

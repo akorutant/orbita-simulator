@@ -20,7 +20,8 @@ public:
         missionRole,
         outerRadiusRole,
         innerRadiusRole,
-        pythonCodeRole
+        pythonCodeRole,
+        filePathRole,
     };
 
     // Basic functionality:

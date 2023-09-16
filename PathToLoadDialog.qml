@@ -4,6 +4,7 @@ FileDialog {
     id: fileToLoadDialog
     title: 'Выберите файл для загрузки'
     selectFolder: false
+    selectMultiple: false
     width: 264
     height: 146
     visible: false

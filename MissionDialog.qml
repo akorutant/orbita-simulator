@@ -88,7 +88,7 @@ Dialog  {
                             showDiagrammButton = false
                             showPythonArea.text = ""
 
-                            probes.appendProbe("probe", missonSelect.currentText, 0, 0, "")
+                            probes.appendProbe("probe", missonSelect.currentText, 0, 0, "", settingsManager.getProbesPath() + "/probe.xml")
                             listViewProbes.currentIndex = probes.size() - 1
                             currentProbe = listViewProbes.currentItem.probesModelData
                             devicesItems.changeDevices(probes, listViewProbes.currentIndex)
@@ -103,7 +103,7 @@ Dialog  {
                             showPythonArea = true
                             showDiagrammButton = false
 
-                            probes.appendProbe("probe", missonSelect.currentText, 0, 0, "print('Hello World!')")
+                            probes.appendProbe("probe", missonSelect.currentText, 0, 0, "print('Hello World!')", settingsManager.getProbesPath() + "/probe.xml")
                             listViewProbes.currentIndex = probes.size() - 1
                             currentProbe = listViewProbes.currentItem.probesModelData
                             devicesItems.changeDevices(probes, listViewProbes.currentIndex)

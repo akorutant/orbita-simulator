@@ -174,11 +174,11 @@ ApplicationWindow  {
                 anchors.bottomMargin: 67
                 enabled: itemsEnabled
                 onClicked: {
-                    probes.saveProbe(listViewProbes.currentIndex, probeNameText.text, firstNumber.text, secondNumber.text, pythonCodeProperty)
-                    if (pathToSave === "/home/" || pathToSave === "/") {
+                    if (!currentProbe.probeFilePath) {
                         pathToSaveDialog.open()
                     } else {
-                        probes.saveToXml(listViewProbes.currentIndex, planetsItems, missionIndex, pathToSave)
+                        probes.saveProbe(listViewProbes.currentIndex, probeNameText.text, firstNumber.text, secondNumber.text, pythonCodeProperty, currentProbe.probeFilePath)
+                        probes.saveToXml(listViewProbes.currentIndex, planetsItems, missionIndex, currentProbe.probeFilePath)
                     }
                 }
             }

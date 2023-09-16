@@ -87,6 +87,8 @@ void SimulationController::processFinished(int exitCode, QProcess::ExitStatus ex
     mStandardError.clear();
 
     if (exitStatus == QProcess::NormalExit && exitCode == 0) {
+        qDebug()<<standardOutput;
+        qDebug()<<standardError;
         mStandardOutput = QString::fromUtf8("Симуляция завершилась успешно");
     } else {
         if (!standardOutput.isEmpty()) {

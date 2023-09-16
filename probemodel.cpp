@@ -36,6 +36,8 @@ QVariant ProbeModel::data(const QModelIndex &index, int role) const
         return QVariant(item.innerRadius);
     case pythonCodeRole:
         return QVariant(item.pythonCode);
+    case filePathRole:
+        return QVariant(item.filePath);
     }
 
 
@@ -68,6 +70,9 @@ bool ProbeModel::setData(const QModelIndex &index, const QVariant &value, int ro
     case pythonCodeRole:
         item.pythonCode = value.toString();
         break;
+    case filePathRole:
+        item.filePath = value.toString();
+        break;
     }
     if (mList->setProbe(index.row(), item)) {
         emit dataChanged(index, index, QVector<int>() << role);
@@ -93,6 +98,7 @@ QHash<int, QByteArray> ProbeModel::roleNames() const
     names[outerRadiusRole] = "outerRadius";
     names[innerRadiusRole] = "innerRadius";
     names[pythonCodeRole] = "pythonCode";
+    names[filePathRole] = "probeFilePath";
     return names;
 }
 

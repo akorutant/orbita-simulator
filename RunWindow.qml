@@ -80,7 +80,7 @@ Window  {
                        id: startButton
                        text: "Cтарт!"
                        onClicked: {
-                            simulationController.startSimulation(`${settingsManager.getProbesPath()}/${currentProbe.probeName}.xml`, settingsManager);
+                            simulationController.startSimulation(currentProbe.probeFilePath, settingsManager);
                        }
 
                    }
@@ -91,7 +91,6 @@ Window  {
                        text: "Остановить"
                        onClicked: {
                             simulationController.stopSimulation();
-                            simulationRunning = false;
                        }
                    }
                }

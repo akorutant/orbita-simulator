@@ -26,6 +26,7 @@ struct ProbeItem
     QVector<StepsActivityItem> stepsActivity;
     QVector<StepsLandingItem> stepsLanding;
     QString pythonCode;
+    QString filePath;
 };
 
 class Planets;
@@ -71,7 +72,7 @@ public slots:
     void saveToXml(int probeIndex, Planets *planetsData, int planetIndex, const QString &filename);
     void loadFromXml(const QString &filename, PlanetDevices *planetDevicesData);
 
-    void saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode);
+    void saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode, const QString &filePath);
     int size();
 
 private:
