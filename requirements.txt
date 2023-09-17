@@ -1,0 +1,7 @@
+pyxb
+pyzmq
+numpy
+matplotlib
+protobuf
+pysm
+xmltodict
