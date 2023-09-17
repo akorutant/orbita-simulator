@@ -84,3 +84,12 @@ QString PlanetDevices::getDeviceEngName(QString deviceName)
     }
     return "None";
 }
+
+QString PlanetDevices::getDeviceName(QString deviceEngName)
+{
+    for (int i = 0; i < mItems.size(); ++i) {
+        if (mItems[i].deviceEngName == deviceEngName)
+            return mItems[i].deviceName;
+    }
+    return "None";
+}

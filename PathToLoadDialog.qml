@@ -15,10 +15,10 @@ FileDialog {
 
         if (filePath.startsWith("file://") || folderPath.startsWith("file://")) {
             pathToLoad = folderPath.substring(7)
-            var fileToSave = filePath.substring(7)
+            var fileToLoad= filePath.substring(7)
         }
 
-        probes.loadFromXml(fileToSave, planetDevicesItems)
+        probes.loadFromXml(fileToLoad, planetDevicesItems)
         listViewProbes.currentIndex = probes.size() - 1
         currentProbe = listViewProbes.currentItem.probesModelData
 

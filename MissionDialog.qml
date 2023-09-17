@@ -81,42 +81,79 @@ Dialog  {
                         errorDialog.open()
                         return
                     } else if (solutionSelect.currentText && missonSelect.currentText) {
-                        if (solutionSelect.currentText === "Таблица") {
-                            showPlanetsElems = true
-                            showPlanetsDevices = true
-                            showPythonArea = false
-                            showDiagrammButton = false
-                            showPythonArea.text = ""
+                        if (missonSelect.currentText === "Moon" || missonSelect.currentText === "Mars") {
+                            if (solutionSelect.currentText === "Таблица") {
+                                showPlanetsElems = true
+                                showPlanetsDevices = true
+                                showPythonArea = false
+                                showDiagrammButton = false
+                                showPythonArea.text = ""
 
-                            probes.appendProbe("probe", missonSelect.currentText, 0, 0, "", settingsManager.getProbesPath() + "/probe.xml")
-                            listViewProbes.currentIndex = probes.size() - 1
-                            currentProbe = listViewProbes.currentItem.probesModelData
-                            devicesItems.changeDevices(probes, listViewProbes.currentIndex)
-                            stepsActivityItems.changeSteps(probes, listViewProbes.currentIndex)
-                            stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
-                        }
+                                probes.loadFromXml(`planets probes templates/${missonSelect.currentText}-Template.xml`, planetDevicesItems)
+                                listViewProbes.currentIndex = probes.size() - 1
+                                currentProbe = listViewProbes.currentItem.probesModelData
 
-                        if (solutionSelect.currentText === "Python") {
-                            showPlanetsElems = false
-                            showPlanetsDevices = true
+                                probeNameText.text = `${currentProbe.probeName}`
+                                devicesItems.changeDevices(probes, listViewProbes.currentIndex)
+                                stepsActivityItems.changeSteps(probes, listViewProbes.currentIndex)
+                                stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
 
-                            showPythonArea = true
-                            showDiagrammButton = false
+                            } else if (solutionSelect.currentText === "Python") {
+                                showPlanetsElems = false
+                                showPlanetsDevices = true
+                                showPythonArea = true
+                                showDiagrammButton = false
 
-                            probes.appendProbe("probe", missonSelect.currentText, 0, 0, "print('Hello World!')", settingsManager.getProbesPath() + "/probe.xml")
-                            listViewProbes.currentIndex = probes.size() - 1
-                            currentProbe = listViewProbes.currentItem.probesModelData
-                            devicesItems.changeDevices(probes, listViewProbes.currentIndex)
-                            pythonCodeProperty = currentProbe.pythonCode
+                                probes.loadFromXml(`planets probes templates/${missonSelect.currentText}-Python-Template.xml`, planetDevicesItems)
+                                listViewProbes.currentIndex = probes.size() - 1
+                                currentProbe = listViewProbes.currentItem.probesModelData
 
-                        }
+                                probeNameText.text = `${currentProbe.probeName}`
+                                devicesItems.changeDevices(probes, listViewProbes.currentIndex)
+                                stepsActivityItems.changeSteps(probes, listViewProbes.currentIndex)
+                                stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
+                                pythonCodeTextArea.text = currentProbe.pythonCode
+                            }
+                        } else {
+                            if (solutionSelect.currentText === "Таблица") {
+                                showPlanetsElems = true
+                                showPlanetsDevices = true
+                                showPythonArea = false
+                                showDiagrammButton = false
+                                showPythonArea.text = ""
 
-                        if (solutionSelect.currentText === "Диаграмма") {
-                            showPlanetsElems = false
-                            showPlanetsDevices = true
-                            showPythonArea = false
-                            showDiagrammButton = true
-                            showPythonArea.text = ""
+                                probes.appendProbe("probe", missonSelect.currentText, 0, 0, "", settingsManager.getProbesPath() + "/probe.xml")
+
+                                listViewProbes.currentIndex = probes.size() - 1
+                                currentProbe = listViewProbes.currentItem.probesModelData
+                                devicesItems.changeDevices(probes, listViewProbes.currentIndex)
+                                stepsActivityItems.changeSteps(probes, listViewProbes.currentIndex)
+                                stepsLandingItems.changeSteps(probes, listViewProbes.currentIndex)
+                            }
+
+                            if (solutionSelect.currentText === "Python") {
+                                showPlanetsElems = false
+                                showPlanetsDevices = true
+
+                                showPythonArea = true
+                                showDiagrammButton = false
+
+                                probes.appendProbe("probe", missonSelect.currentText, 0, 0, "print('Hello World!')", settingsManager.getProbesPath() + "/probe.xml")
+
+                                listViewProbes.currentIndex = probes.size() - 1
+                                currentProbe = listViewProbes.currentItem.probesModelData
+                                devicesItems.changeDevices(probes, listViewProbes.currentIndex)
+                                pythonCodeProperty = currentProbe.pythonCode
+
+                            }
+
+                            if (solutionSelect.currentText === "Диаграмма") {
+                                showPlanetsElems = false
+                                showPlanetsDevices = true
+                                showPythonArea = false
+                                showDiagrammButton = true
+                                showPythonArea.text = ""
+                            }
                         }
 
                         missionIndex = missonSelect.currentIndex

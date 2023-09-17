@@ -194,7 +194,7 @@ void Probe::saveToXml(int probeIndex, Planets *planetsData, int planetIndex, con
     file.close();
 }
 
-void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesData) {
+void Probe::loadFromXml(QString filename, PlanetDevices *planetDevicesData) {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         return;
@@ -232,10 +232,9 @@ void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesDat
 
                         QXmlStreamAttributes attributes = xmlReader.attributes();
                         deviceItem.deviceNumber = attributes.value("number").toInt();
-                        for (int i = 0; i < planetDevicesData->items().size(); ++i) {
-                            if (planetDevicesData->items()[i].deviceEngName == attributes.value("name").toString())
-                                deviceItem.deviceName = planetDevicesData->items()[i].deviceName;
-                        }
+                        deviceItem.deviceEngName = attributes.value("name").toString();
+                        deviceItem.deviceName = planetDevicesData->getDeviceName(deviceItem.deviceEngName);
+                        deviceItem.deviceCode = planetDevicesData->getDeviceCode(deviceItem.deviceEngName);
 
                         deviceItem.startState = attributes.value("start_state").toString();
                         deviceItem.inSafeMode = (attributes.value("in_safe_mode").toString() == "ON");
@@ -277,7 +276,7 @@ void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesDat
                                         landingItem.deviceNumber = rx.cap(2).toInt();
                                     }
 
-                                    landingItem.id = stepsActivityItems.size();
+                                    landingItem.id = stepsLandingItems.size();
                                     landingItem.time = time;
                                     landingItem.command = action;
                                     landingItem.argument = argument;
@@ -285,7 +284,7 @@ void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesDat
                                 } else if (stageId == "Surface activity") {
                                     if (rx.indexIn(device) != -1) {
                                         activityItem.device = rx.cap(1);
-                                        activityItem.deviceNumber = rx.cap(3).toInt();
+                                        activityItem.deviceNumber = rx.cap(2).toInt();
                                     }
                                     activityItem.id = stepsActivityItems.size();
                                     activityItem.time = time;
@@ -321,6 +320,7 @@ void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesDat
     emit preProbeAppended();
 
     int probeIndex = mItems.size();
+
     mItems.append({probeIndex,
                    probeXmlItem.probeName,
                    probeXmlItem.missionName,
@@ -330,7 +330,7 @@ void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesDat
                    {},
                    {},
                    probeXmlItem.pythonCode,
-                   filename
+                   ""
                   });
 
     emit postProbeAppended();
@@ -368,8 +368,12 @@ void Probe::loadFromXml(const QString &filename, PlanetDevices *planetDevicesDat
 
 
     file.close();
-}
 
+    if (filename.startsWith("planets probes templates")) {
+        filename = "";
+    }
+    mItems[probeIndex].filePath = filename;
+}
 
 
 void Probe::saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode, const QString &filePath)

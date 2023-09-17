@@ -506,9 +506,9 @@ ApplicationWindow  {
                                             anchors.leftMargin: 5
                                             anchors.topMargin: 2
 
-                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.time? '<b>Номер устройства:</b> ' + model.deviceNumber : "<b>Номер устройства:</b> None" }
+                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.deviceNumber? '<b>Номер устройства:</b> ' + model.deviceNumber : "<b>Номер устройства:</b> None" }
 
-                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.time? '<b>Время:</b> ' + model.time : "<b>Время:</b> None" }
+                                            Text { text: index >= 0 && index < listViewStepsLanding.count && model.time >= 0 ? '<b>Время:</b> ' + model.time : "<b>Время:</b> None" }
 
                                             Text { text: index >= 0 && index < listViewStepsLanding.count && model.device ? '<b>Тип:</b> ' + model.device : "<b>Тип:</b> None" }
 
@@ -604,9 +604,9 @@ ApplicationWindow  {
                                                 anchors.leftMargin: 5
                                                 anchors.topMargin: 2
 
-                                                Text { text: index >= 0 && index < listViewStepsLanding.count && model.time? '<b>Номер устройства:</b> ' + model.deviceNumber : "<b>Номер устройства:</b> None" }
+                                                Text { text: index >= 0 && index < listViewStepsLanding.count && model.deviceNumber ? '<b>Номер устройства:</b> ' + model.deviceNumber : "<b>Номер устройства:</b> None" }
 
-                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.time? '<b>Время:</b> ' + model.time : "<b>Время:</b> None" }
+                                                Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.time >= 0 ? '<b>Время:</b> ' + model.time : "<b>Время:</b> None" }
 
                                                 Text { text: index >= 0 && index < listViewStepsPlanetActivity.count && model.device ? '<b>Тип:</b> ' + model.device : "<b>Тип:</b> None" }
 

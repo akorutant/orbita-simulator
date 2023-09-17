@@ -62,6 +62,7 @@ signals:
 public slots:
     void appendProbe(QString probeName, QString missionName, double outerRadius, double innerRadius, QString pythonCode);
     void removeProbe(int index);
+    void saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode, const QString &filePath);
 
     void appendDevicesItem(int probeIndex, int deviceNumber, QString deviceName, QString deviceCode,  QString deviceEngName, QString startState, bool inSafeMode);
     void removeDevicesItem(int probeIndex,int index);
@@ -70,9 +71,8 @@ public slots:
     void removeActivityAndLandingItem(int probeIndex, bool typeCommand, int index);
 
     void saveToXml(int probeIndex, Planets *planetsData, int planetIndex, const QString &filename);
-    void loadFromXml(const QString &filename, PlanetDevices *planetDevicesData);
+    void loadFromXml(QString filename, PlanetDevices *planetDevicesData);
 
-    void saveProbe(int probeIndex, QString probeName, double innerRadius, double outerRadius, QString pythonCode, const QString &filePath);
     int size();
 
 private:

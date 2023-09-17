@@ -34,6 +34,7 @@ signals:
 public slots:
    QString getDeviceCode(QString deviceName);
    QString getDeviceEngName(QString deviceName);
+   QString getDeviceName(QString deviceEngName);
    void loadDevices(const QString &filePath);
    int size();
 
